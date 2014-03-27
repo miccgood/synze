@@ -35,6 +35,8 @@ class Report extends SpotOnReport {
             $type = "tmn";
         } else if($genBy == 2){
             $type = "media";
+        } else {
+            $type = "error";
         }
         
         $dataGroupBy = array();
@@ -51,23 +53,34 @@ class Report extends SpotOnReport {
         $company = $this->m->getCpnById($this->cpnId);
         foreach ($company as $value) {
             $companyName = $value->cpn_name;
+            $companyLink = $this->getValueFromObj($value, "cpn_link");
         }
+        
+//        if($genBy == 1){
+//            $this->countPlayerAndsumDuration($valuePrint, "tmn_grp_ID");
+//        } else if($genBy == 2){
+//            $this->countPlayerAndsumDuration($valuePrint, "media_ID");
+//        }
         
         foreach ($dataGroupBy as $key => $value) {
 
             $obj = $value[0];
             $name = $this->nullToZero($obj->{$type."_name"}, "NULL");
+            $playerGroup = $this->nullToZero($this->getValueFromObj($obj, "tmn_grp_name"), "NULL");
             $valuePrint = array();
             $valuePrint["data"] = $value;
             $valuePrint[$type."Name"] = $name;
+            $valuePrint["playerGroup"] = $playerGroup;
             $valuePrint["companyName"] = $companyName;
             $valuePrint["fromDate"] = $_get["fromDate"];
             $valuePrint["toDate"] = $_get["toDate"];
             
             $valuePrint["countPlayer"] = count($this->countPlayer);
-            $valuePrint["sumDurationGroup"] = $this->sumDurationGroup[$key];
+            $valuePrint["sumDurationPlayer"] = $this->getValueFromArray($this->sumDurationGroup, $key);
             $valuePrint["countMedia"] = count($this->countMedia);
-            $valuePrint["sumDurationMedia"] = $this->sumDurationMedia[$key];
+            $valuePrint["sumDurationMedia"] = $this->getValueFromArray($this->sumDurationMedia, $key);
+            
+            $valuePrint["companyLink"] = $this->nullToZero($companyLink, "");;
             
             $page = ($genBy == 1 ? "player" : "media");
             $this->load->view('pdf/'. $page, $valuePrint);
@@ -79,22 +92,50 @@ class Report extends SpotOnReport {
         }
 //            $this->load->view('pdf/test');
         $this->load->view('pdf/footer');
-        
-        
-		// Get output html
-        
+//        
+//        
+//		// Get output html
+//        
         ini_set("memory_limit", "128M"); 
-
-
+//
+//
         $html = $this->output->get_output();
+//
+//        // Load library
+//        $this->load->library('dompdf_gen');
+//
+//        // Convert to PDF
+//        $this->dompdf->load_html($html);
+//        $this->dompdf->render();
+//        $this->dompdf->stream("report.pdf", $options);
+//        $filename = "test";
+//        $pdfFilePath = FCPATH."/downloads/reports/$filename.pdf";
+//        $data['page_title'] = 'Hello world'; // pass data to the view
 
-        // Load library
-        $this->load->library('dompdf_gen');
+//        if (file_exists($pdfFilePath) == FALSE)
+//        {
+//            ini_set('memory_limit','32M'); // boost the memory limit if it's low <img src="http://davidsimpson.me/wp-includes/images/smilies/icon_wink.gif" alt=";)" class="wp-smiley"> 
+//            $html = $this->load->view('example', $data, true); // render the view into HTML
 
-        // Convert to PDF
-        $this->dompdf->load_html($html);
-        $this->dompdf->render();
-        $this->dompdf->stream("report.pdf", $options);
+        $this->load->library('pdf');
+        $mpdf = $this->pdf->load(); 
+            
+//            $mpdf = new mPDF();
+//            $mpdf->setDisplayMode('fullpage');
+            $mpdf->setAutoFont();
+
+//            $mpdf->writeHTML($style, 1);
+        $mpdf->writeHTML($html);
+        $mpdf->Output();
+
+
+//            $pdf->SetFooter($_SERVER['HTTP_HOST'].'|{PAGENO}|'.date(DATE_RFC822)); // Add a footer for good measure <img src="http://davidsimpson.me/wp-includes/images/smilies/icon_wink.gif" alt=";)" class="wp-smiley"> 
+//            $pdf->WriteHTML($html); // write the HTML into the PDF
+//            $pdf->Output($pdfFilePath, 'F'); // save to file because we can
+//        }
+
+//        redirect("/downloads/reports/$filename.pdf");   
+
     }
     
     private function countPlayerAndsumDuration($valuePrint, $index) {
@@ -112,9 +153,27 @@ class Report extends SpotOnReport {
 //        $valuePrint["sumDuration"] = 123;
     }
     function setDataBeforePrint($value){
-        $value->pl_name = $this->putChar($value->pl_name, " ", 20);
-        
-        
+//        $value->pl_name = "asdfasdfasdfasdfasdfasdfasdfasfsaf";
+//        $value->dsp_name = "asdfasdfasdfasdfasdfasdfasdfasfsaf";
+//        $value->story_name = "asdfasdfasdfasdfasdfasdfasdfasfsaf";
+//        
+//        
+//        $_get = $this->input->get();
+//        $genBy = $_get["genReportBy"];
+//        
+//        
+//        if($genBy == 1){
+//            $value->media_name = $this->putChar($value->media_name, " ", 25);
+//        } else if($genBy == 2){
+//            $value->tmn_name = $this->putChar($value->tmn_name, " ", 20);
+//            $value->tmn_grp_name = $this->putChar($value->tmn_grp_name, " ", 20);
+//        }
+//        
+//        $value->pl_name = $this->putChar($value->pl_name, " ", 17);
+//        $value->dsp_name = $this->putChar($value->dsp_name, " ", 17);
+//        $value->lyt_name = $this->putChar($value->lyt_name, " ", 17);
+//        $value->story_name = $this->putChar($value->story_name, " ", 17);
+//        
         return $value;
     }
     function putChar($str,$wha,$cnt) {
@@ -178,6 +237,7 @@ class Report extends SpotOnReport {
         $company = $this->m->getCpnById($this->cpnId);
         foreach ($company as $value) {
             $companyName = $value->cpn_name;
+            $companyLink = $this->getValueFromObj($value, "cpn_link");
         }
         
         foreach ($dataGroupBy as $key => $value) {
@@ -192,8 +252,9 @@ class Report extends SpotOnReport {
             $valuePrint["companyName"] = $companyName;
             $valuePrint["fromDate"] = $_get["fromDate"];
             $valuePrint["toDate"] = $_get["toDate"];
-            $valuePrint["countPlayer"] = 100;
-            $valuePrint["sumDuration"] = 123;
+//            $valuePrint["countPlayer"] = 100;
+//            $valuePrint["sumDuration"] = 123;
+            $valuePrint["companyLink"] = $this->nullToZero($companyLink, "");;
 
             
 //            $this->load->view('pdf/'. $page, $valuePrint);
@@ -201,7 +262,7 @@ class Report extends SpotOnReport {
 ////                $this->load->view('pdf/new_page');
 //                $count++;
 //            }
-            $sheetId = 1;
+//            $sheetId = 1;
             $this->phpexcel->createSheet(NULL, $count);
             $this->phpexcel->setActiveSheetIndex($count);
 //            $this->phpexcel->getActiveSheet()->setTitle($index);
@@ -263,6 +324,20 @@ class Report extends SpotOnReport {
             'A1:B4'
         )->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         
+        $image = $valuePrint['companyLink'];//'./theme/images/add_media_to_playlist.png';
+        
+        if(file_exists($image)){
+            $objDrawing = new PHPExcel_Worksheet_Drawing();
+            $objDrawing->setName('Logo');
+            $objDrawing->setDescription('Logo');
+            $objDrawing->setPath($image);       // filesystem reference for the image file
+//          $objDrawing->setHeight(150);                 // sets the image height to 36px (overriding the actual image height); 
+            $objDrawing->setWidth(130); 
+            $objDrawing->setCoordinates('A1');    // pins the top-left corner of the image to cell D24
+            $objDrawing->setOffsetX(0);                // pins the top left corner of the image at an offset of 10 points horizontally to the right of the top-left corner of the cell
+            $objDrawing->setWorksheet($workSheet);
+        }
+
         
         //set cell A1 content with some text
         $workSheet->setCellValue('D1', $valuePrint["companyName"]);
@@ -280,9 +355,30 @@ class Report extends SpotOnReport {
         
         $workSheet->setCellValue('E4', "from");
         $workSheet->getStyle('E4')->getFont()->setBold(true);
+        $workSheet->getStyle('E4')->applyFromArray(
+                    array(
+                        'alignment' => array(
+                                'wrap'       => true,
+                                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+                                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+                            )
+                    )
+                );
+        
         $workSheet->setCellValue('F4', $valuePrint["fromDate"]);
+        
         $workSheet->setCellValue('H4', "to");
         $workSheet->getStyle('H4')->getFont()->setBold(true);
+        $workSheet->getStyle('H4')->applyFromArray(
+                    array(
+                        'alignment' => array(
+                                'wrap'       => true,
+                                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+                                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+                            )
+                    )
+                );
+        
         $workSheet->setCellValue('I4',  $valuePrint["toDate"]);
         
         $workSheet->mergeCells('A6:M6')->getStyle(
@@ -321,6 +417,19 @@ class Report extends SpotOnReport {
             'A1:B4'
         )->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         
+        $image = $valuePrint['companyLink'];//'./theme/images/add_media_to_playlist.png';
+        
+        if(file_exists($image)){
+            $objDrawing = new PHPExcel_Worksheet_Drawing();
+            $objDrawing->setName('Logo');
+            $objDrawing->setDescription('Logo');
+            $objDrawing->setPath($image);       // filesystem reference for the image file
+//          $objDrawing->setHeight(150);                 // sets the image height to 36px (overriding the actual image height); 
+            $objDrawing->setWidth(130); 
+            $objDrawing->setCoordinates('A1');    // pins the top-left corner of the image to cell D24
+            $objDrawing->setOffsetX(0);                // pins the top left corner of the image at an offset of 10 points horizontally to the right of the top-left corner of the cell
+            $objDrawing->setWorksheet($workSheet);
+        }
         
         //set cell A1 content with some text
         $workSheet->setCellValue('D1', $valuePrint["companyName"]);
@@ -343,9 +452,29 @@ class Report extends SpotOnReport {
         
         $workSheet->setCellValue('E5', "from");
         $workSheet->getStyle('E5')->getFont()->setBold(true);
+        $workSheet->getStyle('E5')->applyFromArray(
+                    array(
+                        'alignment' => array(
+                                'wrap'       => true,
+                                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+                                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+                            )
+                    )
+                );
+        
         $workSheet->setCellValue('F5', $valuePrint["fromDate"]);
+        
         $workSheet->setCellValue('H5', "to");
         $workSheet->getStyle('H5')->getFont()->setBold(true);
+        $workSheet->getStyle('H5')->applyFromArray(
+                    array(
+                        'alignment' => array(
+                                'wrap'       => true,
+                                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+                                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+                            )
+                    )
+                );
         $workSheet->setCellValue('I5',  $valuePrint["toDate"]);
         
         $workSheet->mergeCells('A7:M7')->getStyle(
@@ -683,7 +812,10 @@ class Report extends SpotOnReport {
     
     private function getValueFromObj($obj, $attr){
         if($obj != null){
-            return $obj->$attr;
+            if(property_exists($obj, $attr)){
+                return $obj->$attr;
+            }
+            return NULL;
         }
         return NULL;
     }

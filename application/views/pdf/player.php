@@ -24,25 +24,42 @@
     .data-table{
          border: 1px solid black; 
          border-style: outset;
-         word-wrap:break-word; 
          table-layout: fixed;
          width:650px; 
          max-width: 650px;
          border-spacing:0px; 
+         
             /*border-collapse:collapse;*/   
     }
     
+    td {
+        word-wrap:break-word;
+    }
+    
+    .border-none tr td{
+        border: none;
+    }
+    
 </style>
-<table border="0" style="width:650px;">
+<table border="0" style="width:650px;" class="border-none">
     <tbody>
         <tr>
-            <td rowspan="3" style="width:100px; border: 1px;"><div style="background-color:#eee;border: 1px solid #888; width: 100%; height: 100px;"></div></td>
+            <td rowspan="4" style="width:100px; border: 0px;">
+                <div style="background-color:#eee;border: 1px solid #888; width: 100%; height: 100px;"> 
+                    <?php if ($companyLink != null || $companyLink != ""){?>
+                        
+                        <img src="<?php echo $companyLink ; ?>" width="140px" height="120px" />
+                        
+                    <?php }?>
+                    
+                </div>
+            </td>
             <td colspan="6"><?php echo $companyName;?></td>
             <td colspan="2"> Playback Report By Media </td>
         </tr>
         <tr>
             <td> Player </td>
-            <td colspan="7"><?php echo $player;?></td>
+            <td colspan="7"><?php echo $tmnName;?></td>
         </tr>
         <tr>
             <td> Player Group </td>
@@ -59,13 +76,13 @@
 </table>
 
 <hr/>
-<table border="0" style="width:650px;">
+<table border="0" style="width:650px;" class="border-none">
     <tbody>
         <tr>
             <td colspan="2"> Summary </td>
         </tr>
         <tr>
-            <td style="width: 100px;">Total Player</td>
+            <td style="width: 130px;">Total Player</td>
             <td><?php echo $countMedia;?></td>
         </tr>
         <tr>
@@ -86,7 +103,7 @@
                 <th style="width:3%;text-align: center;">
                     ID
                 </th>
-                <th style="width:10%;">
+                <th style="width:23%;">
                     Media
                 </th>
 <!--                <th style="width:10%;">
@@ -101,13 +118,13 @@
                 <th style="width:5%;text-align: center;">
                     Duration
                 </th>
-                <th style="width:20%;">
+                <th style="width:15%;">
                     Playlist
                 </th>
                 <th style="width:15%;">
                     Zone
                 </th>
-                <th style="width:20%;">
+                <th style="width:15%;">
                     Story
                 </th>
             </tr>
@@ -121,7 +138,8 @@
                     $player = $value->pl_name;?>
                 <tr style="display:table-row;">
                     <td style="text-align: center;"> <?php echo $count ;?></td>
-                    <td> <?php echo $value->media_name ;?></td>
+                    <!--<td> <div style="word-wrap: break-word; width: 10px;"><?php echo $value->media_name ;?></div></td>-->
+                    <td><?php echo $value->media_name ;?></td>
                     <!--<td> <?php echo $value->tmn_name ;?></td>-->
                     <td style="text-align: center;"> <?php echo $value->start_time ;?></td>
                     <td style="text-align: center;"> <?php echo $value->stop_time ;?></td>
