@@ -1,0 +1,10 @@
+ALTER TABLE `synze25561212`.`trn_dpm` 
+ADD COLUMN `cpn_ID` INT(11) NOT NULL DEFAULT 0 AFTER `tmn_ID`;
+
+
+ALTER TABLE `synze25561212`.`mst_pl` 
+ADD COLUMN `pl_type` ENUM('video','image','scrolling text') NULL DEFAULT 'video' AFTER `update_date`,
+ADD COLUMN `pl_expired` DATE NULL AFTER `pl_type`;
+
+ALTER TABLE `synze25561212`.`mst_media` 
+CHANGE COLUMN `media_type` `media_type` ENUM('video','image','scrolling text') NULL DEFAULT 'video' ;

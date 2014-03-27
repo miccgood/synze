@@ -1,0 +1,64 @@
+<?php
+
+	$this->set_css($this->default_theme_path.'/datatables/css/datatables.css');
+	$this->set_js_lib($this->default_theme_path.'/flexigrid/js/jquery.form.js');
+	$this->set_js_config($this->default_theme_path.'/datatables/js/datatables-add.js');
+	$this->set_css($this->default_css_path.'/ui/simple/'.grocery_CRUD::JQUERY_UI_CSS);
+	$this->set_js_lib($this->default_javascript_path.'/jquery_plugins/ui/'.grocery_CRUD::JQUERY_UI_JS);
+
+	$this->set_js_lib($this->default_javascript_path.'/jquery_plugins/jquery.noty.js');
+	$this->set_js_lib($this->default_javascript_path.'/jquery_plugins/config/jquery.noty.config.js');
+?>
+<script type="text/javascript">
+            <?php echo $this->customScript;?>
+        </script>
+<div class='ui-widget-content ui-corner-all datatables'>
+	<h3 class="ui-accordion-header ui-helper-reset ui-state-default form-title">
+		<div class='floatL form-title-left'>
+			<a href="#"><?php echo $this->l('form_add'); ?> <?php echo $subject?></a>
+		</div>
+		<div class='clear'></div>
+	</h3>
+<div class='form-content form-div' id="form_input">
+	<?php echo form_open( $insert_url, 'method="post" id="crudForm" autocomplete="off" enctype="multipart/form-data"'); ?>
+		<div>
+			<?php include 'detail.php';?>
+			<!-- Start of hidden inputs -->
+				<?php
+					foreach($hidden_fields as $hidden_field){
+						echo $hidden_field->input;
+					}
+				?>
+			<!-- End of hidden inputs -->
+			<?php if ($is_ajax) { ?><input type="hidden" name="is_ajax" value="true" /><?php }?>
+			<div class='line-1px'></div>
+			<div id='report-error' class='report-div error'></div>
+			<div id='report-success' class='report-div success'></div>
+		</div>
+		<div class='buttons-box'>
+			<div class='form-button-box'>
+				<input id="form-button-save" type='submit' value='<?php echo $this->l('form_save'); ?>' class='ui-input-button'/>
+			</div>
+<?php 	if(!$this->unset_back_to_list) { ?>
+			<div class='form-button-box'>
+				<input type='button' value='<?php echo $this->l('form_save_and_go_back'); ?>' class='ui-input-button' id="save-and-go-back-button"/>
+			</div>
+			<div class='form-button-box'>
+				<input type='button' value='<?php echo $this->l('form_cancel'); ?>' class='ui-input-button' id="cancel-button" />
+			</div>
+<?php   } ?>
+			<div class='form-button-box loading-box'>
+				<div class='small-loading' id='FormLoading'><?php echo $this->l('form_insert_loading'); ?></div>
+			</div>
+			<div class='clear'></div>
+		</div>
+	<?php echo form_close(); ?>
+</div>
+</div>
+<script>
+	var validation_url = '<?php echo $validation_url?>';
+	var list_url = '<?php echo $list_url?>';
+
+	var message_alert_add_form = "<?php echo $this->l('alert_add_form')?>";
+	var message_insert_error = "<?php echo $this->l('insert_error')?>";
+</script>
