@@ -30,7 +30,7 @@ class Media extends SpotOn {
             $this->session->set_userdata("cat_id",$cat_id);
         }
         
-        $cat = $this->m->selectCat($this->cpnId, "*");
+        $cat = $this->m->selectCat("*");
         $catigory = array();
         foreach ($cat as $key => $value) {
             $catigory[$value->cat_ID] = $value->cat_name;
@@ -40,7 +40,7 @@ class Media extends SpotOn {
             ->order_by("media_name", "DESC")
             ->set_relation("cat_ID", "mst_media_cat", "cat_name")
             ->set_subject('Media')
-            ->columns('media_name', 'media_type', 'media_filename', 'media_size', 'media_lenght')
+            ->columns('cat_ID', 'media_name', 'media_type', 'media_filename', 'media_size', 'media_lenght')
                  
             ->display_as('cat_ID', 'Group')
             ->display_as('media_name', 'Name')
@@ -85,6 +85,7 @@ class Media extends SpotOn {
                    
         ->callback_field('media_filename_temp',array($this,'_media_filename_temp'))
         ->callback_field('text_input',array($this,'_text_input'))
+        ->callback_column('media_lenght',array($this,'_media_lenght'))
         
 //        ->callback_before_insert(array($this, 'callbackBeforeInsert'))     
 //        ->callback_before_update(array($this, 'callbackBeforeUpdate'))
@@ -108,6 +109,10 @@ class Media extends SpotOn {
                 . " }"
                 . "});");
         $this->output();
+    }
+
+    function _media_lenght($value = "", $field_info = "" , $file = null, $row = null){
+        return $value / 1000;
     }
     
     function _media_filename_temp($value = "", $field_info = "" , $file = null, $row = null){
@@ -253,7 +258,8 @@ class Media extends SpotOn {
 //            $ext = ".".$ext;
 //            $files_to_upload[0]->name = str_replace($ext, "", $name);
 //        }
-        $files_to_upload[0]->name = $fileObj->name;
+//        $search = substr($fileObj->name, 0, strpos($fileObj->name, "-") + 1);
+        $files_to_upload[0]->name = $fileObj->name;//str_replace($search, "" , $fileObj->name);
 
         return $files_to_upload;
     }

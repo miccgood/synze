@@ -420,8 +420,19 @@
 //                        percen--;
 //                    }
 //                },10);
-                var $lenght = $("#field-pl_lenght").val();
+
+                var $string = $("#field-pl_lenght").val();
+                var $arr = $string.split(":");
+                var $lenght = parseInt($arr[0]) * 3600 + parseInt($arr[1]) * 60 + parseInt($arr[2]); 
+//                var $lenght = $("#field-pl_lenght").val();
                 var percen = ((countUsage / $lenght) * 100).toFixed(2);
+                
+                if(parseInt(countUsage) == 0){
+                    percen = 0;
+                } else if($lenght == "0"){
+                    percen = 100;
+                }
+                
                 $('#progressbar').progressbar({value: parseInt(percen)});
                 $(".progress-label").html( countUsage + ":" + $lenght + " (" + percen + "%)");
                 $("#field-pl_usage").val(countUsage);

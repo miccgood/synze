@@ -145,8 +145,10 @@ $(function(){
                             if( name.length === 1 || ( name[0] === "" && name.length === 2 ) ) {
                                 name = "";
                             }
+                            
                             name = name.pop(); 
-                            $(mediaNameId).val(file.name.replace("."+name, ""));
+                            var nameReplaceEx = file.name.replace("."+name, "")
+                            $(mediaNameId).val(nameReplaceEx.replace(nameReplaceEx.substring(0, nameReplaceEx.indexOf("-") + 1 ), "" ));
 
                             $('#file_'+unique_id).attr('href',file.url);
                             $('#hidden_'+unique_id).val(file_name);

@@ -7,7 +7,8 @@ class Programmer extends SpotOn {
     }
     
     public function index() {
-        $this->genLog();
+        
+//        $this->genLog();
 //        $this->genMedia();
 //        $this->genPlaylist();
 //        $this->genTerminal();

@@ -11,8 +11,8 @@
 
                                     //width : height
 //$config["media_url"] = "http://www.spotoninteractive.com/synzes/assets/uploads/media";
-$config["media_url"] = "http://localhost/synzes/assets/uploads/media";
-$config["text_url"] = "http://localhost/synzes/assets/uploads/text";
+$config["media_url"] = "http://localhost/synzef/assets/uploads/media";
+$config["text_url"] = "http://localhost/synzef/assets/uploads/text";
 $config["media_path"] = "assets/uploads/media/";
 $config["text_path"] = "assets/uploads/text/";
 

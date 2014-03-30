@@ -5059,7 +5059,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 	 * @param string $priority_field_relation_table
 	 * @param mixed $where_clause
 	 */
-	public function set_relation_n_n($field_name, $relation_table, $selection_table, $primary_key_alias_to_this_table, $primary_key_alias_to_selection_table , $title_field_selection_table , $priority_field_relation_table = null, $where_clause = null)
+	public function set_relation_n_n($field_name, $relation_table, $selection_table, $primary_key_alias_to_this_table, $primary_key_alias_to_selection_table , $title_field_selection_table , $priority_field_relation_table = null, $where_clause = null, $custom_order_by = array())
 	{
 		$this->relation_n_n[$field_name] =
 			(object)array(
@@ -5070,7 +5070,8 @@ class Grocery_CRUD extends grocery_CRUD_States
 				'primary_key_alias_to_selection_table' => $primary_key_alias_to_selection_table ,
 				'title_field_selection_table' => $title_field_selection_table ,
 				'priority_field_relation_table' => $priority_field_relation_table,
-				'where_clause' => $where_clause
+				'where_clause' => $where_clause,
+                                'custom_order_by' => $custom_order_by
 			);
 
 		return $this;
@@ -5106,7 +5107,12 @@ class Grocery_CRUD extends grocery_CRUD_States
         
         
         public function setCustomScript($customScript) {
-            $this->customScript = $customScript;
+            $this->customScript = $customScript . " \n";
+            return $this;
+        }
+        
+        public function appendCustomScript($customScript) {
+            $this->customScript .= $customScript . " \n";
             return $this;
         }
         

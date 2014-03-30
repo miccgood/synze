@@ -20,11 +20,11 @@ class Report extends SpotOnReport {
         $_get = $this->input->get();
         
         $data["data"] = $this->m->getDataForReport($_get);
-        
+        $this->countPlayerAndsumDuration($data);
         return $data;
     } 
     
-    private function genReport($options = array('Attachment'=>0)){
+    private function genReport($options = '', $filename = ""){
         $_get = $this->input->get();
         
         $data = $this->getData();
@@ -41,8 +41,8 @@ class Report extends SpotOnReport {
         
         $dataGroupBy = array();
         foreach ($data["data"] as $value) {
-            $valuePrint = $this->setDataBeforePrint($value);
-            $arr = array($valuePrint);
+//            $valuePrint = $this->setDataBeforePrint($value);
+            $arr = array($value);
             $valueFromArray = $this->getValueFromArray($dataGroupBy, $value->{$type."_ID"});
             $array = $this->getArray($valueFromArray);
             $dataGroupBy[$value->{$type."_ID"}] = array_merge($array, $arr);
@@ -75,9 +75,9 @@ class Report extends SpotOnReport {
             $valuePrint["fromDate"] = $_get["fromDate"];
             $valuePrint["toDate"] = $_get["toDate"];
             
-            $valuePrint["countPlayer"] = count($this->countPlayer);
+            $valuePrint["countPlayer"] = count($this->countPlayer[$this->getValueFromObj($obj, "tmn_ID")]);
             $valuePrint["sumDurationPlayer"] = $this->getValueFromArray($this->sumDurationGroup, $key);
-            $valuePrint["countMedia"] = count($this->countMedia);
+            $valuePrint["countMedia"] = count($this->countMedia[$this->getValueFromObj($obj, "media_ID")]);
             $valuePrint["sumDurationMedia"] = $this->getValueFromArray($this->sumDurationMedia, $key);
             
             $valuePrint["companyLink"] = $this->nullToZero($companyLink, "");;
@@ -119,14 +119,30 @@ class Report extends SpotOnReport {
 
         $this->load->library('pdf');
         $mpdf = $this->pdf->load(); 
-            
+        $mpdf->SetDisplayMode('fullpage');
+        $mpdf->list_indent_first_level = 0; 
 //            $mpdf = new mPDF();
 //            $mpdf->setDisplayMode('fullpage');
-            $mpdf->setAutoFont();
+        $mpdf->setAutoFont();
 
 //            $mpdf->writeHTML($style, 1);
         $mpdf->writeHTML($html);
-        $mpdf->Output();
+//        if( $options == 1 ){
+//            $mpdf->Output("report.pdf",'F');
+//        } else{
+        $mpdf->Output($filename, $options);
+//            $mpdf->Output();
+//        }
+        
+        
+//$mpdf=new mPDF('c','A4','','',32,25,27,25,16,13); 
+//$mpdf->SetDisplayMode('fullpage');
+//$mpdf->list_indent_first_level = 0; 
+//$stylesheet = file_get_contents('mpdfstyletables.css');
+//$mpdf->WriteHTML($stylesheet,1);
+//$mpdf->WriteHTML($html);
+//$mpdf->Output('mpdf.pdf');
+
 
 
 //            $pdf->SetFooter($_SERVER['HTTP_HOST'].'|{PAGENO}|'.date(DATE_RFC822)); // Add a footer for good measure <img src="http://davidsimpson.me/wp-includes/images/smilies/icon_wink.gif" alt=";)" class="wp-smiley"> 
@@ -138,43 +154,19 @@ class Report extends SpotOnReport {
 
     }
     
-    private function countPlayerAndsumDuration($valuePrint, $index) {
+    private function countPlayerAndsumDuration($valuePrint) {
         
         foreach ($valuePrint["data"] as $value) {
             $arrMedia = $this->getValueFromObj($value, "media_ID");
-            $arrTmnGrp = $this->getValueFromObj($value, "tmn_grp_ID");
+//            $arrTmnGrp = $this->getValueFromObj($value, "tmn_grp_ID");
             $arrTmn = $this->getValueFromObj($value, "tmn_ID");
-            $this->countPlayer[$arrMedia] = $this->nullToZero($this->getValueFromArray($this->countPlayer, $arrMedia), 0) + 1;
-            $this->countMedia[$arrTmnGrp] = $this->nullToZero($this->getValueFromArray($this->countMedia, $arrTmnGrp), 0) + 1;
+            $this->countPlayer[$arrTmn][$arrMedia] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countPlayer, $arrTmn), $arrMedia), 0)  + 1;
+            $this->countMedia[$arrMedia][$arrTmn] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countMedia, $arrMedia), $arrTmn), 0) + 1;
             $this->sumDurationMedia[$arrMedia] = $this->nullToZero($this->getValueFromArray($this->sumDurationMedia, $arrMedia), 0) + $value->duration;
             $this->sumDurationGroup[$arrTmn] = $this->nullToZero($this->getValueFromArray($this->sumDurationGroup, $arrTmn), 0) + $value->duration;
         }
 //        $valuePrint["countPlayer"] = 100;
 //        $valuePrint["sumDuration"] = 123;
-    }
-    function setDataBeforePrint($value){
-//        $value->pl_name = "asdfasdfasdfasdfasdfasdfasdfasfsaf";
-//        $value->dsp_name = "asdfasdfasdfasdfasdfasdfasdfasfsaf";
-//        $value->story_name = "asdfasdfasdfasdfasdfasdfasdfasfsaf";
-//        
-//        
-//        $_get = $this->input->get();
-//        $genBy = $_get["genReportBy"];
-//        
-//        
-//        if($genBy == 1){
-//            $value->media_name = $this->putChar($value->media_name, " ", 25);
-//        } else if($genBy == 2){
-//            $value->tmn_name = $this->putChar($value->tmn_name, " ", 20);
-//            $value->tmn_grp_name = $this->putChar($value->tmn_grp_name, " ", 20);
-//        }
-//        
-//        $value->pl_name = $this->putChar($value->pl_name, " ", 17);
-//        $value->dsp_name = $this->putChar($value->dsp_name, " ", 17);
-//        $value->lyt_name = $this->putChar($value->lyt_name, " ", 17);
-//        $value->story_name = $this->putChar($value->story_name, " ", 17);
-//        
-        return $value;
     }
     function putChar($str,$wha,$cnt) {
         if(strlen($str) <= $cnt){
@@ -193,8 +185,7 @@ class Report extends SpotOnReport {
             
             
     function preview(){
-        
-        $this->genReport(array('Attachment'=>0));
+        $this->genReport();
     }  
     
     function excel(){
@@ -225,8 +216,8 @@ class Report extends SpotOnReport {
         
         $dataGroupBy = array();
         foreach ($data["data"] as $value) {
-            $valuePrint = $this->setDataBeforePrint($value);
-            $arr = array($valuePrint);
+//            $valuePrint = $this->setDataBeforePrint($value);
+            $arr = array($value);
             $valueFromArray = $this->getValueFromArray($dataGroupBy, $value->{$type."_ID"});
             $array = $this->getArray($valueFromArray);
             $dataGroupBy[$value->{$type."_ID"}] = array_merge($array, $arr);
@@ -274,11 +265,13 @@ class Report extends SpotOnReport {
             //set ชื่อ sheet
 //            $workSheet->setTitle("test");
             if($genBy == 1 ){
-                $this->countPlayerAndsumDuration($valuePrint, "tmn_grp_ID");
+                $this->countPlayerAndsumDuration($valuePrint);
+//                $this->countPlayerAndsumDuration($valuePrint, "tmn_grp_ID");
                 $this->headerPlayer($workSheet,$valuePrint, $key);
                 $this->tablePlayer($workSheet,$valuePrint);
             }else{
-                $this->countPlayerAndsumDuration($valuePrint, "media_ID");
+                $this->countPlayerAndsumDuration($valuePrint);
+//                $this->countPlayerAndsumDuration($valuePrint, "media_ID");
                 $this->headerMedia($workSheet, $valuePrint, $key);
                 $this->tableMedia($workSheet,$valuePrint);
             }
@@ -313,10 +306,6 @@ class Report extends SpotOnReport {
         $workSheet->getColumnDimension('E')->setWidth(6);
         $workSheet->getColumnDimension('F')->setWidth(10);
         $workSheet->getColumnDimension('G')->setWidth(10);
-//        $workSheet->getColumnDimension('C')->setWidth(5);
-//        $workSheet->getColumnDimension('D')->setWidth(5);
-//        $workSheet->getColumnDimension('E')->setWidth(5);
-//        $workSheet->getColumnDimension('F')->setWidth(5);
         
         $workSheet->setTitle($valuePrint["mediaName"]);
         
@@ -389,7 +378,7 @@ class Report extends SpotOnReport {
         $workSheet->getStyle('A7')->getFont()->setBold(true);
         $workSheet->setCellValue('A8', "Total Player ");
         $workSheet->setCellValue('A9', "Total Duration ");
-        $workSheet->setCellValue('C8', count($this->countMedia));
+        $workSheet->setCellValue('C8', count($this->countMedia[$key]));
         $workSheet->setCellValue('C9', $this->sumDurationMedia[$key]);
         
         $workSheet->mergeCells('A11:M11')->getStyle(
@@ -483,9 +472,9 @@ class Report extends SpotOnReport {
         
         $workSheet->setCellValue('A8', "Summary ");
         $workSheet->getStyle('A8')->getFont()->setBold(true);
-        $workSheet->setCellValue('A9', "Total Player ");
+        $workSheet->setCellValue('A9', "Total Media ");
         $workSheet->setCellValue('A10', "Total Duration ");
-        $workSheet->setCellValue('C9', count($this->countPlayer));
+        $workSheet->setCellValue('C9', count($this->countPlayer[$key]));
         $workSheet->setCellValue('C10', $this->sumDurationGroup[$key]);
         
         $workSheet->mergeCells('A12:M12')->getStyle(
@@ -715,7 +704,8 @@ class Report extends SpotOnReport {
     }
     
     function pdf(){
-        $this->genReport(array('Attachment'=>1));
+//        'F', $filename = "report.pdf"
+        $this->genReport('F', "report.pdf");
 //        echo json_encode("pdf");
     } 
     

@@ -1,3 +1,5 @@
+
+
 <style type="text/css">
             
             #circle { 
@@ -25,12 +27,36 @@
             </style>
             <div style="vertical-align: bottom;">
             </div>
-            <?php $uniqid = uniqid(); ?>"
+            <?php $uniqid = uniqid(); ?>
             
             <script type="text/javascript">
                 
                 var $_tableId = "<?php echo $uniqid; ?>";
-                
+                <?php 
+
+
+                    if(count($default_value["uploadStatusColor"]) > 0){
+                        echo "var uploadStatusColor = {"; 
+
+                        foreach ($default_value["uploadStatusColor"] as $key => $value) {
+                            echo $key . " : '" . $value . "' ,";
+                        }
+
+                        echo "error : 'red' };"; 
+                    }
+
+                    if(count($default_value["statusColor"]) > 0){
+                        echo "var statusColor = {"; 
+
+                        foreach ($default_value["statusColor"] as $key => $value) {
+                            echo $key . " : '" . $value . "' ,";
+                        }
+
+                        echo "error : 'red' };"; 
+                    }
+
+
+                ?>
             </script>
             
 <table cellpadding="0" cellspacing="0" border="0" class="display groceryCrudTable" id="<?php echo $uniqid; ?>">
@@ -46,7 +72,7 @@
 	</thead>
 	<tbody>
 		<?php foreach($list as $num_row => $row){ ?>
-		<tr id='row-<?php echo $num_row?>'>
+		<tr id='row-<?php echo $num_row?>' tmn_ID='<?php echo $row->tmn_ID?>'>
 			<?php foreach($columns as $column){?>
 				<td><?php echo $row->{$column->field_name}?></td>
 			<?php }?>

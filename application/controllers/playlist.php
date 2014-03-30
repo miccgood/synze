@@ -16,17 +16,78 @@ class PlayList extends SpotOn {
         return $event;
     }
     
+    public function _clone($primary_key) {
+       return 'playlist/fclone/add/'.$primary_key;
+    }
+    
+    
+    public function fclone() {
+        
+        $this->detail("Clone");
+        
+//        $plId = $this->url->segment(4);
+//        $playlistDaoList = $this->m->getPlaylistById($plId);
+//        $playlist = $playlistDaoList[0];
+//        
+//        $mediaXmlList = array();
+//        foreach ($mediaDaoList as $value) {
+//            $mediaXmlList[$value->media_ID] = array("cat_ID" => $value->cat_ID, 
+//                                                    "lenght" => $value->media_lenght / 1000,
+//                                                    "type" => $value->media_type);
+//        }
+//
+//        $mediaXmlList = json_encode($mediaXmlList);
+//        $this->crud->appendCustomScript();
+//       
+        $this->output();
+    }
+    
     public function index() {
+        $this->detail();
+       
+        $this->output();
+    }
+    
+    function _pl_usage($value = "" , $pk = "", $row = "" , $rows = "") {
+        return "<div id='progressbar' style='display:none;'><div class='progress-label'>$value</div></div> <input type='hidden' name='pl_usage' id='field-pl_usage' value='$value'/>";
+    }
+     
+    function clearBeforeInsertAndUpdate($post) {
+        $this->mediaTemp = split(",", trim($post["media_temp"], ","));
+        
+        $post = parent::clearBeforeInsertAndUpdate($post);
+        $post = parent::setDefaultValue($post);
+        
+        $string = $post["pl_lenght"];
+        $arr = explode(":", $string);
+        $count = $arr[0] * 3600 + $arr[1] * 60 + $arr[2];
+        
+        $post["pl_lenght"] = $count;
+                
+        
+         return $post;
+     }
+     
+     function afterInsert($playlist , $playlistId){
+         $this->m->insertPlaylistItem($playlistId, $this->mediaTemp);
+     }
+     
+    public function _beforeDelete($primary_key) {
+        return $this->m->checkDeletePlaylist($primary_key);
+    }
+    
+    
+    private function detail($detail = ""){
         $playlist_type = $this->getPlaylistType();
         $this->crud->set_table('mst_pl')
-        ->set_relation_n_n('Media', 'trn_pl_has_media', 'mst_media', 'pl_ID', 'media_ID', 'media_name', 'seq_no')
-        ->set_subject('PlayList')
+        ->set_relation_n_n('Media', 'trn_pl_has_media', 'mst_media', 'pl_ID', 'media_ID', 'media_name', 'seq_no', null, array("`mst_media`.`create_date` DESC"))
+        ->set_subject($detail . ' PlayList')
         ->where("mst_pl.cpn_ID" , $this->cpnId)
         
         ->columns('pl_name','pl_desc', 'pl_lenght', 'pl_usage')
         ->display_as('pl_name', 'Name')
         ->display_as('pl_desc', 'Desc')
-        ->display_as('pl_lenght', 'Lenght')
+        ->display_as('pl_lenght', 'Duration')
         ->display_as('media_name', 'Media Name')       
         ->display_as('pl_usage', 'Usage')
         ->display_as('pl_playmode', 'Play Mode')
@@ -48,6 +109,7 @@ class PlayList extends SpotOn {
         ->callback_field("pl_usage", array($this, "_pl_usage")) 
         ->callback_after_insert(array($this, "afterInsert"))
         ->callback_after_update(array($this, "afterInsert"))
+//        ->add_action('Clone', '', 'demo/action_more','ui-icon-document', array($this,'_clone'))
         ;
         
         
@@ -56,7 +118,7 @@ class PlayList extends SpotOn {
             
 //            $where = array("media_type" => $playlist_type);
             $mediaDaoList = $this->m->selectMedia();
-            $groupDaoList = $this->m->selectCat($this->cpnId);
+            $groupDaoList = $this->m->selectCat();
             $obj = new stdClass();
             $obj->cat_ID = 0;
             $obj->cat_name = "all";
@@ -67,7 +129,7 @@ class PlayList extends SpotOn {
             $mediaXmlList = array();
             foreach ($mediaDaoList as $value) {
                 $mediaXmlList[$value->media_ID] = array("cat_ID" => $value->cat_ID, 
-                                                        "lenght" => $value->media_lenght,
+                                                        "lenght" => $value->media_lenght / 1000,
                                                         "type" => $value->media_type);
             }
             
@@ -77,27 +139,5 @@ class PlayList extends SpotOn {
                 $this->crud->field_type("pl_type", "enum", array("video", "image", "scrolling test"), $playlist_type);
             }
         }
-       
-        $this->output();
-    }
-    
-    function _pl_usage($value = "" , $pk = "", $row = "" , $rows = "") {
-        return "<div id='progressbar' style='display:none;'><div class='progress-label'>$value</div></div> <input type='hidden' name='pl_usage' id='field-pl_usage' value='$value'/>";
-    }
-     
-    function clearBeforeInsertAndUpdate($post) {
-        $this->mediaTemp = split(",", trim($post["media_temp"], ","));
-        
-        $post = parent::clearBeforeInsertAndUpdate($post);
-        $post = parent::setDefaultValue($post);
-         return $post;
-     }
-     
-     function afterInsert($playlist , $playlistId){
-         $this->m->insertPlaylistItem($playlistId, $this->mediaTemp);
-     }
-     
-    public function _beforeDelete($primary_key) {
-        return $this->m->checkDeletePlaylist($primary_key);
     }
 }

@@ -17,10 +17,26 @@ class Scheduling extends SpotOn {
              
     
     public function index() {
+        
+        $state = $this->crud->getState();
+        $storyID = 0;
+        if($state == "edit"){ 
+            $shdId = $this->uri->segment(4);
+            $shd = $this->m->getSchedulingById($shdId);
+            $this->shd = $shd[0];
+            $storyID = $this->shd->story_ID;
+        }
+        
+        $storyList = $this->m->getStory();
+        $this->story = array();
+        foreach ($storyList as $story) {
+            $this->story[$story->story_ID] = $story->story_name;
+        }
+        
         $this->crud->set_table('mst_shd')
                 
         ->where("mst_shd.cpn_ID" , $this->cpnId)
-        ->set_relation('story_ID', 'mst_story', 'story_name')
+//        ->set_relation('story_ID', 'mst_story', 'story_name')
         ->set_subject('Scheduling')
         ->columns("shd_name","story_ID", "shd_start_date", "shd_start_time")
                 
@@ -40,13 +56,32 @@ class Scheduling extends SpotOn {
                 
                 
                 ->callback_field("player_group", array($this, "_player_group"))
+//                ->callback_field("story_ID", array($this, "_story_ID"))
                 ->field_type('shd_ID', 'hidden')
-                
+                ->field_type('story_ID', 'dropdown', $this->story, $storyID)
                 ->display_as('shd_start_time', 'Start Time')
         ->callback_after_insert(array($this,'afterInsert'))
         ->callback_after_update(array($this,'afterInsert'))
         ;
         $this->output();
+    }
+    
+    function _story_ID($value = '', $shd_ID = null, $row = "", $roe= ""){
+//        $result = $this->m->getTerminalGroup();
+//        $resultSelected = $this->m->getTerminalGroupByShdId($shd_ID);
+//        $selectedArray = array();
+//        foreach ($resultSelected as $value) {
+//            $selectedArray[$value->tmn_grp_ID] = $value->tmn_grp_ID;
+//        }
+//        $ret = "<select id='playerGroup' name='player_group[]' multiple='multiple' style='width:500px; display:none;'> " ;
+//            foreach($result as $value) {
+//                $selected = (in_array($value->tmn_grp_ID, $selectedArray) ? "selected='selected'" : "");            
+//                $ret .= "<option value='$value->tmn_grp_ID' $selected> $value->tmn_grp_name </option> ";
+//            }
+//        $ret .= "</select>";
+//        return $ret;
+        
+        return "<select id='field-story_ID'  name='story_ID' class='chosen-select' data-placeholder='Select Story Name' style='width:300px'><option value=''></option><option value='6'  >asf</option><option value='5'  >story</option><option value='1'  >Story 1</option><option value='2'  >Story 2</option><option value='3'  >str</option><option value='4' selected='selected' >str</option></select>";		
     }
     
     function _player_group($value = '', $shd_ID = null, $row = "", $roe= ""){

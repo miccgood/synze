@@ -110,12 +110,17 @@ class spot_on_model extends CI_Model  {
         public function getResolutionByLayoutId($layoutId){
             return $this->db->select("lyt_width, lyt_height")->where("lyt_ID", $layoutId)->get('mst_lyt')->result();
         }
+                
+//        public function selectMedia($where = array(), $select = "cat_ID, media_ID, media_lenght, media_type") {
+//            return $this->db->select($select)->where($where)->get('mst_media')->result();
+//	}
+                        
         public function selectMedia($where = array(), $select = "cat_ID, media_ID, media_lenght, media_type") {
-            return $this->db->select($select)->where($where)->get('mst_media')->result();
+            return $this->db->select($select)->where($this->getWhere($where))->get('mst_media')->result();
 	}
         
-        public function selectCat($cpnId, $select = "cat_ID, cat_name") {
-            return $this->db->select($select)->where("cpn_ID", $cpnId)->get('mst_media_cat')->result();
+        public function selectCat($select = "cat_ID, cat_name") {
+            return $this->db->select($select)->where($this->getWhere())->get('mst_media_cat')->result();
 	}
         
         public function selectTrnPlHasMediaByPlId($plId) {
@@ -166,7 +171,7 @@ class spot_on_model extends CI_Model  {
 	}
         
         public function getStory() {
-            return $this->db->select('*')->get('mst_story')->result();
+            return $this->db->select('*')->where($this->getWhere())->get('mst_story')->result();
 	}
         
         public function getLayout() {
@@ -540,6 +545,9 @@ class spot_on_model extends CI_Model  {
             $this->db->insert("log_item", $set);
         }
         
+        public function updateTerminal($terminal){
+            $this->db->update("mst_tmn", (array)$terminal, array("tmn_ID" => $terminal->tmn_ID) );
+        }
         
         public function getDataForReport($_get){
 //            $genReportBy = $_get["genReportBy"];

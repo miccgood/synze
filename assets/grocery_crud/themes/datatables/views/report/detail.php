@@ -77,14 +77,14 @@
                 <!--<td> from : </td>-->
                 <td colspan="4">
                     from :
-                    <span>
-                        <input id='start_date' name='start_date' type='text' value='1/03/2014' maxlength='10' class='datepicker-input' size="8" style="height: 30px;"/>
-                        <a class='datepicker-input-clear' tabindex='-1' style="margin-right: 20px;">Clear</a>
+                    <span style="margin-right: 30px; ">
+                        <input id='start_date' name='start_date' type='text' value='<?php echo date('01/m/Y'); ?>' maxlength='10' class='datepicker-input' size="8" style="height: 30px;" readonly="readonly"/>
+                        <!--<a class='datepicker-input-clear' tabindex='-1' style="margin-right: 20px;">Clear</a>-->
                     </span>
                     to :
                     <span>
-                        <input id='stop_date' name='stop_date' type='text' value='31/03/2014' maxlength='10' class='datepicker-input' size="8" style="height: 30px;"/>
-                        <a class='datepicker-input-clear' tabindex='-1'>Clear</a>
+                        <input id='stop_date' name='stop_date' type='text' value='<?php echo date(date("t") . '/m/Y'); ?>' maxlength='10' class='datepicker-input' size="8" style="height: 30px;" readonly="readonly"/>
+                        <!--<a class='datepicker-input-clear' tabindex='-1'>Clear</a>-->
                     </span>
                 </td>
             </tr>

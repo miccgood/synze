@@ -638,6 +638,7 @@
             
             clearScreen($_containerId);
             clearRow();
+            $("#inputDuration").val(getFormatTime("0"));
             var $lytId = $(this).val();
             $layout = $_layoutAll[$lytId];
             $_layoutWidth = $layout.lyt_width;
@@ -656,7 +657,7 @@
     
     
     function bindEventPlaylist(){
-        $(".chosen-select").chosen().bind("change", function(e){
+        $(".chosen-select").chosen().not("#selectLayout").bind("change", function(e){
             var $value = $_playlist[$(this).val()];
             var $duration = $value["duration"];
             var $desc = $value["desc"];

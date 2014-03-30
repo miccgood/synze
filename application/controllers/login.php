@@ -27,13 +27,18 @@ class Login extends CI_Controller {
     }
     
     public function logout() {
+        $message_login = $this->session->userdata("message_login");
+        $this->session->set_userdata("message_login", "");
         $this->session->sess_destroy();
-        redirect("login");
+//        redirect("login");
+        $data["error"] = $message_login;
+        $this->load->view('login', $data);
     }
     
     public function index()
     {
-        $data["error"] = "";
+        $message_login = $this->session->userdata("message_login");
+        $data["error"] = $message_login;
         $this->load->view('login', $data);
     }
         

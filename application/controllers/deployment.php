@@ -46,10 +46,16 @@ class Deployment extends SpotOn {
         $dpmId = $this->nullToZero($this->input->get("dpm_id"), $this->session->userdata("edit_dpm_ID"));
         $this->dmp = array();
         $tmnGrpId = 0;
+        $storyID = 0;
         if($state == "edit"){
             $dmp = $this->m->getDeploymentById($dpmId);
             $this->dmp = $dmp[0];
             $tmnGrpId = $this->dmp->tmn_grp_ID;
+            
+            $shdId = $this->dmp->shd_ID;
+            $shd = $this->m->getSchedulingById($shdId);
+            $this->shd = $shd[0];
+            $storyID = $this->shd->story_ID;
         }
         
         $terminalGroupList = $this->m->getTerminalGroup();
@@ -58,10 +64,17 @@ class Deployment extends SpotOn {
             $this->terminalGroup[$terminalGroup->tmn_grp_ID] = $terminalGroup->tmn_grp_name;
         }
         
+        
+        $storyList = $this->m->getStory();
+        $this->story = array();
+        foreach ($storyList as $story) {
+            $this->story[$story->story_ID] = $story->story_name;
+        }
+        
         $this->crud->set_table('mst_shd')
                 
         ->where("mst_shd.cpn_ID" , $this->cpnId)
-        ->set_relation('story_ID', 'mst_story', 'story_name')     
+//        ->set_relation('story_ID', 'mst_story', 'story_name')     
         ->set_subject('Scheduling')
         ->columns("shd_name","story_ID", "shd_start_date", "shd_start_time")
                 
@@ -84,6 +97,7 @@ class Deployment extends SpotOn {
                 ->field_type('shd_ID', 'hidden')
                 ->field_type('dpm_ID', 'hidden', $dpmId)
                 ->field_type('player_group', 'dropdown', $this->terminalGroup, $tmnGrpId)
+                ->field_type('story_ID', 'dropdown', $this->story, $storyID)
                 ->display_as('shd_start_time', 'Start Time')
         ->callback_after_insert(array($this,'afterInsert'))
         ->callback_after_update(array($this,'afterInsert'))

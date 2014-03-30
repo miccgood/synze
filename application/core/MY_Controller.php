@@ -31,6 +31,7 @@ class SpotOn extends CI_Controller {
         
         
         if($this->nullToZero($this->cpnId) == 0 || $this->nullToZero($this->userId) == 0){
+            $this->session->set_userdata("message_login", "Company Id Wrong");
             redirect("login/logout");
         }else{
             $this->m->setCpnId($this->cpnId);

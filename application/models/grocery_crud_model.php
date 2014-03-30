@@ -387,6 +387,13 @@ class grocery_CRUD_Model  extends CI_Model  {
     	$selection_primary_key = $this->get_primary_key($field_info->selection_table);
         if(!$use_template)
         	$this->db->order_by("{$field_info->selection_table}.{$field_info->title_field_selection_table}");
+                
+        // add by momo
+        foreach ($field_info->custom_order_by as $value) {
+            $this->db->order_by($value);
+        }
+            
+        // -- 
         $results = $this->db->get($field_info->selection_table)->result();
 
         $results_array = array();
