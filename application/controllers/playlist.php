@@ -25,19 +25,16 @@ class PlayList extends SpotOn {
         
         $this->detail("Clone");
         
-//        $plId = $this->url->segment(4);
-//        $playlistDaoList = $this->m->getPlaylistById($plId);
-//        $playlist = $playlistDaoList[0];
-//        
-//        $mediaXmlList = array();
-//        foreach ($mediaDaoList as $value) {
-//            $mediaXmlList[$value->media_ID] = array("cat_ID" => $value->cat_ID, 
-//                                                    "lenght" => $value->media_lenght / 1000,
-//                                                    "type" => $value->media_type);
-//        }
-//
-//        $mediaXmlList = json_encode($mediaXmlList);
-//        $this->crud->appendCustomScript();
+        $plId = $this->url->segment(4);
+        $playlistDaoList = $this->m->getPlaylistById($plId);
+//        $playlistDao = $playlistDaoList[0];
+        //
+        $playlistXmlList = array();
+        foreach ($playlistDaoList as $value) {
+            $playlistXmlList[$value->pl_ID] = $value;
+        }
+        
+        $this->crud->appendCustomScript("var = " . json_encode($playlistXmlList) . "; ");
 //       
         $this->output();
     }
