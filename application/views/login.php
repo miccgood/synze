@@ -90,7 +90,7 @@
                     var $this = $(this);
                     if($this.val() === ""){
                         var $error = $("#"+$this.attr("name"));
-                        $error.show().find("span").html("This Field is Require");
+                        $error.fadeIn(1000).find("span").html("This Field is Require").delay(3000).fadeOut(1000);
                         $this.focus();
                         event.preventDefault();
                         return;
@@ -102,6 +102,7 @@
             
             $("[name=user]").focus();
             
+            $("#errorMessage").fadeIn(1000).delay(3000).fadeOut(1000);
         });
         </script>
   
@@ -143,7 +144,7 @@
                     </tr>
                     
                     <tr>
-                        <td align="center" colspan="2">
+                        <td align="center" colspan="2" id="errorMessage">
                             <h3 style="color:red;"><?php echo $error;?> </h3>
                         </td>
                     </tr>

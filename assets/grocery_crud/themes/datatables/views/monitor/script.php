@@ -136,18 +136,18 @@ $setInterval = $ci->setInterval;
         return $color;
     }
     
-    function getColor($active, $id){
-        var $color = "#cccccc";
-        if($active != null && $active == 1){
-            $.each(uploadStatusColor , function ($index, $value){
-                if($index == $id){
-                    $color = $value;
-                    return;
-                }
-            });
-        }  
-        return $color;
-    }
+//    function getColor($active, $id){
+//        var $color = "#cccccc";
+//        if($active != null && $active == 1){
+//            $.each(uploadStatusColor , function ($index, $value){
+//                if($index == $id){
+//                    $color = $value;
+//                    return;
+//                }
+//            });
+//        }  
+//        return $color;
+//    }
     
 //    function getStatusMessage(value){
 //        var $id = value.tmn_status_id;

@@ -21,10 +21,10 @@ class Monitor extends SpotOn {
         
         $ids = $post["monitorIds"];
         
-        require_once 'test.php';
-//        
-        $test = new Test();
-        $test->index();
+//        require_once 'test.php';
+////        
+//        $test = new Test();
+//        $test->index();
         
         
         $result = $this->m->getTerminalStatusInIds($ids);
@@ -86,26 +86,7 @@ class Monitor extends SpotOn {
         $message = $row->tmn_status_upload_message;
         $active = $row->tmn_monitor;
 
-        $color = "#cccccc";
-        
-        if($active != null && $active == 1){
-            switch ($value) {
-                case 1:
-                    $color = "red";
-                    break;
-                case 2:
-                    $color = "yellow";
-                    break;
-                case 3:
-                    $color = "green";
-                    break;
-
-                default:
-                    $color = "red";
-                    break;
-            }
-        }  
-            
+        $color = $this->getColor($active, $value, "uploadStatusColor");
             
         if($message == null || $active == null || $active != 1){
             return '<div id="border-circle" >'
@@ -122,26 +103,7 @@ class Monitor extends SpotOn {
         $message = $row->tmn_status_message;
         $active = $row->tmn_monitor;
 
-        $color = "#cccccc";
-        
-        if($active != null && $active == 1){
-            switch ($value) {
-                case 1:
-                    $color = "red";
-                    break;
-                case 2:
-                    $color = "yellow";
-                    break;
-                case 3:
-                    $color = "green";
-                    break;
-
-                default:
-                    $color = "red";
-                    break;
-            }
-        }  
-            
+        $color = $this->getColor($active, $value, "statusColor");
             
          if($message == null || $active == null || $active != 1){
             return '<div id="border-circle" >'
@@ -153,6 +115,21 @@ class Monitor extends SpotOn {
         }
         
         
+    }
+    
+    private function getColor($active, $id, $arrayStatus){
+        
+        $color = "#cccccc";
+        
+        if($active != null && $active == 1){
+            foreach ($this->monitor[$arrayStatus] as $key => $value) {
+                if($id == $key){
+                    $color = $value;
+                    break;
+                }
+            }
+        }  
+        return $color;
     }
     function callbackTmnGrpName($value = '', $primary_key = null)
     {
