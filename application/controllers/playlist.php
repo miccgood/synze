@@ -21,22 +21,28 @@ class PlayList extends SpotOn {
     }
     
     
-    public function fclone() {
+    public function cloning() {
+         //array
+        $post = $this->input->post();
+        $playlist = $post["playlist"];
+        $playlist["pl_lenght"] = $this->getDuration($playlist["pl_lenght"]);
+        $playlist["pl_expired"] = date("YmdHis", strtotime($playlist["pl_expired"]));
         
-        $this->detail("Clone");
+        $playlist["create_date"] = date("YmdHis", time());
+        $playlist["create_by"] = $this->userId;
+        $playlist["update_date"] = date("YmdHis", time());
+        $playlist["update_by"] = $this->userId;
         
-        $plId = $this->url->segment(4);
-        $playlistDaoList = $this->m->getPlaylistById($plId);
-//        $playlistDao = $playlistDaoList[0];
-        //
-        $playlistXmlList = array();
-        foreach ($playlistDaoList as $value) {
-            $playlistXmlList[$value->pl_ID] = $value;
+        $playlistId = $this->m->insertPlaylist($this->setDefaultValue($playlist));
+        
+        $ret = array("success" => false);
+        if($this->nullToZero($playlistId) != "0"){
+            $this->m->insertPlaylistItem($playlistId, $post["media"]);
+            $ret = array("success" => true, "pl_ID" => $playlistId);
         }
         
-        $this->crud->appendCustomScript("var = " . json_encode($playlistXmlList) . "; ");
-//       
-        $this->output();
+        
+        echo json_encode($ret);
     }
     
     public function index() {
@@ -55,13 +61,8 @@ class PlayList extends SpotOn {
         $post = parent::clearBeforeInsertAndUpdate($post);
         $post = parent::setDefaultValue($post);
         
-        $string = $post["pl_lenght"];
-        $arr = explode(":", $string);
-        $count = $arr[0] * 3600 + $arr[1] * 60 + $arr[2];
-        
-        $post["pl_lenght"] = $count;
+        $post["pl_lenght"] = $this->getDuration($post["pl_lenght"]);
                 
-        
          return $post;
      }
      
@@ -69,6 +70,10 @@ class PlayList extends SpotOn {
          $this->m->insertPlaylistItem($playlistId, $this->mediaTemp);
      }
      
+     private function getDuration($string){
+        $arr = explode(":", $string);
+        return $arr[0] * 3600 + $arr[1] * 60 + $arr[2];
+     } 
     public function _beforeDelete($primary_key) {
         return $this->m->checkDeletePlaylist($primary_key);
     }

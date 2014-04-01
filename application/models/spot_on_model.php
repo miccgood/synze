@@ -288,6 +288,12 @@ class spot_on_model extends CI_Model  {
             return $ret;
 	}
         
+        public function insertPlaylist($playlist) {
+            $playlist["cpn_ID"] = $this->cpnId;
+            $this->db->insert("mst_pl", $playlist);
+            return $this->db->insert_id();
+	}
+        
         public function insertPlaylistItem($playlistId, $playlistItem) {
             $count = 1;
             foreach ($playlistItem as $value) {

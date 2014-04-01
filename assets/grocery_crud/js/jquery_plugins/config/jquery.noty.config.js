@@ -23,7 +23,7 @@ function error_message(error_message)
 		  text: error_message,
 		  type: 'error',
 		  layout: 'top',
-                  timeout: 3000,
+                  timeout: 2000,
 		  dismissQueue: true
 	});
 }

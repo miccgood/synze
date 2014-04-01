@@ -237,6 +237,15 @@
         return arrayToObject($story);
     }
     
+//    function arrayToObject($ret){
+//        var jObject={};
+//        for(var i = 0 ; i < $ret.length ; i++)
+//        {
+//            jObject[i] = $ret[i];
+//        }
+//        return  jObject;
+//    }
+//    
     function arrayToObject($ret){
         var jObject={};
         for(i in $ret)

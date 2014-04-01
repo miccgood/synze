@@ -53,6 +53,9 @@
 			<div id='report-success' class='report-div success'></div>
 		</div>
 		<div class='buttons-box'>
+                        <div class='form-button-box'>
+				<input  id="form-button-clone" type='button' value='Clone' class='ui-input-button' />
+			</div>
 			<div class='form-button-box'>
 				<input  id="form-button-save" type='submit' value='<?php echo $this->l('form_update_changes'); ?>' class='ui-input-button' />
 			</div>
@@ -81,3 +84,107 @@
 </script>
 
 <?php include 'scriptMedia.php';?>
+
+
+
+<script type="text/javascript">
+    $(function(){
+        $("#form-button-clone").unbind().bind("click", function(){
+            if(!validate()){
+//                alert("validate Error");
+                return false;;
+            }
+            var url = "<?php echo base_url('index.php/playlist/cloning'); ?>";
+            var dataToBeSent = new Array();
+             
+            dataToBeSent["playlist"] = getPlaylistFromPage();
+            dataToBeSent["media"] = $("#field-Media").val();
+//            dataToBeSent["storyItem"] = getDataFromTable();
+//            var data = { name: "John", location: "Boston" };
+
+            dataToBeSent = arrayToObject(dataToBeSent);
+            
+            $("#FormLoading").show();
+            $.post(url, dataToBeSent, function(data, textStatus) {
+               console.log( "success" );
+              }, "json")
+            .done(function(data) {
+                
+                form_success_message("<p>Your data has been successfully Clone. into the database. <a href='<?php echo base_url("index.php/playlist/index/edit");?>/" + data.pl_ID + " '>Edit Playlist</a> or <a href='<?php echo base_url("index.php/playlist");?>'>Go back to list</a></p>") ;
+//                $("#report-success").fadeIn(1000).delay(3000).fadeOut(1000);
+//                location.reload();
+            })
+            .fail(function(data) {
+                form_error_message(data);
+//                $("#report-error").fadeIn(1000).delay(3000).fadeOut(1000);
+            })
+            .always(function() {
+                $("#FormLoading").hide();
+                console.log( "complete" );
+            });
+        });
+    });
+    
+    function validate(){
+        
+        
+        var storyNameId = "#storyName";
+        var selectLayoutId = "#selectLayout";
+        var message = "";
+        var ret = true;
+        $(storyNameId + ', ' + selectLayoutId).removeClass('field_error');
+        
+        var $storyName = $(storyNameId).val();
+        
+        if($storyName === null || $storyName === ""){
+//            $("#storyName").focus().css({'border-color': "red"});
+            
+            $(storyNameId).addClass('field_error');
+            message += "<p>The Story Name field is required.</p>";
+            ret = false;
+        }
+        var $selectLayout = $(selectLayoutId).val();
+        
+        if($selectLayout === null || $selectLayout === "" || $selectLayout === "0"){
+            $(selectLayoutId).addClass('field_error');//$("#selectLayout").focus().css('border-color', "red");
+            message += "<p>The Layout field is required.</p>";
+            ret = false;
+        }
+        
+        if(!ret){
+            form_error_message(message);
+        }
+        
+        return ret;
+    }
+    
+    function getPlaylistFromPage(){
+        var $playlist = new Array();
+        $playlist["pl_name"] = $("#field-pl_name").val();
+        $playlist["pl_desc"] = $("#field-pl_desc").val();
+        $playlist["pl_lenght"] = $("#field-pl_lenght").val();
+        $playlist["pl_usage"] = $("#field-pl_usage").val();
+        $playlist["pl_type"] = $("#field-pl_type").val();
+        $playlist["pl_expired"] = $("#field-pl_expired").val();
+        return arrayToObject($playlist);
+    }
+    
+//    function arrayToObject($ret){
+//        var jObject={};
+//        for(var i = 0 ; i < $ret.length ; i++)
+//        {
+//            jObject[i] = $ret[i];
+//        }
+//        return  jObject;
+//    }
+    
+    function arrayToObject($ret){
+        var jObject={};
+        for(var i in $ret)
+        {
+            jObject[i] = $ret[i];
+        }
+        return  jObject;
+    }
+</script>
+

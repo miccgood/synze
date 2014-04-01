@@ -182,6 +182,9 @@ class Media extends SpotOn {
                 //path ไฟล์จริงใน server
                 $media_path = $this->getMediaPath($file_name);
             } while (file_exists($media_path));
+            
+            $files_to_insert["media_filename"] = $file_name;
+            $files_to_insert["media_path"] = trim($this->media['text_url'], "/")."/" .$file_name;
         }else if($state === "update"){
             $media_path = $this->getMediaPath($files_to_insert["media_filename"]);
         }
@@ -191,8 +194,8 @@ class Media extends SpotOn {
         
         file_put_contents($media_path, $writeDate, LOCK_EX);
 
-        $files_to_insert["media_filename"] = $file_name;
-        $files_to_insert["media_path"] = trim($this->media['text_url'], "/")."/" .$file_name;
+        
+        
         $files_to_insert["media_size"] = filesize($media_path);
         $files_to_insert["media_checksum"] = md5_file($media_path);
         return $files_to_insert;
