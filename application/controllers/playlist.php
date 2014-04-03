@@ -5,7 +5,9 @@ class PlayList extends SpotOn {
     
     function __construct() {
         parent::__construct();
-        $this->indexArray = array("Media", "media_temp", "mediaTemp", "event");
+        $this->indexArray = array("Media", "media_temp", "mediaTemp", "event", "autoCreateStory");
+        $this->config->load('playlist', true);
+        $this->playlist = $this->config->item('playlist');
     }
     
     public function getPlaylistType(){
@@ -54,8 +56,16 @@ class PlayList extends SpotOn {
     function _pl_usage($value = "" , $pk = "", $row = "" , $rows = "") {
         return "<div id='progressbar' style='display:none;'><div class='progress-label'>$value</div></div> <input type='hidden' name='pl_usage' id='field-pl_usage' value='$value'/>";
     }
+    
+    function _autoCreateStory($value = "" , $pk = "", $row = "" , $rows = "") {
+        if($row->crud_type == "hidden"){
+            return "";
+        }
+        return "<input type='checkbox' name='autoCreateStory' style='margin:5px;'/>";
+    }
      
     function clearBeforeInsertAndUpdate($post) {
+        $this->autoCreateStory = $post["autoCreateStory"];
         $this->mediaTemp = split(",", trim($post["media_temp"], ","));
         
         $post = parent::clearBeforeInsertAndUpdate($post);
@@ -68,6 +78,56 @@ class PlayList extends SpotOn {
      
      function afterInsert($playlist , $playlistId){
          $this->m->insertPlaylistItem($playlistId, $this->mediaTemp);
+         if($this->autoCreateStory != null){
+             $this->autoCreateStory($playlistId, $playlist["pl_name"]);
+         }
+     }
+     
+     private function autoCreateStory($playlistId, $playListname){
+         $resolution = $this->playlist["default_layout_resolution"];
+         
+         $layout = $this->createLayout($playListname, $resolution);
+         $layoutId = $this->m->insertLayout($layout);
+         
+         $display = $this->createDisplay($playListname, $resolution, $layoutId);
+         $displayId = $this->m->insertDisplay($display);
+         
+         $story = $this->createStory($playListname, $layoutId);
+         $storyId = $this->m->insertStory($story);
+         
+         $this->m->insertStoryItem($storyId, $displayId, $playlistId);
+         
+         
+     }
+     
+     private function createLayout($name, $resolution){
+        $width = $resolution["width"];
+        $height = $resolution["height"];
+        $layout = array("lyt_name" => $name,
+                        "lyt_width" => $width,
+                        "lyt_height" => $height,
+                        "cpn_ID" => $this->cpnId
+                        );
+        return $this->setDefaultValue($layout, "insert");
+     }
+     
+     private function createStory($name, $layoutId){
+        $story = array("story_name" => $name,
+                        "lyt_ID" => $layoutId,
+                        "cpn_ID" => $this->cpnId
+                        );
+        return $this->setDefaultValue($story, "insert");
+     }
+     
+     private function createDisplay($name, $resolution, $layoutId){
+         return array("dsp_name" => $name,
+                        "dsp_left" => "0",
+                        "dsp_top" => "0",
+                        "dsp_width" => $resolution["width"],
+                        "dsp_height" => $resolution["width"],
+                        "dsp_zindex" => '1',
+                        "lyt_ID" => $layoutId
+                        );
      }
      
      private function getDuration($string){
@@ -98,17 +158,20 @@ class PlayList extends SpotOn {
         ->display_as('Media', 'Media') 
         ->display_as('pl_type', 'Playlist Type') 
         ->display_as('pl_expired', 'Expired Date')                 
+        ->display_as('autoCreateStory', 'Auto Create Story')                 
                 
         ->required_fields("pl_name", 'pl_lenght', "pl_type", "pl_expired")
                     
 
         ->fields('pl_ID', 'pl_name', 'pl_desc', 'pl_lenght', 'pl_usage', 'pl_type', 'pl_expired', 
-                'Media', "media_temp", "page", "cpn_ID", "event",
+                'Media', "autoCreateStory", "media_temp", "page", "cpn_ID", "event",
                 "create_date", "create_by", "update_date", "update_by")
+                
         ->field_type("pl_ID", "hidden") 
         ->field_type("media_temp", "hidden")    
         ->field_type("event", "hidden") 
         ->callback_field("pl_usage", array($this, "_pl_usage")) 
+        ->callback_field("autoCreateStory", array($this, "_autoCreateStory")) 
         ->callback_after_insert(array($this, "afterInsert"))
         ->callback_after_update(array($this, "afterInsert"))
 //        ->add_action('Clone', '', 'demo/action_more','ui-icon-document', array($this,'_clone'))
@@ -116,6 +179,10 @@ class PlayList extends SpotOn {
         
         
         $state = $this->crud->getState();
+        if($state !== "add"){
+            $this->crud->field_type("autoCreateStory", "hidden") ;
+        }
+        
         if($state === "add" || $state === "edit"){
             
 //            $where = array("media_type" => $playlist_type);

@@ -101,9 +101,10 @@ class SpotOn extends CI_Controller {
         return ($param === FALSE || $param === NULL || $param === "" ? $ret : $param);
     }
     
-    protected function setDefaultValue($array) {
+    protected function setDefaultValue($array, $mode = null) {
         
-        $state = $this->crud->getState();
+        $state = ($mode != null ? $mode : $this->crud->getState());
+        
         switch ($state) {
             case "insert":
                 $array["create_date"] = date("YmdHis", time());

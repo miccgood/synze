@@ -30,6 +30,14 @@ class Media extends SpotOn {
             $this->session->set_userdata("cat_id",$cat_id);
         }
         
+        
+//        $mediaGroupList = $this->m->selectCat();
+//        $this->mediaGroup = array();
+//        foreach ($mediaGroupList as $mediaGroup) {
+//            $this->mediaGroup[$mediaGroup->cat_ID] = $mediaGroup->cat_name;
+//        }
+        
+        
         $cat = $this->m->selectCat("*");
         $catigory = array();
         foreach ($cat as $key => $value) {
@@ -38,11 +46,11 @@ class Media extends SpotOn {
         $this->crud->set_table('mst_media')
             ->where("mst_media.cpn_ID" , $this->cpnId)
             ->order_by("media_name", "DESC")
-            ->set_relation("cat_ID", "mst_media_cat", "cat_name")
+            ->set_relation("cat_id", "mst_media_cat", "cat_name")
             ->set_subject('Media')
-            ->columns('cat_ID', 'media_name', 'media_type', 'media_filename', 'media_size', 'media_lenght')
+            ->columns('cat_id', 'media_name', 'media_type', 'media_filename', 'media_size', 'media_lenght')
                  
-            ->display_as('cat_ID', 'Group')
+            ->display_as('cat_id', 'Group')
             ->display_as('media_name', 'Name')
             ->display_as('media_type', 'Type')
             ->display_as('media_path', 'Path File')
@@ -58,7 +66,7 @@ class Media extends SpotOn {
                 'media_size', 
                 'media_lenght', 
                 'media_expire', 
-                'cat_ID', 
+                'cat_id', 
                 'media_path', 
                 "page", 
                 'media_checksum', 
@@ -69,13 +77,14 @@ class Media extends SpotOn {
                 "create_date", "create_by", "update_date", "update_by"
                 )
                 
-                
+               
 //        ->field_type("media_filename_temp", "readonly")
 //        ->field_type("cpn_ID", "hidden", $this->cpnId)
         ->field_type("media_path", "hidden")
         ->field_type("media_checksum", "hidden")
         ->field_type("media_lenght", "integer")     
-//        ->field_type("cat_id", "dropdown", $catigory, $cat_id)
+//        ->field_type('cat_ID', 'dropdown', $this->mediaGroup, $this->nullToZero($cat_id))
+        ->field_type("cat_id", "dropdown", $catigory, $cat_id)
         ->field_type('text_input', 'text')      
         ->required_fields("media_filename", 'media_name', "media_filename_temp", "media_expire", "media_lenght", 'media_type', 'cat_ID')
 

@@ -73,7 +73,13 @@ class spot_on_model extends CI_Model  {
         public function deleteStoryItem($storyId){
             return $this->db->delete("trn_dsp_has_pl", array("story_ID" => $storyId));
         }
-        
+        public function insertLayout($layout){
+            $this->db->trans_start();
+            $this->db->insert("mst_lyt", $layout);
+            $insert_id = $this->db->insert_id();
+            $this->db->trans_complete();
+            return $insert_id;
+        }
         public function insertStory($story){
             
             $this->setDefaltCreateRow($story);
@@ -102,7 +108,11 @@ class spot_on_model extends CI_Model  {
         
         
         public function insertDisplay($data){
-            return $this->db->insert("mst_dsp", $data);
+            $this->db->trans_start();
+            $this->db->insert("mst_dsp", $data);
+            $insert_id = $this->db->insert_id();
+            $this->db->trans_complete();
+            return $insert_id;
         }
         public function updateDisplay($data){
             return $this->db->where("dsp_ID", $data["dsp_ID"])->update("mst_dsp", $data);

@@ -1,8 +1,5 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+$config["default_layout_resolution"] = array("width" => "1920", 
+                                      "height" => "1080");
 
