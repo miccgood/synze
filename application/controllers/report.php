@@ -8,19 +8,19 @@ class Report extends SpotOnReport {
     function __construct() {
         parent::__construct();
     }
-    
-    function countTerminal($value, $row) {
-        
-        
-        $E = @$this->db->query('select count(tmn_id) as result from mst_tmn where tmn_grp_ID = ?', array($row->tmn_grp_ID))->row()->result;
-        return ($E) ? (string) $E : '0'; // or: return ($E) ? (string) $E : '~empty~';
-    }
+//    
+//    function countTerminal($value, $row) {
+//        
+//        
+//        $E = @$this->db->query('select count(tmn_id) as result from mst_tmn where tmn_grp_ID = ?', array($row->tmn_grp_ID))->row()->result;
+//        return ($E) ? (string) $E : '0'; // or: return ($E) ? (string) $E : '~empty~';
+//    }
 
     function getData(){
         $_get = $this->input->get();
         
         $data["data"] = $this->m->getDataForReport($_get);
-        $this->countPlayerAndsumDuration($data);
+//        $this->countPlayerAndsumDuration($data);
         return $data;
     } 
     
@@ -28,6 +28,8 @@ class Report extends SpotOnReport {
         $_get = $this->input->get();
         
         $data = $this->getData();
+        
+        $this->countPlayerAndsumDuration($data);
         $genBy = $_get["genReportBy"];
         
         
@@ -80,7 +82,7 @@ class Report extends SpotOnReport {
             $valuePrint["countMedia"] = count($this->countMedia[$this->getValueFromObj($obj, "media_ID")]);
             $valuePrint["sumDurationMedia"] = $this->getValueFromArray($this->sumDurationMedia, $key);
             
-            $valuePrint["companyLink"] = $this->nullToZero($companyLink, "");;
+            $valuePrint["companyLink"] = $this->nullToZero($companyLink, "");
             
             $page = ($genBy == 1 ? "player" : "media");
             $this->load->view('pdf/'. $page, $valuePrint);
@@ -182,7 +184,14 @@ class Report extends SpotOnReport {
         }
         return $tmp;
     }
-            
+           
+    private function getSheetName($name){
+//        $ext = pathinfo($name, PATHINFO_EXTENSION);
+//        $name = str_replace($ext, "", $name);
+//        
+        $length = strlen($name) ;
+        return ($length > 31 ? substr($name, 0, 31) : $name);
+    }
             
     function preview(){
         $this->genReport();
@@ -301,13 +310,13 @@ class Report extends SpotOnReport {
         
         $workSheet->getColumnDimension('A')->setWidth(5);
         $workSheet->getColumnDimension('B')->setWidth(13);
-        $workSheet->getColumnDimension('C')->setWidth(5);
+        $workSheet->getColumnDimension('C')->setWidth(7);
         $workSheet->getColumnDimension('D')->setWidth(13);
         $workSheet->getColumnDimension('E')->setWidth(6);
         $workSheet->getColumnDimension('F')->setWidth(10);
         $workSheet->getColumnDimension('G')->setWidth(10);
         
-        $workSheet->setTitle($valuePrint["mediaName"]);
+        $workSheet->setTitle($this->getSheetName($valuePrint["mediaName"]));
         
         $workSheet->mergeCells('A1:B4')->getStyle(
             'A1:B4'
@@ -390,7 +399,7 @@ class Report extends SpotOnReport {
     private function headerPlayer($workSheet, $valuePrint, $key){
         $workSheet->getColumnDimension('A')->setWidth(5);
         $workSheet->getColumnDimension('B')->setWidth(13);
-        $workSheet->getColumnDimension('C')->setWidth(5);
+        $workSheet->getColumnDimension('C')->setWidth(7);
         $workSheet->getColumnDimension('D')->setWidth(13);
         $workSheet->getColumnDimension('E')->setWidth(6);
         $workSheet->getColumnDimension('F')->setWidth(10);
@@ -400,7 +409,7 @@ class Report extends SpotOnReport {
 //        $workSheet->getColumnDimension('E')->setWidth(5);
 //        $workSheet->getColumnDimension('F')->setWidth(5);
         
-        $workSheet->setTitle($valuePrint["tmnName"]);
+        $workSheet->setTitle($this->getSheetName($valuePrint["tmnName"]));
         
         $workSheet->mergeCells('A1:B4')->getStyle(
             'A1:B4'
@@ -705,7 +714,7 @@ class Report extends SpotOnReport {
     
     function pdf(){
 //        'F', $filename = "report.pdf"
-        $this->genReport('F', "report.pdf");
+        $this->genReport('D', "report.pdf");
 //        echo json_encode("pdf");
     } 
     
@@ -798,26 +807,6 @@ class Report extends SpotOnReport {
     
     private function getArray($input){
         return ($input == null) ? array() : $input;
-    }
-    
-    private function getValueFromObj($obj, $attr){
-        if($obj != null){
-            if(property_exists($obj, $attr)){
-                return $obj->$attr;
-            }
-            return NULL;
-        }
-        return NULL;
-    }
-    
-    private function getValueFromArray($obj, $attr){
-        if($obj != null){
-            if(array_key_exists($attr, $obj)){
-                return $obj[$attr];
-            }
-            return NULL;
-        }
-        return NULL;
     }
     
 }

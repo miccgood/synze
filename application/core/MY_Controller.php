@@ -139,6 +139,27 @@ class SpotOn extends CI_Controller {
         $pk = $primary_key;
         return false;
     }
+    
+    public function getValueFromObj($obj, $attr){
+        if($obj != null){
+            if(property_exists($obj, $attr)){
+                return $obj->$attr;
+            }
+            return NULL;
+        }
+        return NULL;
+    }
+    
+    public function getValueFromArray($obj, $attr){
+        if($obj != null){
+            if(array_key_exists($attr, $obj)){
+                return $obj[$attr];
+            }
+            return NULL;
+        }
+        return NULL;
+    }
+    
 }
 
 

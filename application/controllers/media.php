@@ -10,16 +10,15 @@ class Media extends SpotOn {
     }
     
     private function getCatId() {
-        $index = 'cat_id';
-        $lyt_id = $this->input->get($index);
-        $session_lyt_id = $this->session->userdata($index);
-        if($lyt_id != null){
-            return $lyt_id;
-        }else if($session_lyt_id != null){
-            return $session_lyt_id;
+//        $index = 'cat_id';
+        $mediaId = $this->uri->segment(4);
+        if($this->nullToZero($mediaId) != "0"){
+            $media = $this->m->getMediaById($mediaId);
+            foreach ($media as $key => $value) {
+                return $this->getValueFromObj($value, "cat_ID");
+            }
         }
-        return false ;
-        
+        return NULL;
     }
             
     function index() {
@@ -86,7 +85,7 @@ class Media extends SpotOn {
 //        ->field_type('cat_ID', 'dropdown', $this->mediaGroup, $this->nullToZero($cat_id))
         ->field_type("cat_id", "dropdown", $catigory, $cat_id)
         ->field_type('text_input', 'text')      
-        ->required_fields("media_filename", 'media_name', "media_filename_temp", "media_expire", "media_lenght", 'media_type', 'cat_ID')
+        ->required_fields("media_filename", 'media_name', "media_filename_temp", "media_expire", "media_lenght", 'media_type', 'cat_id')
 
         ->set_field_upload('media_filename', 'assets/uploads/media')
         ->callback_before_upload(array($this, 'callbackBeforeUpload'))
@@ -95,6 +94,8 @@ class Media extends SpotOn {
         ->callback_field('media_filename_temp',array($this,'_media_filename_temp'))
         ->callback_field('text_input',array($this,'_text_input'))
         ->callback_column('media_lenght',array($this,'_media_lenght'))
+        ->callback_column('media_filename',array($this,'_media_filename'))        
+                
         
 //        ->callback_before_insert(array($this, 'callbackBeforeInsert'))     
 //        ->callback_before_update(array($this, 'callbackBeforeUpdate'))
@@ -122,6 +123,10 @@ class Media extends SpotOn {
 
     function _media_lenght($value = "", $field_info = "" , $file = null, $row = null){
         return $value / 1000;
+    }
+    
+    function _media_filename($value = "", $field_info = "" , $file = null, $row = null){
+        return "<a href='$field_info->media_path'>$value</a>";
     }
     
     function _media_filename_temp($value = "", $field_info = "" , $file = null, $row = null){

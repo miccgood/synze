@@ -180,14 +180,14 @@
         return arrayToString($ret);
     }
 
-    function arrayToObject($ret){
-        var jObject={};
-        for(var i = 0 ; i < $ret.length ; i++)
-        {
-            jObject[i] = $ret[i];
-        }
-        return  jObject;
-    }
+//    function arrayToObject($ret){
+//        var jObject={};
+//        for(var i = 0 ; i < $ret.length ; i++)
+//        {
+//            jObject[i] = $ret[i];
+//        }
+//        return  jObject;
+//    }
 //    
     function arrayToObject($ret){
         var jObject={};
@@ -198,13 +198,13 @@
         return  jObject;
     }
 
-//    function arrayToString($ret){
-//        var jSring=""
-//        for(var i in $ret)
-//        {
-//            jSring  += i + "=" + $ret[i] + "&";
-//        }
-//        return  jSring;
-//    }
+    function arrayToString($ret){
+        var jSring=""
+        for(var i in $ret)
+        {
+            jSring  += i + "=" + $ret[i] + "&";
+        }
+        return  jSring;
+    }
 
 </script>

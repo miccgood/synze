@@ -6,6 +6,15 @@ class Programmer extends SpotOn {
         parent::__construct();
     }
     
+    public function alter() {
+        $this->m->alter("ALTER TABLE `synze25561212`.`mst_pl` 
+        ADD COLUMN `pl_type` ENUM('video','image','scrolling text') NULL DEFAULT 'video' AFTER `update_date`,
+        ADD COLUMN `pl_expired` DATE NULL AFTER `pl_type`;
+
+        ALTER TABLE `synze25561212`.`mst_media` 
+        CHANGE COLUMN `media_type` `media_type` ENUM('video','image','scrolling text') NULL DEFAULT 'video' ;");
+    }
+    
     public function index() {
         
 //        $this->genLog();

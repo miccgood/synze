@@ -32,8 +32,16 @@
             /*border-collapse:collapse;*/   
     }
     
+    td {
+        word-wrap:break-word;
+    }
+    
+    .border-none tr td{
+        border: none;
+    }
+    
 </style>
-<table border="0" style="width:650px;">
+<table style="width:650px;"  class="border-none">
     <tbody>
         <tr>
             <td rowspan="3" style="width:100px; border: 1px;"><div style="background-color:#eee;border: 1px solid #888; width: 100%; height: 100px;"></div></td>
@@ -55,7 +63,7 @@
 </table>
 
 <hr/>
-<table border="0" style="width:650px;">
+<table style="width:650px;" class="border-none">
     <tbody>
         <tr>
             <td colspan="2"> Summary </td>
@@ -121,7 +129,7 @@
                     <td> <?php echo $value->tmn_name ;?></td>
                     <td style="text-align: center;"> <?php echo $value->start_time ;?></td>
                     <td style="text-align: center;"> <?php echo $value->stop_time ;?></td>
-                    <td style="text-align: center;"> 0 </td>
+                    <td style="text-align: center;"> <?php echo $value->duration; ?> </td>
                     <td> <?php echo $value->pl_name ;?></td>
                     <td> <?php echo $value->dsp_name ;?></td>
                     <td> <?php  echo  $value->story_name ;?></td>

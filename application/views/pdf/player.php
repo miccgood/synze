@@ -143,7 +143,7 @@
                     <!--<td> <?php echo $value->tmn_name ;?></td>-->
                     <td style="text-align: center;"> <?php echo $value->start_time ;?></td>
                     <td style="text-align: center;"> <?php echo $value->stop_time ;?></td>
-                    <td style="text-align: center;"> 0 </td>
+                    <td style="text-align: center;">  <?php echo $value->duration; ?> </td>
                     <td> <?php echo $value->pl_name ;?></td>
                     <td> <?php echo $value->dsp_name ;?></td>
                     <td> <?php  echo  $value->story_name ;?></td>

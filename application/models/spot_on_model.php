@@ -27,6 +27,7 @@
  * @version    	1.2
  * @link		http://www.grocerycrud.com/documentation
  */
+
 class spot_on_model extends CI_Model  {
     
         private  $query_str = ''; 
@@ -34,6 +35,10 @@ class spot_on_model extends CI_Model  {
 	function __construct() {
 		parent::__construct();
 	}
+        
+        public function alter($sql){
+            $this->db->query($sql);
+        }
         
         public function setCpnId($cpn_ID){
             $this->cpnId = $cpn_ID;
