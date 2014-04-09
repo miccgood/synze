@@ -132,7 +132,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	width: 270px;
 	height:100%;
 	background-color: rgb(235, 238, 244);//#EBEEF4;
-	padding: 40px 20px 0 20px;
+	padding: 10px 15px 0 15px;
 	top: 80px;
 	bottom:0;
 	border-right-color: rgb(160, 167, 184);

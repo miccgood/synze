@@ -110,12 +110,27 @@ $(function(){
                             }
                             else if(file.type === "video")
                             {
-                                    $('#file_'+unique_id).removeClass('image-thumbnail');
+                                    $('#file_'+unique_id).removeClass('image-thumbnail'); 
+                                    
+                                   
                                     $('#file_'+unique_id).unbind("click");
 //                                    $('#file_'+unique_id).html(file_name);
-                                    $('#file_'+unique_id).html("<video height='240' controls id='video' style='z-index: 1;'>"
-                                            +"<source src='"+file.path+"' type='video/"+file.ext+"'>"
-                                        +"</video>");
+
+                                    var $input = '<object id="MediaPlayer1" CLASSID="CLSID:22d6f312-b0f6-11d0-94ab-0080c74c7e95" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"';
+                                    $input += 'standby="Loading Microsoft Windows® Media Player components..." type="application/x-oleobject" width="300" height="256">';
+                                    $input += '<param name="fileName" value="' + file.path + '">';
+                                    $input += '<param name="animationatStart" value="true">';
+                                    $input += '<param name="transparentatStart" value="true">';
+                                    $input += '<param name="autoStart" value="true">';
+                                    $input += '<param name="showControls" value="true">';
+                                    $input += '<param name="Volume" value="-450">';
+                                    $input += '<embed type="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" src="' + file.path + '" name="MediaPlayer1" width=280 height=256 autostart=1 showcontrols=1 volume=-450>';
+                                    $input += '</object>';
+                    
+                                    $('#file_'+unique_id).html($input);
+//                                    $('#file_'+unique_id).html("<video height='240' controls id='video' style='z-index: 1;' name='asdf'>"
+//                                            +"<source src='"+file.path+"' type='video/"+file.ext+"'>"
+//                                        +"</video>");
                                     
                                     
                                     // custom

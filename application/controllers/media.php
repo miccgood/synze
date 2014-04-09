@@ -113,8 +113,8 @@ class Media extends SpotOn {
                 . "     $('#field-media_type').change().prop('disabled', true).trigger('liszt:updated');"
                 . " }else{"
                 . "     if('$cat_id' != ''){"
-                . "         $('#field-cat_ID').val($cat_id);"
-                . "         $('#field_cat_ID_chzn').find('span').html($('#field-cat_ID :selected').html()).change();"
+                . "         $('#field-cat_id').val($cat_id);"
+                . "         $('#field_cat_id_chzn').find('span').html($('#field-cat_id :selected').html()).change();"
                 . "     }"
                 . " }"
                 . "});");
@@ -247,14 +247,19 @@ class Media extends SpotOn {
         $fileName = $root . $fileObj->name;
 
         $this->fileInfo = $getID3->analyze($fileName);
-
+//        $ext = pathinfo($files_to_upload[0]->name, PATHINFO_EXTENSION);
         $ext = $this->fileInfo["fileformat"];
 
-        if(in_array($ext, $this->media["extention"]["video"])){
+        $map = $this->media["extention"]["map"];
+        if(array_key_exists($ext, $map)){
+            $ext = $map[$ext];
+        }
+        
+        if(in_array(strtolower($ext), array_map('strtolower', $this->media["extention"]["video"]))){
             $files_to_upload[0]->type = "video";
             $lenght = $this->fileInfo['playtime_seconds'];
             $files_to_upload[0]->lenght = number_format($lenght,4);
-        }else if(in_array($ext, $this->media["extention"]["image"])){
+        }else if(in_array(strtolower($ext), array_map('strtolower', $this->media["extention"]["image"]))){
             $files_to_upload[0]->type = "image";
         }
         //เปลี่ยน requirement เป็นไม่ upload file text แล้ว
@@ -286,7 +291,7 @@ class Media extends SpotOn {
             $ext = pathinfo($value['name'], PATHINFO_EXTENSION);
         }
 
-        if (in_array($ext, $this->media["allowed_formats"])) {
+        if (in_array(strtolower($ext), array_map('strtolower', $this->media["allowed_formats"]))) {
             return true;
         } else {
             return 'Wrong file format';

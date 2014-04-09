@@ -11,8 +11,8 @@
 
                                     //width : height
 //$config["media_url"] = "http://www.spotoninteractive.com/synzes/assets/uploads/media";
-$config["media_url"] = "http://www.spotoninteractive.com/synze_lite/assets/uploads/media";
-$config["text_url"] = "http://www.spotoninteractive.com/synze_lite/assets/uploads/text";
+$config["media_url"] = "http://www.spotoninteractive.com/synzes/assets/uploads/media";
+$config["text_url"] = "http://www.spotoninteractive.com/synzes/assets/uploads/text";
 
 //$config["media_url"] = "http://localhost/synzef/assets/uploads/media";
 //$config["text_url"] = "http://localhost/synzef/assets/uploads/text";
@@ -23,7 +23,9 @@ $config["text_path"] = "assets/uploads/text/";
 $config["not_allowed_file_name"] = array("/", ".", "-");
 
 
-$config["extention"]["video"] = array("mp4");
+$config["extention"]["map"] = array("mpeg" => "mpg");
+
+$config["extention"]["video"] = array("mp4", "mpg", "mpeg");
 $config["extention"]["image"] = array("jpg", "gif", "png");
 //$config["extention"]["text"] = array("txt");
 

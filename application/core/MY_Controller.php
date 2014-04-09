@@ -160,6 +160,12 @@ class SpotOn extends CI_Controller {
         return NULL;
     }
     
+    
+    public function getMode(){
+        $ret = "A";//Advance Mode
+//        $ret = "L";//Lite Mode
+        return $ret;
+    }
 }
 
 

@@ -243,7 +243,7 @@
 
         function deleteGroup()
         {
-            var catId = $("#field-cat_ID").val();
+            var catId = $("#field-cat_id").val();
             if(catId === ""){
                 alert("Pleace Select Group To Delete");
                 return ;
@@ -261,10 +261,10 @@
 				if(data.success)
 				{
                                     success_message($delete_success_message);
-//					$("#field-cat_ID").append("<option value='" + id + "'> " + name + " </option>").trigger('liszt:updated'); 
+//					$("#field-cat_id").append("<option value='" + id + "'> " + name + " </option>").trigger('liszt:updated'); 
 
-                                        $("#field-cat_ID :selected").remove()
-                                        $("#field-cat_ID").trigger('liszt:updated');
+                                        $("#field-cat_id :selected").remove()
+                                        $("#field-cat_id").trigger('liszt:updated');
 				}
 				else
 				{
@@ -280,7 +280,7 @@
         function refreshGroup(id, name){
 //            
             
-            $("#field-cat_ID").append("<option value='" + id + "'> " + name + " </option>").trigger('liszt:updated'); 
+            $("#field-cat_id").append("<option value='" + id + "'> " + name + " </option>").trigger('liszt:updated'); 
 
         }
         

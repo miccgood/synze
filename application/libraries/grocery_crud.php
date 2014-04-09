@@ -2693,9 +2693,24 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 //		$input .= "</a> ";
                 
                 if($is_video){
-                    $input .= "<video height='240' controls id='video'>"
-                            ."<source src='$file_url' type='video/$ext'>"
-                        ."</video>  <script type=\"text/javascript\"> $(function(){ $('#video').css({'z-index':0}); });</script>";
+//                    if($ext == "mpg" || $ext){
+                    $input .= '<object id="MediaPlayer1" CLASSID="CLSID:22d6f312-b0f6-11d0-94ab-0080c74c7e95" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"';
+                    $input .= 'standby="Loading Microsoft Windows® Media Player components..." type="application/x-oleobject" width="300" height="256">';
+                    $input .= '<param name="fileName" value="' . $file_url . '">';
+                    $input .= '<param name="animationatStart" value="true">';
+                    $input .= '<param name="transparentatStart" value="true">';
+                    $input .= '<param name="autoStart" value="true">';
+                    $input .= '<param name="showControls" value="true">';
+                    $input .= '<param name="Volume" value="-450">';
+                    $input .= '<embed type="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" src="' . $file_url .'" name="MediaPlayer1" width=280 height=256 autostart=1 showcontrols=1 volume=-450>';
+                    $input .= '</object>';
+//                    }
+//                    $input .= "<video height='240' controls id='video'>"
+//                            ."<source src='$file_url' type='video/$ext'>"
+//                        ."</video>  <script type=\"text/javascript\"> $(function(){ $('#video').css({'z-index':0}); });</script>";
+                    
+                    
+                    
                 } else {
                     $input .= "<a href='".$file_url."' id='file_$unique' class='open-file";
                     if($is_image){
