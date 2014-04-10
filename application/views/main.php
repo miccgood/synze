@@ -55,19 +55,41 @@
             <div class="mainleft">
                 <div class="sidebar1">
                     <br />
-<!--                    <div style="margin: auto;padding-left: 20%;margin-bottom: 10px;" id="mode"> 
+                    <div style="margin: auto;padding-left: 20%;margin-bottom: 10px;" id="mode"> 
                         <input type="button" id="advanceModeButton" value="Advance"><input type="button" id="liteModeButton" value="Lite">
                     </div>
                     
                     <script>
                         $(function() {
-                          $( "#mode input[type=button]" )
+                          $( "#advanceModeButton" )
                             .button()
                             .click(function( event ) {
-                              event.preventDefault();
+                                setMode("A");
+                            });
+                          $( "#liteModeButton" )
+                            .button()
+                            .click(function( event ) {
+                                setMode("L");
                             });
                         });
-                    </script>-->
+                        
+                        function setMode($mode){
+                            var url = "<?php echo base_url("index.php/mode/setmode") ; ?>/"+$mode;
+                            
+                            $.post(url, $mode , function(data, textStatus) {
+                                if($mode === "L"){
+                                    $(".mode").hide(400);
+                                }else{
+                                    $(".mode").show(400);
+                                }
+                            }, "json").fail(function() {
+                                //ถ้าเชื่อต่อไม่ได้แปลว่า session timeout
+                                window.location.replace("<?php echo base_url("index.php/login") ; ?>");
+                                //alert( "Network Error" );
+                            });
+                        }
+                    </script>
+                    
                     <ul class="nav">
                         <li><h4>Content Distribution</h4></li>
                         <div class="divider"></div>
@@ -87,13 +109,15 @@
                             
                             //$mode = "A";//Advance Mode
                             //$mode = "L";//Lite Mode
-                            if($mode == "A"){
+                           
                         ?>
-                        <li><a href="<?php echo site_url(); ?>/story"><img src="<?php echo base_url() ?>theme/images/story.png" width="36" height="30">Story</a></li>
-                        <li><a href="<?php echo site_url(); ?>/layout"><img src="<?php echo base_url() ?>theme/images/layout.png" width="36" height="30">Layout</a></li>
-                        <?php 
-                            }
-                        ?>
+                        <li class="mode" <?php echo ($mode == "L" ? "style='display:none;'" : ""); ?>>
+                            <a href="<?php echo site_url(); ?>/story"><img src="<?php echo base_url() ?>theme/images/story.png" width="36" height="30">Story</a>
+                        </li>
+                        <li class="mode" <?php echo ($mode == "L" ? "style='display:none;'" : ""); ?>>
+                            <a href="<?php echo site_url(); ?>/layout"><img src="<?php echo base_url() ?>theme/images/layout.png" width="36" height="30">Layout</a>
+                        </li>
+                        
                         <li><a href="<?php echo site_url(); ?>/playlist"><img src="<?php echo base_url() ?>theme/images/playlist.png" width="36" height="30">Playlist</a></li>
                         <li><a href="<?php echo site_url(); ?>/media"><img src="<?php echo base_url() ?>theme/images/content.png" width="36" height="30">Content</a></li>
                     </ul>

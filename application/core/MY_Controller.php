@@ -162,9 +162,14 @@ class SpotOn extends CI_Controller {
     
     
     public function getMode(){
-        $ret = "A";//Advance Mode
-//        $ret = "L";//Lite Mode
-        return $ret;
+        
+        $mode = $this->session->userdata("mode");
+        if($this->nullToZero($mode) == "0"){
+            $mode = "A";
+            //$ret = "A";//Advance Mode
+            //$ret = "L";//Lite Mode
+        }
+        return $mode;
     }
 }
 
