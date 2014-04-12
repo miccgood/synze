@@ -209,6 +209,10 @@ class spot_on_model extends CI_Model  {
             return $this->db->select('tmn_grp_ID')->where("shd_ID", $shdId)->get('trn_dpm')->result();
         }
         
+        public function getTerminalById($tmnId){
+            return $this->db->select('*')->where($this->getWhere("tmn_ID", $tmnId))->get('mst_tmn')->result();
+        }
+        
         public function getLayoutById($layoutId) {
             return $this->db->select('*')->where($this->getWhere('lyt_ID', $layoutId))->get('mst_lyt')->result();
 	}
@@ -395,11 +399,11 @@ class spot_on_model extends CI_Model  {
             $this->db->delete("trn_dpm", $data);
         }
         
-        public function deleteTrnDspHasPlByStoryId ($tmnGrpId){
+        public function deleteTrnDspHasPlByStoryId ($storyId){
             $data = array(
-                'tmn_grp_ID' => $tmnGrpId
+                'story_ID' => $storyId
             );
-            $this->db->delete("trn_dpm", $data);
+            $this->db->delete("trn_dsp_has_pl", $data);
         }
         
         

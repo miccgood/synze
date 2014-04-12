@@ -56,7 +56,7 @@
                 <div class="sidebar1">
                     <br />
                     <div style="margin: auto;padding-left: 20%;margin-bottom: 10px;" id="mode"> 
-                        <input type="button" id="advanceModeButton" value="Advance"><input type="button" id="liteModeButton" value="Lite">
+                        <input type="button" id="advanceModeButton" value="Advance" class="ui-button ui-widget ui-state-default ui-corner-all"><input type="button" id="liteModeButton" value="Lite" class="ui-button ui-widget ui-state-default ui-corner-all">
                     </div>
                     
                     <script>

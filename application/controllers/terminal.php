@@ -12,12 +12,25 @@ class Terminal extends SpotOn {
 //    }
 
     function index() {
-        $tmnGrpId = $this->getPkFormReq("tmn_grp_id");
+        $tmnId = $this->uri->segment(4);
+        
+        $terminalGroupList = $this->m->getTerminalGroup();
+        $this->terminalGroup = array();
+        foreach ($terminalGroupList as $terminalGroup) {
+            $this->terminalGroup[$terminalGroup->tmn_grp_ID] = $terminalGroup->tmn_grp_name;
+        }
+        
+        $terminalGroupId = 0;
+        if($this->nullToZero($tmnId) != "0"){
+            $tmn = $this->m->getTerminalById($tmnId);
+            $terminalGroupId = $tmn[0]->tmn_grp_ID;
+        }
+        
         $this->crud->set_table('mst_tmn')
         ->set_subject('Terminal')
         ->where("mst_tmn.cpn_ID" , $this->cpnId)
 //                ->set_relation("cat_ID", "mst_media_cat", "cat_name")
-        ->set_relation("tmn_grp_ID", "mst_tmn_grp", "tmn_grp_name")
+//        ->set_relation("tmn_grp_ID", "mst_tmn_grp", "tmn_grp_name")
         ->columns('tmn_grp_ID', 'tmn_name','tmn_desc', 'tmn_uuid')
         ->fields("tmn_grp_ID", 'tmn_name', 'tmn_desc', 'tmn_uuid', 'tmn_monitor', 'cpn_ID',
                 "create_date", "create_by", "update_date", "update_by")
@@ -38,7 +51,7 @@ class Terminal extends SpotOn {
             ->display_as('tmn_status_update', 'Status Update')
             ->display_as('tmn_monitor', 'Monitor')    
 //                
-//            ->field_type('tmn_grp_ID', 'dropdown', array('1' => 'active', '2' => 'private','3' => 'spam' , '4' => 'deleted'), "1")
+            ->field_type('tmn_grp_ID', 'dropdown', $this->terminalGroup , $terminalGroupId)
             ->field_type('tmn_os', 'readonly')
 //            ->field_type('tmn_uuid', 'readonly')
             ->field_type('tmn_regis_date', 'readonly')
