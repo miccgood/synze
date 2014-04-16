@@ -434,7 +434,7 @@
                 }
                 
                 $('#progressbar').progressbar({value: parseInt(percen)});
-                $(".progress-label").html( countUsage + ":" + $lenght + " (" + percen + "%)");
+                $(".progress-label").html( getFormatTime(countUsage) + " / " + getFormatTime($lenght) + " (" + percen + "%)");
                 $("#field-pl_usage").val(countUsage);
 //                $(".progress-label").html(countUsage);
 //                var $lenght = parseFloat($("#field-pl_usage").val());

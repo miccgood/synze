@@ -7,7 +7,7 @@
   }
   .progress-label {
     position: absolute;
-    left: 35%;
+    left: 29%;
     top: 4px;
     font-weight: bold;
     text-shadow: 1px 1px 0 #fff;
@@ -92,7 +92,7 @@
             if(min == ""){
                 min = 0;
             }
-            var $string = getFormatTimeByMinute(timeToString(min));
+            var $string = getFormatTime(timeToString(min));
             $(this).val($string);
             
 //            var $arr = $string.split(":");
@@ -107,7 +107,7 @@
                 percen = 100;
             }
             $('#progressbar').progressbar({value: parseInt(percen)});
-            $(".progress-label").html( countUsage + ":" + $lenght + " (" + percen + "%)");
+            $(".progress-label").html( getFormatTime(countUsage) + " / " + getFormatTime($lenght) + " (" + percen + "%)");
 //            $("#field-pl_usage").val(countUsage);
                 
         }).blur();

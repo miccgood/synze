@@ -57,13 +57,22 @@ class PlayList extends SpotOn {
         return "<div id='progressbar' style='display:none;'><div class='progress-label'>$value</div></div> <input type='hidden' name='pl_usage' id='field-pl_usage' value='$value'/>";
     }
     
+    function _length($value = "" , $pk = "", $row = "" , $rows = "") {
+        return $this->getStringFormDuration($this->nullToZero($value));
+    }
+     
+    function _usage($value = "" , $pk = "", $row = "" , $rows = "") {
+        return $this->getStringFormDuration($this->nullToZero($value));
+    }
+    
     function _autoCreateStory($value = "" , $pk = "", $row = "" , $rows = "") {
         if($row->crud_type == "hidden"){
             return "";
         }
         return "<input type='checkbox' name='autoCreateStory' style='margin:5px;'/>";
     }
-     
+    
+    
     function clearBeforeInsertAndUpdate($post) {
         $this->autoCreateStory = $post["autoCreateStory"];
         $this->mediaTemp = split(",", trim($post["media_temp"], ","));
@@ -170,6 +179,8 @@ class PlayList extends SpotOn {
         ->field_type("pl_ID", "hidden") 
         ->field_type("media_temp", "hidden")    
         ->field_type("event", "hidden") 
+        ->callback_column("pl_lenght", array($this, "_length")) 
+        ->callback_column("pl_usage", array($this, "_usage")) 
         ->callback_field("pl_usage", array($this, "_pl_usage")) 
         ->callback_field("autoCreateStory", array($this, "_autoCreateStory")) 
         ->callback_after_insert(array($this, "afterInsert"))
