@@ -112,6 +112,7 @@ class Scheduling extends SpotOn {
      }
      
     public function _beforeDelete($primary_key) {
+        $this->m->deleteDeploymentByShdId($primary_key);
         return true;//$this->m->checkDeleteScheduling($primary_key);
     }
      

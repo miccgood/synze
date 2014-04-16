@@ -44,6 +44,7 @@ class Report extends SpotOnReport {
         $dataGroupBy = array();
         foreach ($data["data"] as $value) {
 //            $valuePrint = $this->setDataBeforePrint($value);
+            $value->duration = $this->getStringFormDuration($value->duration);
             $arr = array($value);
             $valueFromArray = $this->getValueFromArray($dataGroupBy, $value->{$type."_ID"});
             $array = $this->getArray($valueFromArray);
@@ -78,9 +79,9 @@ class Report extends SpotOnReport {
             $valuePrint["toDate"] = $_get["toDate"];
             
             $valuePrint["countPlayer"] = count($this->countPlayer[$this->getValueFromObj($obj, "tmn_ID")]);
-            $valuePrint["sumDurationPlayer"] = $this->getValueFromArray($this->sumDurationGroup, $key);
+            $valuePrint["sumDurationPlayer"] = $this->getStringFormDuration($this->getValueFromArray($this->sumDurationGroup, $key));
             $valuePrint["countMedia"] = count($this->countMedia[$this->getValueFromObj($obj, "media_ID")]);
-            $valuePrint["sumDurationMedia"] = $this->getValueFromArray($this->sumDurationMedia, $key);
+            $valuePrint["sumDurationMedia"] = $this->getStringFormDuration($this->getValueFromArray($this->sumDurationMedia, $key));
             
             $valuePrint["companyLink"] = $this->nullToZero($companyLink, "");
             
@@ -164,8 +165,9 @@ class Report extends SpotOnReport {
             $arrTmn = $this->getValueFromObj($value, "tmn_ID");
             $this->countPlayer[$arrTmn][$arrMedia] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countPlayer, $arrTmn), $arrMedia), 0)  + 1;
             $this->countMedia[$arrMedia][$arrTmn] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countMedia, $arrMedia), $arrTmn), 0) + 1;
-            $this->sumDurationMedia[$arrMedia] = $this->nullToZero($this->getValueFromArray($this->sumDurationMedia, $arrMedia), 0) + $value->duration;
-            $this->sumDurationGroup[$arrTmn] = $this->nullToZero($this->getValueFromArray($this->sumDurationGroup, $arrTmn), 0) + $value->duration;
+            $duration = $this->getDurationFormString($value->duration);
+            $this->sumDurationMedia[$arrMedia] = $this->nullToZero($this->getValueFromArray($this->sumDurationMedia, $arrMedia), 0) + $duration;
+            $this->sumDurationGroup[$arrTmn] = $this->nullToZero($this->getValueFromArray($this->sumDurationGroup, $arrTmn), 0) + $duration;
         }
 //        $valuePrint["countPlayer"] = 100;
 //        $valuePrint["sumDuration"] = 123;
@@ -226,6 +228,7 @@ class Report extends SpotOnReport {
         $dataGroupBy = array();
         foreach ($data["data"] as $value) {
 //            $valuePrint = $this->setDataBeforePrint($value);
+            $value->duration = $this->getStringFormDuration($value->duration);
             $arr = array($value);
             $valueFromArray = $this->getValueFromArray($dataGroupBy, $value->{$type."_ID"});
             $array = $this->getArray($valueFromArray);
@@ -388,7 +391,7 @@ class Report extends SpotOnReport {
         $workSheet->setCellValue('A8', "Total Player ");
         $workSheet->setCellValue('A9', "Total Duration ");
         $workSheet->setCellValue('C8', count($this->countMedia[$key]));
-        $workSheet->setCellValue('C9', $this->sumDurationMedia[$key]);
+        $workSheet->setCellValue('C9', $this->getStringFormDuration($this->sumDurationMedia[$key]));
         
         $workSheet->mergeCells('A11:M11')->getStyle(
             'A11:M11'
@@ -484,7 +487,7 @@ class Report extends SpotOnReport {
         $workSheet->setCellValue('A9', "Total Media ");
         $workSheet->setCellValue('A10', "Total Duration ");
         $workSheet->setCellValue('C9', count($this->countPlayer[$key]));
-        $workSheet->setCellValue('C10', $this->sumDurationGroup[$key]);
+        $workSheet->setCellValue('C10', $this->getStringFormDuration($this->sumDurationGroup[$key]));
         
         $workSheet->mergeCells('A12:M12')->getStyle(
             'A12:M12'

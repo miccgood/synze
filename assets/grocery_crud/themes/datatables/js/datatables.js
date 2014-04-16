@@ -20,7 +20,13 @@ var mColumns = [];
 
 $(document).ready(function() {
 
-	$('table.groceryCrudTable thead tr th').each(function(index){
+	initTable();
+
+} );
+
+
+function initTable(){
+    $('table.groceryCrudTable thead tr th').each(function(index){
 		if(!$(this).hasClass('actions'))
 		{
 			mColumns[index] = index;
@@ -52,8 +58,10 @@ $(document).ready(function() {
 
 	$('.groceryCrudTable').each(function(index){
 		if (typeof oTableArray[index] !== 'undefined') {
-			return false;
-		}
+                    if(typeof oTableMapping[$(this).attr('id')] !== 'undefined'){
+                        return false;
+                    }
+		} 
 
 		oTableMapping[$(this).attr('id')] = index;
 
@@ -112,9 +120,7 @@ $(document).ready(function() {
 
 	$('th.actions').unbind('click');
 	$('th.actions>div .DataTables_sort_icon').remove();
-
-} );
-
+}
 function loadListenersForDatatables() {
 
 	$('.refresh-data').click(function(){
@@ -133,6 +139,7 @@ function loadListenersForDatatables() {
 				loadDataTable(new_container.find('.groceryCrudTable'));
 
 				loadListenersForDatatables();
+                                initTable();
 			}
 		});
 	});

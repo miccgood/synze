@@ -88,11 +88,11 @@
         });
         
         $("#field-pl_lenght").bind("blur", function(e){
-            var sec = $(this).val();
-            if(sec == ""){
-                sec = 0;
+            var min = $(this).val();
+            if(min == ""){
+                min = 0;
             }
-            var $string = getFormatTime(timeToString(sec));
+            var $string = getFormatTimeByMinute(timeToString(min));
             $(this).val($string);
             
 //            var $arr = $string.split(":");
@@ -133,6 +133,10 @@
         return time;
     }
     
+    function getFormatTimeByMinute (min) { 
+        return getFormatTime(parseInt(min) * 60);
+    }
+    
     function timeToString ($string) { 
         if(typeof $string !== "string"){
             return $string;
@@ -146,10 +150,21 @@
         } else if($arr.length == 1){
             return parseInt($arr);
         }
-//        var count = 0;
-//        for(var i = 0 ; i < $arr.lenght ; i++){
-//            count += $arr[i] * (3600 / (60 * i));
-//        }
-        
     }
+    
+    function timeToStringByMinute ($string) { 
+        if(typeof $string !== "string"){
+            return $string;
+        }
+        var $arr = $string.split(":");
+        
+        if($arr.length == 3){
+            return parseInt($arr[0]) * 60 + parseInt($arr[1]) + parseInt($arr[2]) / 60; 
+        } else if($arr.length == 2){
+            return parseInt($arr[1]) + parseInt($arr[2]) / 60;
+        } else if($arr.length == 1){
+            return parseInt($arr);
+        }
+    }
+    
 </script>

@@ -16,9 +16,9 @@ class Deployment extends SpotOn {
      
     public function index() {
        $state = $this->crud->getState();
-       if($state == "list"){
+       if($state == "list" || $state == "delete"){
            $this->modeList();
-       }else{
+       }else {
            $this->modeOther($state);
        }
     }
@@ -118,7 +118,7 @@ class Deployment extends SpotOn {
                     ->add_action('Edit', '', 'storyitem/index','ui-icon-pencil', array($this,'edit_participant'))
                     ->unset_edit()
 
-                    ->display_as('shd_ID', 'Name')
+                    ->display_as('shd_ID', 'Start Time')
                     ->display_as('shd_name', 'Scheduling Name')
                     ->display_as('shd_desc', 'Scheduling Desc')
                     ->display_as('story_ID', 'Story Name')

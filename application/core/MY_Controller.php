@@ -171,6 +171,82 @@ class SpotOn extends CI_Controller {
         }
         return $mode;
     }
+    
+    protected function getStringFormDuration($sec){
+        //3600;
+//        $h = floor($sec / 3600);
+//        $sec = $sec - $h * 3600
+//        $m = floor($sec / 3600);
+//        $h = $sec / 3600;
+//        $h = $sec / 3600;
+        $ret = "";
+        foreach(array(3600=>':',60=>':',1=>'') as $p=>$suffix){
+
+            if ($sec >= $p){
+
+                $sec -= $d = $sec-$sec % $p;
+
+                $temp = $d/$p;
+                
+                if(strlen($temp) === 0){
+                    $temp = "00";
+                }else if(strlen($temp) === 1){
+                    $temp = "0". $temp;
+                }
+                $ret .= $temp."$suffix"; 
+
+            } else {
+                $ret .= "00"."$suffix";
+            }
+
+        }
+        return $ret;
+    }
+    
+    protected function getDurationFormString($string){
+        //3600;
+//        $h = floor($sec / 3600);
+//        $sec = $sec - $h * 3600
+//        $m = floor($sec / 3600);
+//        $h = $sec / 3600;
+//        $h = $sec / 3600;
+        $string = split(":", $string );
+        $count = count($string); 
+        $ret = 0;
+        if($count == 3){
+            $ret = $string[0] * 3600 + $string[1] * 60 + $string[2];
+        }else if($count == 2){
+            $ret = $string[1] * 60 + $string[2];
+        }else { 
+            $ret = $string[0];
+        }
+        return $ret;
+        
+        
+        
+        
+//        foreach(array(3600=>':',60=>':',1=>'') as $p=>$suffix){
+//
+//            if ($sec >= $p){
+//
+//                $sec -= $d = $sec-$sec % $p;
+//
+//                $temp = $d/$p;
+//                
+//                if(strlen($temp) === 0){
+//                    $temp = "00";
+//                }else if(strlen($temp) === 1){
+//                    $temp = "0". $temp;
+//                }
+//                $ret .= $temp."$suffix"; 
+//
+//            } else {
+//                $ret .= "00"."$suffix";
+//            }
+//
+//        }
+//        return $ret;
+    }
 }
 
 

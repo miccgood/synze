@@ -17,12 +17,12 @@ class Programmer extends SpotOn {
     
     public function index() {
         
-//        $this->genLog();
-//        $this->genMedia();
-//        $this->genPlaylist();
-//        $this->genTerminal();
-//        $this->genTerminalGroup();
-//        $this->genLog();
+        $this->genLog();
+        $this->genMedia();
+        $this->genPlaylist();
+        $this->genTerminal();
+        $this->genTerminalGroup();
+        $this->genLog();
     }
     
     private function genLog(){
