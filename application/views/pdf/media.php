@@ -43,11 +43,27 @@
 </style>
 <table style="width:650px;"  class="border-none">
     <tbody>
-        <tr>
+<!--        <tr>
             <td rowspan="3" style="width:100px; border: 1px;"><div style="background-color:#eee;border: 1px solid #888; width: 100%; height: 100px;"></div></td>
             <td colspan="6"><?php echo $companyName;?></td>
             <td colspan="2"> Playback Report By Media </td>
+        </tr>-->
+        <tr>
+            <td style="width:150px;">
+<!--                <div style="background-color:#eee;border: 1px solid #888; width: 100%; height: 100px;"> 
+                    <?php if ($companyLink != null || $companyLink != ""){?>
+                        
+                        <img src="<?php echo $companyLink ; ?>" width="140px" height="120px" />
+                        
+                    <?php }?>
+                    
+                </div>-->
+                Company Name
+            </td>
+            <td colspan="6"><?php echo $companyName;?></td>
+            <td colspan="2" style="width:600px; text-align: right;" > Playback Report By Media </td>
         </tr>
+        
         <tr>
             <td> Media </td>
             <td colspan="7"><?php echo $mediaName;?></td>
@@ -70,7 +86,7 @@
         </tr>
         <tr>
             <td style="width: 100px;">Total Player</td>
-            <td><?php echo $countPlayer;?></td>
+            <td><?php echo $countMedia;?></td>
         </tr>
         <tr>
             <td>Total Duration</td>
@@ -90,11 +106,14 @@
                 <th style="width:3%;text-align: center;">
                     ID
                 </th>
-                <th style="width:10%;">
+                <th style="width:22%;">
                     PlayerGroup
                 </th>
-                <th style="width:10%;">
+                <th style="width:23%;">
                     Player
+                </th>
+                <th style="width:12%;">
+                    Play Date
                 </th>
                 <th style="width:10%;text-align: center;">
                     Start Time
@@ -102,13 +121,13 @@
                 <th style="width:10%;text-align: center;">
                     Stop Time
                 </th>
-                <th style="width:5%;text-align: center;">
+                <th style="width:10%;text-align: center;">
                     Duration
                 </th>
                 <th style="width:20%;">
                     Playlist
                 </th>
-                <th style="width:15%;">
+                <th style="width:20%;">
                     Zone
                 </th>
                 <th style="width:20%;">
@@ -127,6 +146,7 @@
                     <td style="text-align: center;"> <?php echo $count ;?></td>
                     <td> <?php echo $value->tmn_grp_name ;?></td>
                     <td> <?php echo $value->tmn_name ;?></td>
+                    <td><?php echo date("d/m/Y", strtotime($value->start_date)) ;?></td>
                     <td style="text-align: center;"> <?php echo $value->start_time ;?></td>
                     <td style="text-align: center;"> <?php echo $value->stop_time ;?></td>
                     <td style="text-align: center;"> <?php echo $value->duration; ?> </td>

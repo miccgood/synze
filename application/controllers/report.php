@@ -8,13 +8,6 @@ class Report extends SpotOnReport {
     function __construct() {
         parent::__construct();
     }
-//    
-//    function countTerminal($value, $row) {
-//        
-//        
-//        $E = @$this->db->query('select count(tmn_id) as result from mst_tmn where tmn_grp_ID = ?', array($row->tmn_grp_ID))->row()->result;
-//        return ($E) ? (string) $E : '0'; // or: return ($E) ? (string) $E : '~empty~';
-//    }
 
     function getData(){
         $_get = $this->input->get();
@@ -58,12 +51,6 @@ class Report extends SpotOnReport {
             $companyName = $value->cpn_name;
             $companyLink = $this->getValueFromObj($value, "cpn_link");
         }
-        
-//        if($genBy == 1){
-//            $this->countPlayerAndsumDuration($valuePrint, "tmn_grp_ID");
-//        } else if($genBy == 2){
-//            $this->countPlayerAndsumDuration($valuePrint, "media_ID");
-//        }
         
         foreach ($dataGroupBy as $key => $value) {
 
@@ -122,6 +109,7 @@ class Report extends SpotOnReport {
 
         $this->load->library('pdf');
         $mpdf = $this->pdf->load(); 
+        $mpdf = new mPDF('c', 'A4-L');
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->list_indent_first_level = 0; 
 //            $mpdf = new mPDF();
