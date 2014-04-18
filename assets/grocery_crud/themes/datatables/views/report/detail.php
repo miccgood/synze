@@ -15,17 +15,17 @@
     <table border="0"  cellpadding="10" class="table table-curved" id="nextTeamTable" style="width: 700px; margin: auto;">
         <thead data-parent="#bodyContainer" data-toggle="collapse" data-target="#tbodyCollapse">
             <tr >
-                <td colspan="5">Report :   Playback report by media </td>
+                <td colspan="5">Report :   Playback Report</td>
             </tr>
         </thead>
         <tbody >
             <tr>
-                <td>Generate By </td>
+                <td>Please Select Report </td>
                 <td colspan="4">
                     <select id="genReportBy" style="width:250px;"class='chosen-select'>
                         <!--<option value="1"> Player Group </option>-->
-                        <option value="1"> Player </option>
-                        <option value="2"> Media </option>
+                        <option value="1"> By Player </option>
+                        <option value="2"> By Media </option>
                     </select>
                 </td>
             </tr>
@@ -78,12 +78,12 @@
                 <td colspan="4">
                     from :
                     <span style="margin-right: 30px; ">
-                        <input id='start_date' name='start_date' type='text' value='<?php echo date('01/m/Y'); ?>' maxlength='10' class='datepicker-input' size="8" style="height: 30px;" readonly="readonly"/>
+                        <input id='start_date' name='start_date' type='text' value='<?php echo date('d/m/Y'); //date('01/m/Y'); ?>' maxlength='10' class='datepicker-input' size="8" style="height: 30px;" readonly="readonly"/>
                         <!--<a class='datepicker-input-clear' tabindex='-1' style="margin-right: 20px;">Clear</a>-->
                     </span>
                     to :
                     <span>
-                        <input id='stop_date' name='stop_date' type='text' value='<?php echo date(date("t") . '/m/Y'); ?>' maxlength='10' class='datepicker-input' size="8" style="height: 30px;" readonly="readonly"/>
+                        <input id='stop_date' name='stop_date' type='text' value='<?php echo date('d/m/Y'); //date(date("t") . '/m/Y'); ?>' maxlength='10' class='datepicker-input' size="8" style="height: 30px;" readonly="readonly"/>
                         <!--<a class='datepicker-input-clear' tabindex='-1'>Clear</a>-->
                     </span>
                 </td>

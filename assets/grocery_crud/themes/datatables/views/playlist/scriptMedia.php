@@ -7,7 +7,7 @@
   }
   .progress-label {
     position: absolute;
-    left: 29%;
+    left: 35%;
     top: 4px;
     font-weight: bold;
     text-shadow: 1px 1px 0 #fff;
@@ -107,7 +107,7 @@
                 percen = 100;
             }
             $('#progressbar').progressbar({value: parseInt(percen)});
-            $(".progress-label").html( getFormatTime(countUsage) + " / " + getFormatTime($lenght) + " (" + percen + "%)");
+            $(".progress-label").html( getFormatTime(countUsage) + " (" + percen + "%)");
 //            $("#field-pl_usage").val(countUsage);
                 
         }).blur();

@@ -210,7 +210,12 @@ class SpotOn extends CI_Controller {
 //        $m = floor($sec / 3600);
 //        $h = $sec / 3600;
 //        $h = $sec / 3600;
-        $string = split(":", $string );
+//        $time = strtotime($string);
+//        return $time;
+//        if(strpos(":", $string) < 0){
+//            return $string;
+//        }
+        $string = explode(":", $string );
         $count = count($string); 
         $ret = 0;
         if($count == 3){

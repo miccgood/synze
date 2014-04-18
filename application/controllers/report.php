@@ -4,7 +4,8 @@ class Report extends SpotOnReport {
     private $countPlayer = array();
     private $countMedia = array();
     private $sumDurationMedia = array();
-    private $sumDurationGroup = array();    
+    private $sumDurationGroup = array();  
+    
     function __construct() {
         parent::__construct();
     }
@@ -20,9 +21,12 @@ class Report extends SpotOnReport {
     private function genReport($options = '', $filename = ""){
         $_get = $this->input->get();
         
+        
+        ini_set("memory_limit", "512M"); 
+        
         $data = $this->getData();
         
-        $this->countPlayerAndsumDuration($data);
+//        $this->countPlayerAndsumDuration($data);
         $genBy = $_get["genReportBy"];
         
         
@@ -36,6 +40,18 @@ class Report extends SpotOnReport {
         
         $dataGroupBy = array();
         foreach ($data["data"] as $value) {
+            
+            $arrMedia = $this->getValueFromObj($value, "media_ID");
+//            $arrTmnGrp = $this->getValueFromObj($value, "tmn_grp_ID");
+            $arrTmn = $this->getValueFromObj($value, "tmn_ID");
+            $this->countPlayer[$arrTmn][$arrMedia] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countPlayer, $arrTmn), $arrMedia), 0)  + 1;
+            $this->countMedia[$arrMedia][$arrTmn] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countMedia, $arrMedia), $arrTmn), 0) + 1;
+            $duration = $this->getDurationFormString($value->duration);
+            $this->sumDurationMedia[$arrMedia] = $this->nullToZero($this->getValueFromArray($this->sumDurationMedia, $arrMedia), 0) + $duration;
+            $this->sumDurationGroup[$arrTmn] = $this->nullToZero($this->getValueFromArray($this->sumDurationGroup, $arrTmn), 0) + $duration;
+            
+            
+            
 //            $valuePrint = $this->setDataBeforePrint($value);
             $value->duration = $this->getStringFormDuration($value->duration);
             $arr = array($value);
@@ -44,7 +60,8 @@ class Report extends SpotOnReport {
             $dataGroupBy[$value->{$type."_ID"}] = array_merge($array, $arr);
         }
 
-        $this->load->view('pdf/header');
+        $lib = "pdf";
+        $this->load->view($lib.'/header');
         $count = 0;
         $company = $this->m->getCpnById($this->cpnId);
         foreach ($company as $value) {
@@ -73,57 +90,56 @@ class Report extends SpotOnReport {
             $valuePrint["companyLink"] = $this->nullToZero($companyLink, "");
             
             $page = ($genBy == 1 ? "player" : "media");
-            $this->load->view('pdf/'. $page, $valuePrint);
+            $this->load->view($lib.'/'. $page, $valuePrint);
             if($count < count($dataGroupBy) - 1){
-                $this->load->view('pdf/new_page');
+                $this->load->view($lib.'/new_page');
                 $count++;
             }
             
         }
 //            $this->load->view('pdf/test');
-        $this->load->view('pdf/footer');
+        $this->load->view($lib.'/footer');
 //        
 //        
 //		// Get output html
 //        
-        ini_set("memory_limit", "128M"); 
 //
 //
         $html = $this->output->get_output();
-//
-//        // Load library
-//        $this->load->library('dompdf_gen');
-//
-//        // Convert to PDF
-//        $this->dompdf->load_html($html);
-//        $this->dompdf->render();
-//        $this->dompdf->stream("report.pdf", $options);
-//        $filename = "test";
-//        $pdfFilePath = FCPATH."/downloads/reports/$filename.pdf";
-//        $data['page_title'] = 'Hello world'; // pass data to the view
-
-//        if (file_exists($pdfFilePath) == FALSE)
-//        {
-//            ini_set('memory_limit','32M'); // boost the memory limit if it's low <img src="http://davidsimpson.me/wp-includes/images/smilies/icon_wink.gif" alt=";)" class="wp-smiley"> 
-//            $html = $this->load->view('example', $data, true); // render the view into HTML
-
+        
+        
         $this->load->library('pdf');
         $mpdf = $this->pdf->load(); 
-        $mpdf = new mPDF('c', 'A4-L');
+//        $mpdf = new mPDF('c', 'A4-L');
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->list_indent_first_level = 0; 
-//            $mpdf = new mPDF();
-//            $mpdf->setDisplayMode('fullpage');
         $mpdf->setAutoFont();
 
-//            $mpdf->writeHTML($style, 1);
         $mpdf->writeHTML($html);
-//        if( $options == 1 ){
-//            $mpdf->Output("report.pdf",'F');
-//        } else{
         $mpdf->Output($filename, $options);
-//            $mpdf->Output();
-//        }
+        
+        
+//        $this->load->library('loadfpdf');
+//        $fpdf = $this->loadfpdf->load(); 
+//        
+//        $fpdf->AddPage("L");
+//        $fpdf->SetFont('Arial', '', 12);
+//
+//        $fpdf->WriteHTML($html);
+//        $fpdf->Output();
+        
+        
+//        $fpdf->addPage('L');
+////        $fpdf = $pdf->setSourceFile('template.pdf');
+////        $fpdf = $pdf->importPage(1); 
+////        $fpdf->useTemplate($tplIdx); 
+//        $fpdf->SetFont('Arial'); 
+//        $fpdf->SetTextColor(255,0,0); 
+//        $fpdf->SetXY(25, 25); 
+//        $fpdf->Write(0, "This is just a test"); 
+//        $fpdf->Output('newpdf.pdf', 'F');
+        
+        
         
         
 //$mpdf=new mPDF('c','A4','','',32,25,27,25,16,13); 
@@ -188,7 +204,7 @@ class Report extends SpotOnReport {
     }  
     
     function excel(){
-        
+        ini_set("memory_limit", "512M");
         //load our new PHPExcel library
         $this->load->library('phpexcel');
         
@@ -301,50 +317,58 @@ class Report extends SpotOnReport {
         
         $workSheet->getColumnDimension('A')->setWidth(5);
         $workSheet->getColumnDimension('B')->setWidth(13);
-        $workSheet->getColumnDimension('C')->setWidth(7);
-        $workSheet->getColumnDimension('D')->setWidth(13);
-        $workSheet->getColumnDimension('E')->setWidth(6);
-        $workSheet->getColumnDimension('F')->setWidth(10);
+        $workSheet->getColumnDimension('C')->setWidth(8);
+        $workSheet->getColumnDimension('D')->setWidth(10);
+        $workSheet->getColumnDimension('E')->setWidth(10);
+        $workSheet->getColumnDimension('F')->setWidth(11);
         $workSheet->getColumnDimension('G')->setWidth(10);
+        
+        
+        $workSheet->getColumnDimension('J')->setWidth(15);
+        $workSheet->getColumnDimension('K')->setWidth(15);
+        $workSheet->getColumnDimension('L')->setWidth(15);
         
         $workSheet->setTitle($this->getSheetName($valuePrint["mediaName"]));
         
-        $workSheet->mergeCells('A1:B4')->getStyle(
-            'A1:B4'
-        )->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+//        $workSheet->mergeCells('A1:B4')->getStyle(
+//            'A1:B4'
+//        )->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+//        
+//        $image = $valuePrint['companyLink'];//'./theme/images/add_media_to_playlist.png';
         
-        $image = $valuePrint['companyLink'];//'./theme/images/add_media_to_playlist.png';
-        
-        if(file_exists($image)){
-            $objDrawing = new PHPExcel_Worksheet_Drawing();
-            $objDrawing->setName('Logo');
-            $objDrawing->setDescription('Logo');
-            $objDrawing->setPath($image);       // filesystem reference for the image file
-//          $objDrawing->setHeight(150);                 // sets the image height to 36px (overriding the actual image height); 
-            $objDrawing->setWidth(130); 
-            $objDrawing->setCoordinates('A1');    // pins the top-left corner of the image to cell D24
-            $objDrawing->setOffsetX(0);                // pins the top left corner of the image at an offset of 10 points horizontally to the right of the top-left corner of the cell
-            $objDrawing->setWorksheet($workSheet);
-        }
+//        if(file_exists($image)){
+//            $objDrawing = new PHPExcel_Worksheet_Drawing();
+//            $objDrawing->setName('Logo');
+//            $objDrawing->setDescription('Logo');
+//            $objDrawing->setPath($image);       // filesystem reference for the image file
+////          $objDrawing->setHeight(150);                 // sets the image height to 36px (overriding the actual image height); 
+//            $objDrawing->setWidth(130); 
+//            $objDrawing->setCoordinates('A1');    // pins the top-left corner of the image to cell D24
+//            $objDrawing->setOffsetX(0);                // pins the top left corner of the image at an offset of 10 points horizontally to the right of the top-left corner of the cell
+//            $objDrawing->setWorksheet($workSheet);
+//        }
 
         
         //set cell A1 content with some text
-        $workSheet->setCellValue('D1', $valuePrint["companyName"]);
-        $workSheet->getStyle('D1')->getFont()->setBold(true);
+        $workSheet->setCellValue('A1', "Company Name");
+        $workSheet->getStyle('A1')->getFont()->setBold(true);
+        
+        $workSheet->setCellValue('C1', $valuePrint["companyName"]);
+        $workSheet->getStyle('C1')->getFont()->setBold(true);
         
         $workSheet->setCellValue('K1', "Playback Report by Player");
         $workSheet->getStyle('K1')->getFont()->setBold(true);
 
-        $workSheet->setCellValue('D3', "Media");
-        $workSheet->getStyle('D3')->getFont()->setBold(true);
+        $workSheet->setCellValue('A3', "Media");
+        $workSheet->getStyle('A3')->getFont()->setBold(true);
         
-        $workSheet->setCellValue('E3', $valuePrint["mediaName"]);
-        $workSheet->setCellValue('D4', "Period");
-        $workSheet->getStyle('D4')->getFont()->setBold(true);
+        $workSheet->setCellValue('C3', $valuePrint["mediaName"]);
+        $workSheet->setCellValue('A4', "Period");
+        $workSheet->getStyle('A4')->getFont()->setBold(true);
         
-        $workSheet->setCellValue('E4', "from");
-        $workSheet->getStyle('E4')->getFont()->setBold(true);
-        $workSheet->getStyle('E4')->applyFromArray(
+        $workSheet->setCellValue('C4', "From");
+        $workSheet->getStyle('C4')->getFont()->setBold(true);
+        $workSheet->getStyle('C4')->applyFromArray(
                     array(
                         'alignment' => array(
                                 'wrap'       => true,
@@ -354,11 +378,11 @@ class Report extends SpotOnReport {
                     )
                 );
         
-        $workSheet->setCellValue('F4', $valuePrint["fromDate"]);
+        $workSheet->setCellValue('D4', $valuePrint["fromDate"]);
         
-        $workSheet->setCellValue('H4', "to");
-        $workSheet->getStyle('H4')->getFont()->setBold(true);
-        $workSheet->getStyle('H4')->applyFromArray(
+        $workSheet->setCellValue('F4', "To");
+        $workSheet->getStyle('F4')->getFont()->setBold(true);
+        $workSheet->getStyle('F4')->applyFromArray(
                     array(
                         'alignment' => array(
                                 'wrap'       => true,
@@ -368,10 +392,10 @@ class Report extends SpotOnReport {
                     )
                 );
         
-        $workSheet->setCellValue('I4',  $valuePrint["toDate"]);
+        $workSheet->setCellValue('G4',  $valuePrint["toDate"]);
         
-        $workSheet->mergeCells('A6:M6')->getStyle(
-            'A6:M6'
+        $workSheet->mergeCells('A6:L6')->getStyle(
+            'A6:L6'
         )->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         
         $workSheet->setCellValue('A7', "Summary ");
@@ -381,67 +405,70 @@ class Report extends SpotOnReport {
         $workSheet->setCellValue('C8', count($this->countMedia[$key]));
         $workSheet->setCellValue('C9', $this->getStringFormDuration($this->sumDurationMedia[$key]));
         
-        $workSheet->mergeCells('A11:M11')->getStyle(
-            'A11:M11'
+        $workSheet->mergeCells('A11:L11')->getStyle(
+            'A11:L11'
         )->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         
     }
     
     private function headerPlayer($workSheet, $valuePrint, $key){
         $workSheet->getColumnDimension('A')->setWidth(5);
-        $workSheet->getColumnDimension('B')->setWidth(13);
+        $workSheet->getColumnDimension('B')->setWidth(10);
         $workSheet->getColumnDimension('C')->setWidth(7);
-        $workSheet->getColumnDimension('D')->setWidth(13);
-        $workSheet->getColumnDimension('E')->setWidth(6);
+        $workSheet->getColumnDimension('D')->setWidth(10);
+        $workSheet->getColumnDimension('E')->setWidth(10);
         $workSheet->getColumnDimension('F')->setWidth(10);
-        $workSheet->getColumnDimension('G')->setWidth(10);
-//        $workSheet->getColumnDimension('C')->setWidth(5);
-//        $workSheet->getColumnDimension('D')->setWidth(5);
-//        $workSheet->getColumnDimension('E')->setWidth(5);
-//        $workSheet->getColumnDimension('F')->setWidth(5);
+        $workSheet->getColumnDimension('G')->setWidth(11);
+
+        
+        $workSheet->getColumnDimension('K')->setWidth(15);
+        $workSheet->getColumnDimension('L')->setWidth(15);
+        $workSheet->getColumnDimension('M')->setWidth(15);
         
         $workSheet->setTitle($this->getSheetName($valuePrint["tmnName"]));
         
-        $workSheet->mergeCells('A1:B4')->getStyle(
-            'A1:B4'
-        )->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+//        $workSheet->mergeCells('A1:B4')->getStyle(
+//            'A1:B4'
+//        )->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+//        
+//        $image = $valuePrint['companyLink'];//'./theme/images/add_media_to_playlist.png';
+//        
+//        if(file_exists($image)){
+//            $objDrawing = new PHPExcel_Worksheet_Drawing();
+//            $objDrawing->setName('Logo');
+//            $objDrawing->setDescription('Logo');
+//            $objDrawing->setPath($image);       // filesystem reference for the image file
+////          $objDrawing->setHeight(150);                 // sets the image height to 36px (overriding the actual image height); 
+//            $objDrawing->setWidth(130); 
+//            $objDrawing->setCoordinates('A1');    // pins the top-left corner of the image to cell D24
+//            $objDrawing->setOffsetX(0);                // pins the top left corner of the image at an offset of 10 points horizontally to the right of the top-left corner of the cell
+//            $objDrawing->setWorksheet($workSheet);
+//        }
         
-        $image = $valuePrint['companyLink'];//'./theme/images/add_media_to_playlist.png';
-        
-        if(file_exists($image)){
-            $objDrawing = new PHPExcel_Worksheet_Drawing();
-            $objDrawing->setName('Logo');
-            $objDrawing->setDescription('Logo');
-            $objDrawing->setPath($image);       // filesystem reference for the image file
-//          $objDrawing->setHeight(150);                 // sets the image height to 36px (overriding the actual image height); 
-            $objDrawing->setWidth(130); 
-            $objDrawing->setCoordinates('A1');    // pins the top-left corner of the image to cell D24
-            $objDrawing->setOffsetX(0);                // pins the top left corner of the image at an offset of 10 points horizontally to the right of the top-left corner of the cell
-            $objDrawing->setWorksheet($workSheet);
-        }
-        
+        $workSheet->setCellValue('A1', "CompanyName");
+        $workSheet->getStyle('A1')->getFont()->setBold(true);
         //set cell A1 content with some text
-        $workSheet->setCellValue('D1', $valuePrint["companyName"]);
-        $workSheet->getStyle('D1')->getFont()->setBold(true);
+        $workSheet->setCellValue('C1', $valuePrint["companyName"]);
+//        $workSheet->getStyle('C1')->getFont()->setBold(true);
         
-        $workSheet->setCellValue('K1', "Playback Report by Player");
-        $workSheet->getStyle('K1')->getFont()->setBold(true);
+        $workSheet->setCellValue('L1', "Playback Report by Player");
+        $workSheet->getStyle('L1')->getFont()->setBold(true);
 
-        $workSheet->setCellValue('D3', "Player");
-        $workSheet->getStyle('D3')->getFont()->setBold(true);
-        $workSheet->setCellValue('E3', $valuePrint["tmnName"]);
+        $workSheet->setCellValue('A3', "Player");
+        $workSheet->getStyle('A3')->getFont()->setBold(true);
+        $workSheet->setCellValue('C3', $valuePrint["tmnName"]);
         
-        $workSheet->setCellValue('D4', "Player Group");
-        $workSheet->getStyle('D4')->getFont()->setBold(true);
-        $workSheet->setCellValue('E4', $valuePrint["groupName"]);
+        $workSheet->setCellValue('A4', "Player Group");
+        $workSheet->getStyle('A4')->getFont()->setBold(true);
+        $workSheet->setCellValue('C4', $valuePrint["groupName"]);
         
         
-        $workSheet->setCellValue('D5', "Period");
-        $workSheet->getStyle('D5')->getFont()->setBold(true);
+        $workSheet->setCellValue('A5', "Period");
+        $workSheet->getStyle('A5')->getFont()->setBold(true);
         
-        $workSheet->setCellValue('E5', "from");
-        $workSheet->getStyle('E5')->getFont()->setBold(true);
-        $workSheet->getStyle('E5')->applyFromArray(
+        $workSheet->setCellValue('C5', "From");
+        $workSheet->getStyle('C5')->getFont()->setBold(true);
+        $workSheet->getStyle('C5')->applyFromArray(
                     array(
                         'alignment' => array(
                                 'wrap'       => true,
@@ -451,11 +478,11 @@ class Report extends SpotOnReport {
                     )
                 );
         
-        $workSheet->setCellValue('F5', $valuePrint["fromDate"]);
+        $workSheet->setCellValue('D5', $valuePrint["fromDate"]);
         
-        $workSheet->setCellValue('H5', "to");
-        $workSheet->getStyle('H5')->getFont()->setBold(true);
-        $workSheet->getStyle('H5')->applyFromArray(
+        $workSheet->setCellValue('F5', "To");
+        $workSheet->getStyle('F5')->getFont()->setBold(true);
+        $workSheet->getStyle('F5')->applyFromArray(
                     array(
                         'alignment' => array(
                                 'wrap'       => true,
@@ -464,7 +491,7 @@ class Report extends SpotOnReport {
                             )
                     )
                 );
-        $workSheet->setCellValue('I5',  $valuePrint["toDate"]);
+        $workSheet->setCellValue('G5',  $valuePrint["toDate"]);
         
         $workSheet->mergeCells('A7:M7')->getStyle(
             'A7:M7'
@@ -484,26 +511,26 @@ class Report extends SpotOnReport {
     
     private function tableMedia($workSheet, $valuePrint){
         //header 
-        $workSheet->mergeCells('I12:K12');
-               $workSheet->setCellValue('I12', "Reference");
+        $workSheet->mergeCells('J12:L12');
+               $workSheet->setCellValue('J12', "Reference");
         
         $workSheet->setCellValue('A13', "ID");
         $workSheet->setCellValue('B13', "Player Group");
         $workSheet->mergeCells('C13:E13');
                $workSheet->setCellValue('C13', "Player");
-               
-        $workSheet->setCellValue('F13', "Start Time");
-        $workSheet->setCellValue('G13', "Stop Time");
-        $workSheet->setCellValue('H13', "Duration");
-        $workSheet->setCellValue('I13', "PlayList");
-        $workSheet->setCellValue('J13', "Zone");
-        $workSheet->setCellValue('K13', "Story");
+        $workSheet->setCellValue('F13', "Play Date");       
+        $workSheet->setCellValue('G13', "Start Time");
+        $workSheet->setCellValue('H13', "Stop Time");
+        $workSheet->setCellValue('I13', "Duration");
+        $workSheet->setCellValue('J13', "PlayList");
+        $workSheet->setCellValue('K13', "Zone");
+        $workSheet->setCellValue('L13', "Story");
         
         //---//
-        $workSheet->getStyle('I12:K12')->getFont()->setBold(true);
-        $workSheet->getStyle('I12:K12')->getBorders()->getAllBorders()
+        $workSheet->getStyle('J12:L12')->getFont()->setBold(true);
+        $workSheet->getStyle('J12:L12')->getBorders()->getAllBorders()
                 ->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $workSheet->getStyle('I12:K12')->applyFromArray(
+        $workSheet->getStyle('J12:L12')->applyFromArray(
                     array(
                         'fill' => array(
                             'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -511,15 +538,15 @@ class Report extends SpotOnReport {
                         )
                     )
                 );
-        $workSheet->getStyle('I12:K12')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $workSheet->getStyle('J12:L12')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         //---//
         //set ตัวหนา
-        $workSheet->getStyle('A13:K13')->getFont()->setBold(true);
+        $workSheet->getStyle('A13:L13')->getFont()->setBold(true);
         //set เส้นขอบ
-        $workSheet->getStyle('A13:K13')->getBorders()->getAllBorders()
+        $workSheet->getStyle('A13:L13')->getBorders()->getAllBorders()
                 ->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         //ใส่สี จัดกลาง
-        $workSheet->getStyle('A13:K13')->applyFromArray(
+        $workSheet->getStyle('A13:L13')->applyFromArray(
                     array(
                         'fill' => array(
                             'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -532,7 +559,7 @@ class Report extends SpotOnReport {
                         )
                     )
                 );
-        $workSheet->getStyle('A13:K13')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $workSheet->getStyle('A13:L13')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         
         $row = 14;
         $id = 1;
@@ -541,15 +568,15 @@ class Report extends SpotOnReport {
             $workSheet->setCellValue('B'.$row, $data->tmn_grp_name);
             $workSheet->mergeCells('C'.$row.':E'.$row);
                    $workSheet->setCellValue('C'.$row, $data->tmn_name);
-
-            $workSheet->setCellValue('F'.$row, $data->start_time);
-            $workSheet->setCellValue('G'.$row, $data->stop_time);
-            $workSheet->setCellValue('H'.$row, $data->duration);
-            $workSheet->setCellValue('I'.$row, $data->pl_name);
-            $workSheet->setCellValue('J'.$row, $data->dsp_name);
-            $workSheet->setCellValue('K'.$row, $data->story_name);
+            $workSheet->setCellValue('F'.$row, date("d/m/Y", strtotime($data->start_date)));
+            $workSheet->setCellValue('G'.$row, $data->start_time);
+            $workSheet->setCellValue('H'.$row, $data->stop_time);
+            $workSheet->setCellValue('I'.$row, $data->duration);
+            $workSheet->setCellValue('J'.$row, $data->pl_name);
+            $workSheet->setCellValue('K'.$row, $data->dsp_name);
+            $workSheet->setCellValue('L'.$row, $data->story_name);
             //set เส้นขอบ
-            $workSheet->getStyle("A$row:K$row")->getBorders()->getAllBorders()
+            $workSheet->getStyle("A$row:L$row")->getBorders()->getAllBorders()
                 ->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
             
             
@@ -565,7 +592,7 @@ class Report extends SpotOnReport {
                 );
         
             //ใส่สี จัดกลาง
-            $workSheet->getStyle("F$row:H$row")->applyFromArray(
+            $workSheet->getStyle("F$row:I$row")->applyFromArray(
                     array(
                         'alignment' => array(
                                         'wrap'       => true,
@@ -584,8 +611,8 @@ class Report extends SpotOnReport {
     
     private function tablePlayer($workSheet, $valuePrint){
         //header 
-        $workSheet->mergeCells('J13:L13');
-               $workSheet->setCellValue('J13', "Reference");
+        $workSheet->mergeCells('K13:M13');
+               $workSheet->setCellValue('K13', "Reference");
         
         $workSheet->setCellValue('A14', "ID");
         
@@ -598,18 +625,19 @@ class Report extends SpotOnReport {
 //        $workSheet->mergeCells('E14:F14');
 //               $workSheet->setCellValue('E14', "Stop Time");
         
-        $workSheet->setCellValue('G14', "Start Time");
-        $workSheet->setCellValue('H14', "Stop Time");
-        $workSheet->setCellValue('I14', "Duration");
-        $workSheet->setCellValue('J14', "PlayList");
-        $workSheet->setCellValue('K14', "Zone");
-        $workSheet->setCellValue('L14', "Story");
+        $workSheet->setCellValue('G14', "Play Date");    
+        $workSheet->setCellValue('H14', "Start Time");
+        $workSheet->setCellValue('I14', "Stop Time");
+        $workSheet->setCellValue('J14', "Duration");
+        $workSheet->setCellValue('K14', "PlayList");
+        $workSheet->setCellValue('L14', "Zone");
+        $workSheet->setCellValue('M14', "Story");
         
         //---//
-        $workSheet->getStyle('J13:L13')->getFont()->setBold(true);
-        $workSheet->getStyle('J13:L13')->getBorders()->getAllBorders()
+        $workSheet->getStyle('K13:M13')->getFont()->setBold(true);
+        $workSheet->getStyle('K13:M13')->getBorders()->getAllBorders()
                 ->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $workSheet->getStyle('J13:L13')->applyFromArray(
+        $workSheet->getStyle('K13:M13')->applyFromArray(
                     array(
                         'fill' => array(
                             'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -617,15 +645,15 @@ class Report extends SpotOnReport {
                         )
                     )
                 );
-        $workSheet->getStyle('J13:L13')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $workSheet->getStyle('K13:M13')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 //        //---//
         //set ตัวหนา
-        $workSheet->getStyle('A14:L14')->getFont()->setBold(true);
+        $workSheet->getStyle('A14:M14')->getFont()->setBold(true);
         //set เส้นขอบ
-        $workSheet->getStyle('A14:L14')->getBorders()->getAllBorders()
+        $workSheet->getStyle('A14:M14')->getBorders()->getAllBorders()
                 ->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
         //ใส่สี จัดกลาง
-        $workSheet->getStyle('A14:L14')->applyFromArray(
+        $workSheet->getStyle('A14:M14')->applyFromArray(
                     array(
                         'fill' => array(
                             'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -638,7 +666,7 @@ class Report extends SpotOnReport {
                         )
                     )
                 );
-        $workSheet->getStyle('A14:L14')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $workSheet->getStyle('A14:M14')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 //        
         $row = 15;
         $id = 1;
@@ -653,13 +681,13 @@ class Report extends SpotOnReport {
 ////        $workSheet->setCellValue("F$row", "Start Time");
 //            $workSheet->mergeCells("E$row:F$row");
 //                $workSheet->setCellValue("E$row", $data->stop_time);
-
-            $workSheet->setCellValue("G$row", $data->start_time);
-            $workSheet->setCellValue("H$row", $data->stop_time);
-            $workSheet->setCellValue("I$row", $data->duration);
-            $workSheet->setCellValue("J$row", $data->pl_name);
-            $workSheet->setCellValue("K$row", $data->dsp_name);
-            $workSheet->setCellValue("L$row", $data->story_name);
+            $workSheet->setCellValue("G$row", date("d/m/Y", strtotime($data->start_date)));
+            $workSheet->setCellValue("H$row", $data->start_time);
+            $workSheet->setCellValue("I$row", $data->stop_time);
+            $workSheet->setCellValue("J$row", $data->duration);
+            $workSheet->setCellValue("K$row", $data->pl_name);
+            $workSheet->setCellValue("L$row", $data->dsp_name);
+            $workSheet->setCellValue("M$row", $data->story_name);
         
         
 //            $workSheet->mergeCells('C'.$row.':E'.$row);
@@ -672,7 +700,7 @@ class Report extends SpotOnReport {
 //            $workSheet->setCellValue('J'.$row, $data->dsp_name);
 //            $workSheet->setCellValue('K'.$row, $data->story_name);
             //set เส้นขอบ
-            $workSheet->getStyle("A$row:L$row")->getBorders()->getAllBorders()
+            $workSheet->getStyle("A$row:M$row")->getBorders()->getAllBorders()
                 ->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
             
             $workSheet->getStyle("A$row")->applyFromArray(
@@ -686,7 +714,7 @@ class Report extends SpotOnReport {
                     )
                 );
             //ใส่สี จัดกลาง
-            $workSheet->getStyle("G$row:I$row")->applyFromArray(
+            $workSheet->getStyle("G$row:J$row")->applyFromArray(
                     array(
                         'alignment' => array(
                                         'wrap'       => true,

@@ -601,7 +601,7 @@ class spot_on_model extends CI_Model  {
                 $where["start_date <="] = date("Y-m-d", strtotime($stopDateTime));
             }
              $this->db->select("*")
-                ->where($where)->limit(5);
+                ->where($where);//->limit(0);
             
             $genBy = $_get["genReportBy"];
             $orderBy = "";
@@ -611,9 +611,14 @@ class spot_on_model extends CI_Model  {
                 //Media
                 $orderBy = "media_name";
             }
+            
+            $this->db->save_queries = FALSE;
+            $this->db->from('log');
+            $query = $this->db->order_by($orderBy)->get();
+            
+            $data = $query->result();
 
-
-            return    $this->db->order_by($orderBy)->get('log')->result();
+            return    $data;
         }
 
         public function insertLog($set){

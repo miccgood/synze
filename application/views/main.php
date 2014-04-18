@@ -39,7 +39,14 @@
             .img-logo {width:61px !important;  height:61px !important;};
         </style>
     </head>
+<?php 
+    $ci = &get_instance();                
+    $mode = $ci->getMode();
 
+    //$mode = "A";//Advance Mode
+    //$mode = "L";//Lite Mode
+
+?>
     <body class="">
 
         <div class="synzecontainer">
@@ -62,14 +69,18 @@
                     <script>
                         $(function() {
                           $( "#advanceModeButton" )
-                            .button()
+                            .button(<?php echo ($mode == "A" ? "{ disabled: true }" : ""); ?>)
                             .click(function( event ) {
                                 setMode("A");
+                                $(this).button({ disabled: true });
+                                $("#liteModeButton").button({ disabled: false });
                             });
                           $( "#liteModeButton" )
-                            .button()
+                            .button(<?php echo ($mode == "L" ? "{ disabled: true }" : ""); ?>)
                             .click(function( event ) {
                                 setMode("L");
+                                $(this).button({ disabled: true });
+                                $("#advanceModeButton").button({ disabled: false });
                             });
                         });
                         
@@ -103,14 +114,7 @@
                         <div class="divider"></div>
                         <li></li>
                         
-                        <?php 
-                            $ci = &get_instance();                
-                            $mode = $ci->getMode();
-                            
-                            //$mode = "A";//Advance Mode
-                            //$mode = "L";//Lite Mode
-                           
-                        ?>
+                        
                         <li class="mode" <?php echo ($mode == "L" ? "style='display:none;'" : ""); ?>>
                             <a href="<?php echo site_url(); ?>/story"><img src="<?php echo base_url() ?>theme/images/story.png" width="36" height="30">Story</a>
                         </li>

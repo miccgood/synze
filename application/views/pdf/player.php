@@ -101,13 +101,13 @@
 <table cellspacing="0" cellpadding="5" class="data-table">
         <thead>
             <tr>
-                <th style="width:3%;text-align: center;">
+                <th style="width:5%;text-align: center;">
                     ID
                 </th>
-                <th style="width:23%;">
+                <th style="width:48%;">
                     Media
                 </th>
-                <th style="width:10%;">
+                <th style="width:12%;">
                     Play Date
                 </th>
                 <th style="width:10%;text-align: center;">

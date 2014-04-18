@@ -17,6 +17,6 @@ class pdf {
             $param = '"en-GB-x","A4","","",10,10,10,10,6,3';          
         }
          
-        return new mPDF($param);
+        return new mPDF('c', 'A4-L');
     }
 }
