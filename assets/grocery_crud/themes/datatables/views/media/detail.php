@@ -17,12 +17,32 @@
                     </div>
                     <div class='clear'></div>
                 </div>-->
+<?php 
+    $ci = &get_instance();
+    $state = $ci->crud->getState();
 
+?>
+
+    
+    <?php $field = $fields[3]; //type?>
+
+                <div class='form-field-box <?php echo ($state == "edit" ? "even" : "odd"); ?>' id="<?php echo $field->field_name; ?>_field_box">
+                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
+    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
+                    </div>
+                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
+    <?php echo $input_fields[$field->field_name]->input ?>
+                    </div>
+                    <div class='clear'></div>
+                </div>
+    
+    
+    
 
     
 <?php $field = $fields[0]; //File Name?>
 
-                <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box">
+                <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box">
                     <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box" style="">
     <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
                     </div>
@@ -32,10 +52,10 @@
                     <div class='clear'></div>
                 </div>
 
-
+<?php if($state != "edit"){ ?>    
     <?php $field = $fields[13]; //File Name Temp?>
 
-    <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box" style="display: none;">
+    <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box" style="display: none;">
                     <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box" style="">
     <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
                     </div>
@@ -45,9 +65,13 @@
                     <div class='clear'></div>
                 </div>
     
+    
+<?php } ?>  
+    
+    
 <?php $field = $fields[1]; //Name?>
 
-                <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box">
+                <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box">
                     <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
     <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
                     </div>
@@ -60,7 +84,7 @@
     
 <?php $field = $fields[2]; //desc?>
 
-                <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box">
+                <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box">
                     <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
     <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
                     </div>
@@ -73,7 +97,7 @@
 
     <?php $field = $fields[7]; //cat_ID?>
 
-                <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box">
+                <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box">
                     <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box" style="">
     <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
                     </div>
@@ -109,20 +133,9 @@
                     <div class='clear'></div>
                 </div>-->
     
-<?php $field = $fields[3]; //type?>
 
-                <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    <div class='clear'></div>
-                </div>
 
 <?php $fieldSize = $fields[4]; //size?>
-<?php $fieldLenght = $fields[5]; //lenght?>
                 <div class='form-field-box even' id="<?php echo $fieldSize->field_name; ?>_field_box">
                     <div class='form-display-as-box' id="<?php echo $fieldSize->field_name; ?>_display_as_box">
     <?php echo $input_fields[$fieldSize->field_name]->display_as ?><?php echo ($input_fields[$fieldSize->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
@@ -130,9 +143,14 @@
                     <div class='form-input-box' id="<?php echo $fieldSize->field_name; ?>_input_box">
     <?php echo $input_fields[$fieldSize->field_name]->input ?> 
                     </div>
-                    
-                    
-                    <div class='form-display-as-box' id="<?php echo $fieldLenght->field_name; ?>_display_as_box" style="width: 150px; text-align: center;">
+                    <div class='clear'></div>
+                  </div>  
+    
+    
+    
+   <?php $fieldLenght = $fields[5]; //lenght?> 
+                <div class='form-field-box odd' id="<?php echo $fieldSize->field_name; ?>_field_box">
+                    <div class='form-display-as-box' id="<?php echo $fieldLenght->field_name; ?>_display_as_box" style="width: 150px; text-align: left;">
     <?php echo $input_fields[$fieldLenght->field_name]->display_as ?><?php echo ($input_fields[$fieldLenght->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
                     </div>
                     <div class='form-input-box' id="<?php echo $fieldLenght->field_name; ?>_input_box">
@@ -170,7 +188,7 @@
 
 
 <?php $field = $fields[6]; //Media expire?>
-                <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box">
+                <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box">
                     <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
     <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
                     </div>
@@ -182,7 +200,7 @@
 
     
 <?php $field = $fields[12]; //Media expire?>
-            <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box" style="display: none;">
+            <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box" style="display: none;">
                 <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
 <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
                 </div>
@@ -226,7 +244,9 @@
                 $("[name=media_filename]").val($(e.target).val());
             });
             
-            
+            $("#field-media_size").change(function(e){
+                $("#size").html($(this).val());
+            });
             
             
         });
@@ -234,7 +254,7 @@
         
         function openWinAddGroup()
         {
-            var options = "toolbar=no, scrollbars=yes, resizable=yes, top=500, left=500, width=550, height=240";
+            var options = "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=500, height=240";
                 var newwindow = window.open("<?php echo base_url("index.php/group/index/add") ; ?>","_blank",options);
                 newwindow.focus();
 //              return false;

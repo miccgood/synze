@@ -31,7 +31,7 @@
    
         function openWinAddGroup()
         {
-            var options = "toolbar=no, scrollbars=yes, resizable=yes, top=500, left=500, width=550, height=240";
+            var options = "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=550, height=240";
                 var newwindow = window.open("<?php echo base_url("index.php/terminalgroup/index/add") ; ?>","_blank",options);
                 newwindow.focus();
 //              return false;

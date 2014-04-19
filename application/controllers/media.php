@@ -93,6 +93,7 @@ class Media extends SpotOn {
                    
         ->callback_field('media_filename_temp',array($this,'_media_filename_temp'))
         ->callback_field('text_input',array($this,'_text_input'))
+        ->callback_field('media_size',array($this,'_media_size'))
         ->callback_column('media_lenght',array($this,'_media_lenght'))
         ->callback_column('media_filename',array($this,'_media_filename'))        
                 
@@ -152,6 +153,14 @@ class Media extends SpotOn {
         }
         
          return '<textarea name="input_text" id="field-text_input">' . $value . '</textarea>';
+    }
+    
+    function _media_size($value = "", $field_info = "" , $file = null, $row = null){
+        
+        $output = "<div id='size' style='padding-top:5px'> $value </div>";
+        $output .= "<input name='media_size' id='field-media_size' style='width: 102.1px; display: none; ' type='text' maxlength='450' value='$value'/>";
+                
+        return $output;
     }
     
     function clearBeforeInsertAndUpdate($files_to_insert = "", $field_info = "" , $file = null, $row = null) {

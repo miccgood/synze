@@ -10,7 +10,9 @@ function show_upload_button(unique_id, uploader_element)
 
 function clearInput()
 {
-	$("input:text").val("");	
+	$("input:text").val("");
+        $("#field-media_type").val('').change().prop('disabled', false).trigger('liszt:updated');
+        $('#field-media_size').val("").prop("readonly", true).css("background-color", "silver").change();
 }
 
 function load_fancybox(elem)
@@ -106,7 +108,7 @@ $(function(){
                                     load_fancybox($('#file_'+unique_id));
                                     $('#file_'+unique_id).html('<img src="'+file.url+'" height="240" />');
                                     $(mediaTypeId).val('image');
-                                    $(mediaSizeId).val(file.size).prop("readonly", true);
+//                                    $(mediaSizeId).val(file.size).prop("readonly", true);
                             }
                             else if(file.type === "video")
                             {
@@ -135,7 +137,7 @@ $(function(){
                                     
                                     // custom
                                     $(mediaLenghtId).val(file.lenght).prop("readonly", true);
-                                    $(mediaSizeId).val(file.size).prop("readonly", true);
+//                                    $(mediaSizeId).val(file.size).prop("readonly", true);
                                     $(mediaTypeId).val('video');
 //                                    $(mediaTypeLabel).html('video');
 //                                    $(mediaPathId).val(file.path);
@@ -148,10 +150,10 @@ $(function(){
                                     $('#file_'+unique_id).html(file_name);
                                     $(mediaTypeId).val('scrolling text');
 //                                    $(mediaTypeId).val('text').prop("disabled", true);
-                                    $(mediaSizeId).val(file.size).prop("readonly", true);
+//                                    $(mediaSizeId).val(file.size).prop("readonly", true);
                             }
                             $(mediaPathId).val(file.path);
-                            
+                            $(mediaSizeId).val(file.size).prop("readonly", true).css("background-color", "silver").change();
                             $(mediaTypeId).change().prop('disabled', true).trigger('liszt:updated');
                             $("#field-media_filename_temp").val(file.name);
                             $(mediaCheckSumId).val(file.checkSum);

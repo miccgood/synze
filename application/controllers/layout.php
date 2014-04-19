@@ -29,7 +29,8 @@ class Layout extends SpotOn {
                 
         ->display_as('lyt_width', 'Width')
         ->display_as('lyt_height', 'Height')
-        
+        ->display_as('Resolution', 'Screen Size')
+                
         ->callback_column('lyt_name',array($this,'callbackLytName'))
         ->columns_align(array('lyt_name' => 'right',
             'lyt_desc' => 'right',
@@ -39,7 +40,7 @@ class Layout extends SpotOn {
             'create_date' => 'right',
             'update_date' => 'right'))
                 
-        ->fields("lyt_name","lyt_desc", "lyt_width", "lyt_height", "Resolution", 'cpn_ID',
+        ->fields("lyt_name","lyt_desc", "Resolution", "lyt_width", "lyt_height", 'cpn_ID',
                 "create_date", "create_by", "update_date", "update_by")
         ->callback_field("Resolution", array($this,'callback_resolution'))
                 
@@ -101,7 +102,12 @@ class Layout extends SpotOn {
         $ret = "<select id='select_resolution'>";
         foreach ($this->layout['resolution'] as $keys => $values) {
              foreach ($values as $key => $value) {
-                  $ret .= "<option value='".$value["width"].','.$value["height"]."'>" . $key . ' (' . $value["width"].'x'.$value["height"].')'. "</option>";
+                  $ret .= "<option value='".$value["width"].','.$value["height"]."'>" . $key ;
+                  
+                  if($value["width"] != "" || $value["height"] != ""){
+                      $ret .= ' (' . $value["width"].'x'.$value["height"].')';
+                  }
+                  $ret .= "</option>";
              }
         }             
          $ret .= "</select>";
