@@ -17,20 +17,18 @@
 
 <script type="text/javascript">
     
-    
-   
-   
    $(function(){
        $("#field-pl_type").change(function(){
            if($(this).val() != ""){
                $("#selectGroup").change();
                $("#Media_input_box").find("div.selected").find("ul").find("li").not("ui-helper-hidden-accessible").remove();
                $("#field-Media :selected").prop({selected:false});
-               
+               $(".selected").find("span.count").html("0 items selected");
+               $('#progressbar').progressbar({value: 0});
+               $(".progress-label").html(" 00:00:00 (0%) ");
            }
         });
         $("#selectGroup").change();
-//        $("#progressbar").prop({readonly: true});
         
         var $progressbarValue = $("#field-pl_usage").val();
         $(".progress-label").html("");
@@ -38,43 +36,6 @@
             value: 0
         }).css({width: "300px"}).show();
         
-        
-//        var $string = $("#field-pl_lenght").val();
-//        var $arr = $string.split(":");
-//        var $lenght = $arr[0] * 3600 + $arr[1] * 60 + $arr[2]; 
-    
-    
-        var $lenght = $("#field-pl_lenght").val();
-        var percen = (parseFloat($progressbarValue) / parseFloat($lenght) * 100).toFixed(2);
-        if($lenght == ""){
-            $lenght = 0;
-            percen = 0;
-        }else{
-            
-        }
-        
-        var int = percen / $progressbarValue;
-        var pGress = setInterval(function() {
-            var pVal = $('#progressbar').progressbar('option', 'value');
-            var pCnt = !isNaN(pVal) ? (pVal + 1) : 1;
-            if (pCnt > percen) {
-                clearInterval(pGress);
-            } else {
-//                var pCnt = !isNaN(pVal) ? (pVal - 1) : 1;
-//                        var $lenght = $("#field-pl_lenght").val();
-//                        var percen = (parseFloat(pCnt) / parseFloat($lenght) * 100).toFixed(2);
-//                        if (pCnt < countUsage) {
-//                            clearInterval(gLoop);
-//                        } else {
-//                            $('#progressbar').progressbar({value: percen});
-//                            $(".progress-label").html(pCnt + ":" + $lenght + " (" + percen + "%)");
-//                        }
-                
-                $('#progressbar').progressbar({value: pCnt});
-                $(".progress-label").html( (pCnt/int).toFixed(0) + ":" + $lenght + " (" + pCnt + "%)");
-            }
-        },10);
-    
         $("#crudForm").bind("submit", function(e){
             $('#field-media_temp').val("");
             var $li = $("#Media_input_box div .selected").find("li").not(".ui-helper-hidden-accessible");
@@ -113,11 +74,76 @@
         }).blur();
         
         
+        $("#hour, #min, #sec").blur(function(e){
+        
+            var $hour = parseInt(nullToZero($("#hour").val()));
+            var $min = parseInt(nullToZero($("#min").val()));
+            var $sec = parseInt(nullToZero($("#sec").val()));
+            
+            var time = 0;
+            if($hour == ''){
+                $hour = 0;
+                $("#hour").val("00");
+            } else {
+                if($hour < 0) $hour = 0;
+                time += parseInt($hour) * 3600;
+                $("#hour").val((($hour+"").length == 1 ? "0" : "")+ $hour);
+            }  
+            
+            if($min == ''){
+                $min = 0;
+                $("#min").val("00");
+            } else {
+                if($min > 60){
+                    $("#min").val($min);
+                    $min = 60;
+                }
+                if($min < 0) $min = 0;
+                time += parseInt($min) * 60;
+                $("#min").val((($min+"").length == 1 ? "0" : "") + $min);
+            } 
+            
+            if($sec == ''){
+                $sec = 0;
+                $("#sec").val("00");
+            } else {
+                if($sec > 60){
+                    $("#sec").val($sec);
+                    $sec = 60;
+                }
+                if($sec < 0) $sec = 0;
+                time += parseInt($sec);
+                $("#sec").val((($sec+"").length == 1 ? "0" : "")+ $sec);
+            } 
+            
+            $("#field-pl_lenght").val(getFormatTime(time)).blur();
+        }).bind('keypress', this, function(e) {
+            if (e.which > 47 && e.which < 58) {
+                if($(this).val().length > 2) {
+                    $(this).width(( $(this).val().length * 10 ) + "px");
+                } else {
+                    $(this).width("20px");
+                }
+                    return true;
+            } 
+            e.preventDefault();
+        }).bind('keyup', this, function(e) {
+            if (e.which == 8){ 
+                if($(this).val().length >= 2) {
+                    $(this).width(( $(this).val().length * 10 ) + "px");
+                } else {
+                    $(this).width("20px");
+                }
+            }
+            return true; 
+        }).width("18px");
+        
+        
 
    });
    
     function nullToZero($value){
-        return (typeof $value === "undefined" || $value === null || $value < 0) ? 0 : $value;
+        return (typeof $value === "undefined" || $value === null || $value < 0 || $value === "") ? 0 : $value;
     }
     
     function getFormatTime (sec) { 

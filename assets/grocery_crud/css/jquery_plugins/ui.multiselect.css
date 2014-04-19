@@ -1,9 +1,9 @@
 /* Multiselect
 ----------------------------------*/
 
-.ui-multiselect { border: solid 1px; font-size: 0.8em; }
+.ui-multiselect { border: solid 1px; font-size: 0.8em; font-family : "Helvetica Neue",Helvetica,Arial,sans-serif !important; }
 .ui-multiselect ul { -moz-user-select: none; }
-.ui-multiselect li { margin: 0; padding: 0; cursor: default; line-height: 20px; height: 20px; font-size: 11px; list-style: none; }
+.ui-multiselect li { margin: 0; padding: 0; cursor: default; line-height: 20px; height: 20px; font-size: 14px; list-style: none; }
 .ui-multiselect li a { color: #999; text-decoration: none; padding: 0; display: block; float: left; cursor: pointer;}
 .ui-multiselect li.ui-draggable-dragging { padding-left: 10px; }
 
@@ -17,10 +17,10 @@
  
 .ui-multiselect .ui-state-default { border: none; margin-bottom: 1px; position: relative; padding-left: 20px;}
 .ui-multiselect .ui-state-hover { border: none; }
-.ui-multiselect .ui-widget-header {border: none; font-size: 11px; margin-bottom: 1px;}
+.ui-multiselect .ui-widget-header {border: none; font-size: 14px; margin-bottom: 1px;}
  
-.ui-multiselect .add-all { float: right; padding: 10px 7px 10px 0; font-size: 11px; }
-.ui-multiselect .remove-all { float: right; padding: 10px 7px 11px 0; font-size: 11px; }
+.ui-multiselect .add-all { float: right; padding: 10px 7px 10px 0; font-size: 14px; }
+.ui-multiselect .remove-all { float: right; padding: 10px 7px 11px 0; font-size: 14px; }
 .ui-multiselect .search { float: left; padding:0;}
 .ui-multiselect .count { float: left; padding: 10px 7px;}
 

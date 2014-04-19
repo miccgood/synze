@@ -23,7 +23,7 @@
 
         _create: function() {
             this.element.hide();
-            this.element.css({height: +450});
+            this.element.css({height: +500, width : +850});
             this.id = this.element.attr("id");
             this.container = b('<div class="ui-multiselect ui-helper-clearfix ui-widget"></div>').insertAfter(this.element);
             this.count = 0;
@@ -41,6 +41,7 @@
                 return!1
             }).appendTo(this.availableContainer);
             var a = this;
+            
             this.container.width(this.element.width() + 1);
             this.selectedContainer.width(Math.floor(this.element.width() * this.options.dividerLocation));
             this.availableContainer.width(Math.floor(this.element.width() * (1 - this.options.dividerLocation)));
@@ -53,7 +54,11 @@
                 update: function() {
                     a.selectedList.find("li").each(function() {
                         b(this).data("optionLink") && b(this).data("optionLink").remove().appendTo(a.element)
-                    })
+                    });
+                    
+                    a.selectedList.find("li").not(".ui-helper-hidden-accessible").each(function(index, value) {
+                       $(this).find(".count-item").removeClass("ui-icon ui-icon-arrowthick-2-n-s").html((index + 1) + " : ");
+                    });
                 }, receive: function(c, d) {
                     d.item.data("optionLink").attr("selected", !0);
                     a.count += 1;
@@ -135,11 +140,21 @@
         }, 
         _updateCount: function() {
             this.element.trigger("change");
-            this.selectedContainer.find("span.count").text(this.count + " " + b.ui.multiselect.locale.itemsCount)
+//            this.selectedContainer.find("span.count").text(this.count + " " + b.ui.multiselect.locale.itemsCount);
+            var $list = this.selectedList.find("li").not(".ui-helper-hidden-accessible");
+            this.count = $list.size();
+            this.selectedContainer.find("span.count").text(this.count + " " + b.ui.multiselect.locale.itemsCount);
+            
+            $list.each(function(index, value){
+                $(this).find(".count-item").removeClass("ui-icon ui-icon-arrowthick-2-n-s").html((index + 1) + " : ");
+            });
+            
+//            $(".count-item").not(".ui-helper-hidden");
+             
             this.updateProcessBar();
         }, 
         _getOptionNode: function(a) {
-            var a = b(a), c = b('<li class="ui-state-default ui-element" title="' + a.text() + '"><span class="ui-icon"/>' + a.text() + '<a href="#" class="action"><span class="ui-corner-all ui-icon"/></a></li>').hide();
+            var a = b(a), c = b('<li class="ui-state-default ui-element" title="' + a.text() + '"><span class="ui-icon"/> <span class="count-item"> test </span> ' + a.text() + '<a href="#" class="action"><span class="ui-corner-all ui-icon"/></a></li>').hide();
             c.data("optionLink", a);
             return c
         }, _cloneWithData: function(a) {
@@ -421,7 +436,7 @@
 //                    }
 //                },10);
 
-                var $string = $("#field-pl_lenght").val();
+                var $string = getFormatTime(timeToString($("#field-pl_lenght").val()));
                 var $arr = $string.split(":");
                 var $lenght = parseInt($arr[0]) * 3600 + parseInt($arr[1]) * 60 + parseInt($arr[2]); 
 //                var $lenght = $("#field-pl_lenght").val();

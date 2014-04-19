@@ -83,7 +83,7 @@
 	var message_update_error = "<?php echo $this->l('update_error')?>";
 </script>
 
-<?php include 'scriptMedia.php';?>
+<?php include 'scriptPlaylist.php';?>
 
 
 

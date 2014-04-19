@@ -80,4 +80,4 @@
 	var message_insert_error = "<?php echo $this->l('insert_error')?>";
 </script>
 
-<?php include 'scriptMedia.php';?>
+<?php include 'scriptPlaylist.php';?>

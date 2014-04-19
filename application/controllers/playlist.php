@@ -53,6 +53,17 @@ class PlayList extends SpotOn {
         $this->output();
     }
     
+    function _pl_lenght($value = "" , $pk = "", $row = "" , $rows = "") {
+        
+        $string = explode(":", $this->getStringFormDuration($this->nullToZero($value)));
+        
+        $output = "<input name='lenght' class='numeric' id='hour' type='text' maxlength='11' value='$string[0]' style='width:30px; text-align: right;'/> : ";
+        $output .= "<input name='lenght' class='numeric' id='min' type='text' maxlength='2' value='$string[1]' style='width:30px;'/> : ";
+        $output .= "<input name='lenght' class='numeric' id='sec' type='text' maxlength='2' value='$string[2]' style='width:30px;'/>";
+        $output .= "<input name='pl_lenght' class='numeric' id='field-pl_lenght' type='text' maxlength='11' value='$value' style='display:none;' /> ";
+        return $output;
+    }
+     
     function _pl_usage($value = "" , $pk = "", $row = "" , $rows = "") {
         return "<div id='progressbar' style='display:none;'><div class='progress-label'>$value</div></div> <input type='hidden' name='pl_usage' id='field-pl_usage' value='$value'/>";
     }
@@ -74,7 +85,7 @@ class PlayList extends SpotOn {
     
     
     function clearBeforeInsertAndUpdate($post) {
-        $this->autoCreateStory = $post["autoCreateStory"];
+//        $this->autoCreateStory = $post["autoCreateStory"];
         $this->mediaTemp = split(",", trim($post["media_temp"], ","));
         
         $post = parent::clearBeforeInsertAndUpdate($post);
@@ -87,7 +98,8 @@ class PlayList extends SpotOn {
      
      function afterInsert($playlist , $playlistId){
          $this->m->insertPlaylistItem($playlistId, $this->mediaTemp);
-         if($this->autoCreateStory != null){
+         
+         if($this->getMode() == "L"){
              $this->autoCreateStory($playlistId, $playlist["pl_name"]);
          }
      }
@@ -105,7 +117,6 @@ class PlayList extends SpotOn {
          $storyId = $this->m->insertStory($story);
          
          $this->m->insertStoryItem($storyId, $displayId, $playlistId);
-         
          
      }
      
@@ -173,7 +184,7 @@ class PlayList extends SpotOn {
                     
 
         ->fields('pl_ID', 'pl_name', 'pl_desc', 'pl_lenght', 'pl_usage', 'pl_type', 'pl_expired', 
-                'Media', "autoCreateStory", "media_temp", "page", "cpn_ID", "event",
+                'Media', "media_temp", "page", "cpn_ID", "event",
                 "create_date", "create_by", "update_date", "update_by")
                 
         ->field_type("pl_ID", "hidden") 
@@ -181,8 +192,9 @@ class PlayList extends SpotOn {
         ->field_type("event", "hidden") 
         ->callback_column("pl_lenght", array($this, "_length")) 
         ->callback_column("pl_usage", array($this, "_usage")) 
+        ->callback_field("pl_lenght", array($this, "_pl_lenght"))
         ->callback_field("pl_usage", array($this, "_pl_usage")) 
-        ->callback_field("autoCreateStory", array($this, "_autoCreateStory")) 
+//        ->callback_field("autoCreateStory", array($this, "_autoCreateStory")) 
         ->callback_after_insert(array($this, "afterInsert"))
         ->callback_after_update(array($this, "afterInsert"))
 //        ->add_action('Clone', '', 'demo/action_more','ui-icon-document', array($this,'_clone'))
@@ -190,9 +202,9 @@ class PlayList extends SpotOn {
         
         
         $state = $this->crud->getState();
-        if($state !== "add"){
-            $this->crud->field_type("autoCreateStory", "hidden") ;
-        }
+//        if($state !== "add"){
+//            $this->crud->field_type("autoCreateStory", "hidden") ;
+//        }
         
         if($state === "add" || $state === "edit"){
             
