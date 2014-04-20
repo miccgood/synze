@@ -113,12 +113,12 @@
 
 <?php if(!is_null($back_url) && $back_url != ""){?>
 
-<span class="datatables-add-button">
+<!--<span class="datatables-add-button">
 <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="<?php echo $back_url?>">
 	<span class="ui-button-icon-primary ui-icon ui-icon-circle-arrow-w"></span>
 	<span class="ui-button-text">Back</span>
 </a>
-</span>
+</span>-->
 <?php }?>
 
 <?php if(!$unset_add){?>
@@ -140,13 +140,13 @@
 </span>
 
 
-<span class="datatables-add-button">
+<!--<span class="datatables-add-button">
 <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
 	<span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
 	<span class="ui-button-text" id="saveLayout"> Save </span>
-        <!--<button id="addLayout"> Add Layout </button>-->
+        <button id="addLayout"> Add Layout </button>
 </a>
-</span>
+</span>-->
 
 
 
@@ -160,6 +160,11 @@
 
 <script type="text/javascript">
     $(function(){
+        var save_and_go_back_to_list = false;
+        $("#save_and_go_back_to_list").unbind().bind("click", function(){
+            save_and_go_back_to_list = true;
+            $("#saveLayout").click();
+        });
         $("#saveLayout").unbind().bind("click", function(){
             if(!validate()){
                 alert("validate Error");
@@ -171,18 +176,42 @@
                console.log( "success" );
               }, "json")
             .done(function() {
-                $("#report-success").fadeIn(1000).delay(3000).fadeOut(1000);
-                location.reload();
+                if(save_and_go_back_to_list){
+                    window.location = "<?php echo $back_url?>";
+                }else{
+                    document.cookie="show=success";
+                    location.reload();
+                }
+                
             })
             .fail(function() {
-               $("#report-error").fadeIn(1000).delay(3000).fadeOut(1000);
+                 $("#report-error").fadeIn(1000).delay(3000).fadeOut(1000);
             })
             .always(function() {
               console.log( "complete" );
             });
         });
+        var isShow = getCookie("show");
+        if(isShow != "" && isShow == "success"){
+            document.cookie="show=false";
+            $("#report-success").fadeIn(1000).delay(3000).fadeOut(1000);
+        }
+       
+        
     });
     
+    function getCookie(cname)
+    {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) 
+          {
+          var c = ca[i].trim();
+          if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+          }
+        return "";
+    }
+
     function validate(){
         return true;
     }

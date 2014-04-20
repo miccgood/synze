@@ -459,6 +459,55 @@
     
 
 
+<div>
+    
+
+    <span class="datatables-add-button">
+        <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
+                <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
+                <span class="ui-button-text" id="saveLayout"> Update Change </span>
+                <!--<button id="addLayout"> Add Layout </button>-->
+        </a>
+    </span>
+
+    <span class="datatables-add-button">
+        <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
+                <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
+                <span class="ui-button-text" id="save_and_go_back_to_list"> Update and go back to list </span>
+                <!--<button id="addLayout"> Add Layout </button>-->
+        </a>
+    </span>
+    
+     
+<?php if(!is_null($back_url) && $back_url != ""){?>
+
+    <span class="datatables-add-button">
+        <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary back-to-list" href="<?php echo $back_url?>" onclick="return confirmGoBackToList()">
+                <span class="ui-button-icon-primary ui-icon ui-icon-circle-close"></span>
+                <span class="ui-button-text">Cancel</span>
+        </a>
+    </span>
+<?php }?>
+
+<br/>
+
+</div>
+<script type="text/javascript">
+    function confirmGoBackToList(){
+        var message_alert_edit_form = "The data you had change may not be saved.\nAre you sure you want to go back to list?";
+        if( $(this).hasClass('back-to-list') || confirm( message_alert_edit_form ) )
+        {
+                 return true;
+        }
+        return false;
+    }
+       
+</script>
+
+
+                        
+                        
+<div class='clear' style="width: 100%; height: 20px;"></div>
 
 <div>
 
