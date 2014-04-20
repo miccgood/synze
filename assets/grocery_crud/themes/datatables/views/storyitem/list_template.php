@@ -124,12 +124,12 @@
 <?php }?>
 <?php if(!is_null($back_url) && $back_url != ""){?>
 
-<span class="datatables-add-button">
+<!--<span class="datatables-add-button">
 <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="<?php echo $back_url?>">
 	<span class="ui-button-icon-primary ui-icon ui-icon-circle-arrow-w"></span>
 	<span class="ui-button-text">Back</span>
 </a>
-</span>
+</span>-->
 <?php }?>
 <!--<div style='text-align: center;'><h3 style="color: #222;">  Table <?php echo $subject?> </h3></div>-->
 <div class="dataTablesContainer">
@@ -143,6 +143,13 @@
 
 <script type="text/javascript">
     $(function(){
+    
+    
+    var save_and_go_back_to_list = false;
+    $("#save_and_go_back_to_list").unbind().bind("click", function(){
+        save_and_go_back_to_list = true;
+        $("#save").click();
+    });
         $("#save").unbind().bind("click", function(){
             if(!validate()){
 //                alert("validate Error");
@@ -163,10 +170,11 @@
                console.log( "success" );
               }, "json")
             .done(function(data) {
-                
-                form_success_message("<p>Your data has been successfully updated. <a href='<?php echo base_url("index.php/story");?>'>Go back to list</a></p>") ;
-//                $("#report-success").fadeIn(1000).delay(3000).fadeOut(1000);
-//                location.reload();
+                if(save_and_go_back_to_list){
+                    window.location = "<?php echo $back_url?>";
+                } else {
+                    form_success_message("<p>Your data has been successfully updated. <a href='<?php echo base_url("index.php/story");?>'>Go back to list</a></p>") ;
+                }
             })
             .fail(function(data) {
                 form_error_message(data);

@@ -2,17 +2,21 @@
 
 class StoryItem extends SpotOn {
 
+    private $storyId = 0;
     
     function __construct() {
         $this->layoutId = null;
         $this->autoSetDefaultValue = TRUE;
         parent::__construct();
-        
+        $this->storyId = 0;
         
 //        $this->config->load('story', true);
 //        $this->layout = $this->config->item('story');
     }
     
+    function getStoryId(){
+        return $this->storyId;
+    }
     
     function ajax(){
         //array
@@ -56,7 +60,7 @@ class StoryItem extends SpotOn {
         
         $storyId = $this->nullToZero($this->input->get("story_id"), 0);
         $layoutId = $this->nullToZero($this->input->get("lyt_id"), 0);
-        
+        $this->storyId = $storyId;
         $this->session->set_userdata("story_id", $storyId);
         $this->session->set_userdata("lyt_id", $layoutId);
         
@@ -82,7 +86,7 @@ class StoryItem extends SpotOn {
                 
         ->setCustomScript("var playlist = $playlistXml;")
         ->set_default_value($data)
-        
+        ->setBackUrl(site_url('story'));
         ;
         
         

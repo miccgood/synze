@@ -461,24 +461,62 @@
                 <tr>
                     <td>Duration </td> <td> <input type="text" id="inputDuration" value="" readonly="readonly" class="grayInput" /></td>
                 </tr>
+                
+                <?php 
+                    $ci = &get_instance();
+                    $mode = ( $ci->getStoryId() == "0" ? "add" : "edit" ) ;
+                    $save = "";
+                    $save_and_go_back = "";
+                    if($mode == "add"){
+                        $save = $this->l('form_save');
+                        $save_and_go_back = $this->l('form_save_and_go_back');
+                    } else if($mode == "edit"){
+                        $save = $this->l('form_update_changes');
+                        $save_and_go_back = $this->l('form_update_and_go_back');
+                    }
+                ?>
                 <tr>
                     <td colspan="2" align="center"> 
                         
                         <span class="datatables-add-button">
                             <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
                                     <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
-                                    <span class="ui-button-text" id="save"> Save </span>
+                                    <span class="ui-button-text" id="save"> <?php echo $save; ?> </span>
                                     <!--<button id="addLayout"> Add Layout </button>-->
                             </a>
                         </span>
 
                         <span class="datatables-add-button">
                             <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
-                                    <span class="ui-button-icon-primary ui-icon ui-icon-circle-close"></span>
-                                    <span class="ui-button-text" id="cancel"> Cancel </span>
+                                    <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
+                                    <span class="ui-button-text" id="save_and_go_back_to_list"> <?php echo $save_and_go_back; ?> </span>
                                     <!--<button id="addLayout"> Add Layout </button>-->
                             </a>
-                        </span> 
+                        </span>
+                        
+                        
+                        <?php if(!is_null($back_url) && $back_url != ""){?>
+
+                            <span class="datatables-add-button">
+                                <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary back-to-list" href="<?php echo $back_url?>" onclick="return confirmGoBackToList()">
+                                        <span class="ui-button-icon-primary ui-icon ui-icon-circle-close"></span>
+                                        <span class="ui-button-text">Cancel</span>
+                                </a>
+                            </span>
+                        <?php }?>
+
+                        <script type="text/javascript">
+                            function confirmGoBackToList(){
+                                var message_alert_edit_form = "The data you had change may not be saved.\nAre you sure you want to go back to list?";
+                                if( $(this).hasClass('back-to-list') || confirm( message_alert_edit_form ) )
+                                {
+                                         return true;
+                                }
+                                return false;
+                            }
+
+                        </script>
+
                     </td>
                 </tr>
                 
@@ -493,7 +531,7 @@
                 </tr>
             </table>
         </div>
-        <div style="min-width: 50px;max-width: 100px ;" class="inline"> &nbsp;</div>
+        <div style="min-width: 30px;max-width: 100px ;" class="inline"> &nbsp;</div>
         <div class="inline">
             <table cellpadding="0" cellspacing="0" border="0" class="display groceryCrudTable" id="<?php echo $uniqid; ?>" style="border: 2px solid #E2E4FF;">
                     <thead>
@@ -540,7 +578,7 @@
 
     </div>
 </div>
-<div class='clear' style="width: 100%; height: 20px;"></div>
+<div class='clear' style="width: 100%; height: 1px;"></div>
 <script type="text/javascript">
     
     var $_tableId = "<?php echo $uniqid; ?>";
@@ -586,7 +624,7 @@
         
         $(".divDetail").height($("#" + $_tableId).height() );
         
-//        $("#storyName, #storyDesc, #selectLayout").prop("disabled", true);
+        $("#storyName, #storyDesc").css({width:"100%"});
     }
     
     function getPlaylistTemplate(){
