@@ -221,6 +221,14 @@ class spot_on_model extends CI_Model  {
             return $this->db->select('*')->where('shd_ID', $shdId)->get('mst_shd')->result();
         }
         
+        public function countDeploymentByShdId($shdId){
+            
+            $result = $this->db->select('count(*) as value')->where('shd_ID', $shdId)->get('trn_dpm')->result();
+            foreach ($result as $value) {
+                return $value->value;
+            }
+        }
+        
         public function getDisplayByLayoutId($layoutId) {
             return $this->db->select('*')->where('lyt_ID', $layoutId)->where('lyt_ID != ', 0)->get('mst_dsp')->result();
 	}

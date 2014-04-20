@@ -2344,8 +2344,16 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
                 if ($state === 'add' || $state === 'edit')
                     $value = $default_value;
         
-        
-		$input = "<select id='field-{$field_info->name}' name='{$field_info->name}' class='chosen-select' data-placeholder='".$select_title."'>";
+                $disabled = "";
+                
+                $ci = &get_instance();
+                $isReadonly = $ci->isReadonly();
+                $class = $ci->router->class;
+                if($class == "deployment" && $isReadonly){
+                    $disabled = "disabled='disabled'";
+                }
+                
+		$input = "<select id='field-{$field_info->name}' name='{$field_info->name}' class='chosen-select' data-placeholder='".$select_title."' $disabled>";
 		$options = array('' => '') + ($field_info->extras[0] == NULL ? array() : $field_info->extras[0]);
 		foreach($options as $option_value => $option_label)
 		{

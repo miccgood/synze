@@ -1,11 +1,15 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Deployment extends SpotOn {
-
+    
     function __construct() {
         parent::__construct();
         $this->autoSetDefaultValue = TRUE;
         $this->indexArray = array("player_group", "dpm_ID");
+    }
+    
+    public function isReadonly(){
+        return $this->isReadonly;
     }
     
     function clearBeforeInsertAndUpdate($post_data){
@@ -47,6 +51,7 @@ class Deployment extends SpotOn {
         $this->dmp = array();
         $tmnGrpId = 0;
         $storyID = 0;
+        $countDeployment = 0;
         if($state == "edit"){
             $dmp = $this->m->getDeploymentById($dpmId);
             $this->dmp = $dmp[0];
@@ -56,6 +61,9 @@ class Deployment extends SpotOn {
             $shd = $this->m->getSchedulingById($shdId);
             $this->shd = $shd[0];
             $storyID = $this->shd->story_ID;
+            
+            $countDeployment = $this->m->countDeploymentByShdId($shdId);
+            
         }
         
         $terminalGroupList = $this->m->getTerminalGroup();
@@ -85,7 +93,7 @@ class Deployment extends SpotOn {
                 ->display_as('shd_name', 'Name')
                 ->display_as('shd_desc', 'Description')
                 ->display_as('story_ID', 'Story Name')
-                ->display_as('shd_start_time', 'Start Time')
+                ->display_as('shd_start_time', 'Start Time (HH:mm:ss)')
                 ->display_as('shd_stop_time', 'Stop Time')
                 ->display_as('shd_start_date', 'Effective Date')
                 ->display_as('shd_stop_date', 'Expire Date')
@@ -98,10 +106,19 @@ class Deployment extends SpotOn {
                 ->field_type('dpm_ID', 'hidden', $dpmId)
                 ->field_type('player_group', 'dropdown', $this->terminalGroup, $tmnGrpId)
                 ->field_type('story_ID', 'dropdown', $this->story, $storyID)
-                ->display_as('shd_start_time', 'Start Time')
         ->callback_after_insert(array($this,'afterInsert'))
         ->callback_after_update(array($this,'afterInsert'))
+                
+        ->required_fields("player_group", "shd_name", "story_ID", "shd_start_date", "shd_start_time")
         ;
+        if($countDeployment > 1){
+            $this->isReadonly = true;
+            foreach (array("shd_name", "shd_desc", "shd_start_date", "shd_start_time") as $value) {
+                $this->crud->field_type($value, 'readonly');
+            }
+        }
+        
+        
         $this->output();
      }
      
@@ -113,9 +130,10 @@ class Deployment extends SpotOn {
             ->set_relation('tmn_grp_ID', 'mst_tmn_grp', 'tmn_grp_ID, tmn_grp_name')
 
             ->set_subject('Deployment')
+            ->callback_column("shd_start_date", array($this, "_shd_start_date"))
             ->columns("tmn_grp_ID", "shd_name", "shd_start_date", "shd_ID")
 
-                    ->add_action('Edit', '', 'storyitem/index','ui-icon-pencil', array($this,'edit_participant'))
+                    ->add_action('Edit', '', '','ui-icon-pencil', array($this,'edit_participant'))
                     ->unset_edit()
 
                     ->display_as('shd_ID', 'Start Time')
@@ -124,7 +142,7 @@ class Deployment extends SpotOn {
                     ->display_as('story_ID', 'Story Name')
                     ->display_as('shd_start_time', 'Start Time')
                     ->display_as('shd_stop_time', 'Stop Time')
-                    ->display_as('shd_start_date', 'Effective Date')
+                    ->display_as('shd_start_date', 'Effective (yyyy/mm/dd)')
                     ->display_as('shd_stop_date', 'Expire Date')
                     ->display_as('tmn_grp_ID', 'Terminal Group')
                     ->display_as('player_group', 'Player Group')
@@ -138,17 +156,11 @@ class Deployment extends SpotOn {
        return 'deployment/index/edit/'.$row->shd_ID.'?dpm_id=' . $primary_key;
     }
      
+    function _shd_start_date($value) {
+        return date("Y/m/d", strtotime($value));
+    }
+    
     public function _beforeDelete($primary_key) {
-        return true;//$this->m->checkDeleteDeplayment($primary_key);
-        
-        
-//        $ret = $this->m->checkDeleteStory($primary_key);
-//        if($ret){
-//            $this->m->deleteTrnDspHasPlByStoryId($primary_key);
-//            return true;
-//        } else {
-//            return $ret;
-//        }
-        
+        return true;
     }
 }

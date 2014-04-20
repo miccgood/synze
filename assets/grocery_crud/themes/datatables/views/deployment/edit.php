@@ -51,7 +51,17 @@
 			<div id='report-error' class='report-div error'></div>
 			<div id='report-success' class='report-div success'></div>
 		</div>
+    
+                
+                
 		<div class='buttons-box'>
+                <?php 
+                
+                $ci = &get_instance();
+                $mode = $ci->getMode();
+                if($mode != "readonly"){
+                    
+                ?>
 			<div class='form-button-box'>
 				<input  id="form-button-save" type='submit' value='<?php echo $this->l('form_update_changes'); ?>' class='ui-input-button' />
 			</div>
@@ -59,15 +69,22 @@
 			<div class='form-button-box'>
 				<input type='button' value='<?php echo $this->l('form_update_and_go_back'); ?>' class='ui-input-button' id="save-and-go-back-button"/>
 			</div>
-			<div class='form-button-box'>
+			
+			<?php }?>
+                <?php 
+                }
+                ?>
+                    
+                        <div class='form-button-box'>
 				<input type='button' value='<?php echo $this->l('form_cancel'); ?>' class='ui-input-button' id="cancel-button" />
 			</div>
-			<?php }?>
 			<div class='form-button-box loading-box'>
 				<div class='small-loading' id='FormLoading'><?php echo $this->l('form_update_loading'); ?></div>
 			</div>
 			<div class='clear'></div>
 		</div>
+    
+                
 	</form>
 </div>
 </div>

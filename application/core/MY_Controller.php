@@ -7,6 +7,9 @@ class SpotOn extends CI_Controller {
     protected $userId = null;
     
     protected $autoSetDefaultValue = false;
+    
+    protected $isReadonly = false;
+    
     function __construct() {
         parent::__construct();
 
@@ -227,30 +230,11 @@ class SpotOn extends CI_Controller {
         }
         return $ret;
         
-        
-        
-        
-//        foreach(array(3600=>':',60=>':',1=>'') as $p=>$suffix){
-//
-//            if ($sec >= $p){
-//
-//                $sec -= $d = $sec-$sec % $p;
-//
-//                $temp = $d/$p;
-//                
-//                if(strlen($temp) === 0){
-//                    $temp = "00";
-//                }else if(strlen($temp) === 1){
-//                    $temp = "0". $temp;
-//                }
-//                $ret .= $temp."$suffix"; 
-//
-//            } else {
-//                $ret .= "00"."$suffix";
-//            }
-//
-//        }
-//        return $ret;
+    }
+    
+    
+    public function isReadonly(){
+        return $this->isReadonly;
     }
 }
 
