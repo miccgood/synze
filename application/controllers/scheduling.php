@@ -47,7 +47,7 @@ class Scheduling extends SpotOn {
                 ->display_as('shd_name', 'Name')
                 ->display_as('shd_desc', 'Description')
                 ->display_as('story_ID', 'Story Name')
-                ->display_as('shd_start_time', 'Start Time(HH:mm:ss)')
+                ->display_as('shd_start_time', 'Start Time (HH:mm:ss)')
                 ->display_as('shd_stop_time', 'Stop Time')
                 ->display_as('shd_start_date', 'Effective Date')
                 ->display_as('shd_stop_date', 'Expire Date')
@@ -62,6 +62,9 @@ class Scheduling extends SpotOn {
 //                ->display_as('shd_start_time', 'Start Time')
         ->callback_after_insert(array($this,'afterInsert'))
         ->callback_after_update(array($this,'afterInsert'))
+                
+                
+        ->required_fields("shd_name", "story_ID", "shd_start_date", "shd_start_time", "player_group" )
         ;
         if($state == "list"){
             $this->crud->display_as('shd_start_date', 'Effective (yyyy/mm/dd)')

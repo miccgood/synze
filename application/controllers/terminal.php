@@ -27,7 +27,7 @@ class Terminal extends SpotOn {
         }
         
         $this->crud->set_table('mst_tmn')
-        ->set_subject('Terminal')
+        ->set_subject('Player')
         ->where("mst_tmn.cpn_ID" , $this->cpnId)
 //                ->set_relation("cat_ID", "mst_media_cat", "cat_name")
 //        ->set_relation("tmn_grp_ID", "mst_tmn_grp", "tmn_grp_name")
@@ -62,7 +62,7 @@ class Terminal extends SpotOn {
 //            ->field_type('tmn_grp_ID', 'hidden')
                 
                 
-            ->required_fields("tmn_name", "tmn_monitor")
+            ->required_fields("tmn_grp_ID", "tmn_name", "tmn_monitor", 'tmn_uuid')
 //            ->field_type('cpn_ID', 'hidden', $this->cpnId)
         ;
 
