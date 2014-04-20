@@ -83,7 +83,7 @@ class Deployment extends SpotOn {
                 "create_date", "create_by", "update_date", "update_by")
         
                 ->display_as('shd_name', 'Name')
-                ->display_as('shd_desc', 'Desc')
+                ->display_as('shd_desc', 'Description')
                 ->display_as('story_ID', 'Story Name')
                 ->display_as('shd_start_time', 'Start Time')
                 ->display_as('shd_stop_time', 'Stop Time')
@@ -120,7 +120,7 @@ class Deployment extends SpotOn {
 
                     ->display_as('shd_ID', 'Start Time')
                     ->display_as('shd_name', 'Scheduling Name')
-                    ->display_as('shd_desc', 'Scheduling Desc')
+                    ->display_as('shd_desc', 'Description')
                     ->display_as('story_ID', 'Story Name')
                     ->display_as('shd_start_time', 'Start Time')
                     ->display_as('shd_stop_time', 'Stop Time')

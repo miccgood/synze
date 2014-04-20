@@ -168,7 +168,7 @@ class PlayList extends SpotOn {
         
         ->columns('pl_name','pl_desc', 'pl_lenght', 'pl_usage')
         ->display_as('pl_name', 'Name')
-        ->display_as('pl_desc', 'Desc')
+        ->display_as('pl_desc', 'Description')
         ->display_as('pl_lenght', 'Duration')
         ->display_as('media_name', 'Media Name')       
         ->display_as('pl_usage', 'Usage')

@@ -23,7 +23,7 @@ class Story extends SpotOn {
         ->set_subject('Story')
         
         ->display_as('story_name', 'Name')
-        ->display_as('story_desc', 'Desc')
+        ->display_as('story_desc', 'Description')
         ->display_as('lyt_ID', 'Layout')
         ->display_as('Zone', 'Zone')
         ->display_as('PlayList', 'PlayList')       

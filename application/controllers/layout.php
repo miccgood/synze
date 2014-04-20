@@ -19,7 +19,7 @@ class Layout extends SpotOn {
         ->set_subject('Layout')
         
         ->display_as('lyt_name', 'Name')
-        ->display_as('lyt_desc', 'Desc')
+        ->display_as('lyt_desc', 'Description')
                 
         ->display_as('lyt_width', 'Width')
         ->display_as('lyt_height', 'Height')

@@ -45,7 +45,7 @@ class Scheduling extends SpotOn {
                 "create_date", "create_by", "update_date", "update_by")
         
                 ->display_as('shd_name', 'Name')
-                ->display_as('shd_desc', 'Desc')
+                ->display_as('shd_desc', 'Description')
                 ->display_as('story_ID', 'Story Name')
                 ->display_as('shd_start_time', 'Start Time(HH:mm:ss)')
                 ->display_as('shd_stop_time', 'Stop Time')

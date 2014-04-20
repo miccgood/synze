@@ -57,7 +57,7 @@ class Monitor extends SpotOn {
             ->order_by("tmn_name", "DESC")
             ->display_as('tmn_grp_ID', 'Player Group')
             ->display_as('tmn_name', 'Player')
-            ->display_as('tmn_desc', 'Desc')
+            ->display_as('tmn_desc', 'Description')
             ->display_as('tmn_os', 'OS')
               
             ->display_as('tmn_uuid', 'UUID')

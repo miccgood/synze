@@ -40,7 +40,7 @@ class Terminal extends SpotOn {
 //            ->callback_column('count_media', array($this, 'countMedia'))
             ->display_as('tmn_grp_ID', 'Group Name')
             ->display_as('tmn_name', 'Name')
-            ->display_as('tmn_desc', 'Desc')
+            ->display_as('tmn_desc', 'Description')
             ->display_as('tmn_os', 'OS')
               
             ->display_as('tmn_uuid', 'UUID')

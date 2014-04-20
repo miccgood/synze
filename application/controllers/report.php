@@ -748,7 +748,7 @@ class Report extends SpotOnReport {
                 
             ->display_as('tmn_grp_ID', 'Group Name')
             ->display_as('tmn_name', 'Name')
-            ->display_as('tmn_desc', 'Desc')
+            ->display_as('tmn_desc', 'Description')
             ->display_as('tmn_os', 'OS')
               
             ->display_as('tmn_uuid', 'UUID')
