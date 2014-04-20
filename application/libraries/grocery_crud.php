@@ -1930,7 +1930,8 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 					'success' => true ,
 					'insert_primary_key' => $insert_result,
 					'success_message' => $success_message,
-					'success_list_url'	=> $this->getListSuccessUrl($insert_result)
+					'success_list_url'	=> $this->getListSuccessUrl($insert_result),
+                                        'id' => $insert_result
 			))."</textarea>";
 		}
 		$this->set_echo_and_die();

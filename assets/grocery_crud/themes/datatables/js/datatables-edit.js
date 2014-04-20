@@ -2,12 +2,19 @@ $(function(){
 
 	var save_and_close = false;
 
+        var save_and_next = false;
+        
 	$('#save-and-go-back-button').click(function(){
 		save_and_close = true;
 
 		$('#crudForm').trigger('submit');
 	});
 
+        $('#save-and-next').click(function(){
+            save_and_next = true;
+            $('#crudForm').trigger('submit');
+        });
+        
 	$('#crudForm').submit(function(){
 		$(this).ajaxSubmit({
 			url: validation_url,
@@ -42,6 +49,11 @@ $(function(){
 
 									return true;
 								}
+                                                                
+                                                                if(save_and_next)
+                                                                {
+                                                                    window.location = $next_url + $id;
+                                                                }
 
 								$('.field_error').removeClass('field_error');
 

@@ -14,11 +14,18 @@ $(function(){
 
 		var save_and_close = false;
 
-		$('#save-and-go-back-button').click(function(){
-			save_and_close = true;
+                var save_and_next = false;
 
-			$('#crudForm').trigger('submit');
+		$('#save-and-go-back-button').click(function(){
+                    save_and_close = true;
+
+                    $('#crudForm').trigger('submit');
 		});
+
+                $('#save-and-next').click(function(){
+                    save_and_next = true;
+                    $('#crudForm').trigger('submit');
+                });
 
 		$('#crudForm').submit(function(){
 			$(this).ajaxSubmit({
@@ -53,15 +60,20 @@ $(function(){
 
 										return true;
 									}
+                                                                        
+                                                                        if(save_and_next)
+                                                                        {
+                                                                            window.location = $next_url + data.id;
+                                                                        }
 
 									$('.field_error').removeClass('field_error');
 
 									form_success_message(data.success_message);
                                                                         
-                                                                        callbackAfterAdd(data);
+                                                                        
                                                                         
 									clearForm();
-                                                                        
+                                                                        callbackAfterAdd(data);
                                                                         
 								}
 								else

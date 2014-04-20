@@ -57,7 +57,7 @@
 			</div>
 			<?php 	if(!$this->unset_back_to_list) { ?>
 			<div class='form-button-box'>
-				<input type='button' value='<?php echo $this->l('form_update_and_go_back'); ?>' class='ui-input-button' id="save-and-go-back-button"/>
+				<input type='button' value='<?php echo $this->l('form_update_and_next'); ?>' class='ui-input-button' id="save-and-next"/>
 			</div>
 			<div class='form-button-box'>
 				<input type='button' value='<?php echo $this->l('form_cancel'); ?>' class='ui-input-button' id="cancel-button" />
@@ -75,6 +75,10 @@
 	var validation_url = '<?php echo $validation_url?>';
 	var list_url = '<?php echo $list_url?>';
 
+        var $next_url = '<?php echo base_url("index.php/display?lyt_id=")?>';
+        
 	var message_alert_edit_form = "<?php echo $this->l('alert_edit_form')?>";
 	var message_update_error = "<?php echo $this->l('update_error')?>";
+        var $id = $("#field-lyt_ID").val();
+        
 </script>

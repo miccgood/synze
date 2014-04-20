@@ -7,12 +7,13 @@ class Layout extends SpotOn {
         $this->config->load('layout', true);
         $this->layout = $this->config->item('layout');
         $this->autoSetDefaultValue = true;
+        $this->indexArray = array("Resolution", "next");
     }
     
     public function index() {
         
         $this->crud->set_table('mst_lyt')
-        ->set_relation('lyt_ID', 'mst_dsp', 'lyt_ID')
+//        ->set_relation('lyt_ID', 'mst_dsp', 'lyt_ID')
         ->where("mst_lyt.cpn_ID" , $this->cpnId)
         ->columns('lyt_name','lyt_desc', 'lyt_width', 'lyt_height')
         ->set_subject('Layout')
@@ -23,7 +24,9 @@ class Layout extends SpotOn {
         ->display_as('lyt_width', 'Width')
         ->display_as('lyt_height', 'Height')
         ->display_as('Resolution', 'Screen Size')
-                
+         ->field_type('lyt_ID','hidden')       
+//        ->field_type('next','invisible')
+        
         ->callback_column('lyt_name',array($this,'callbackLytName'))
         ->columns_align(array('lyt_name' => 'right',
             'lyt_desc' => 'right',
@@ -33,16 +36,31 @@ class Layout extends SpotOn {
             'create_date' => 'right',
             'update_date' => 'right'))
                 
-        ->fields("lyt_name","lyt_desc", "Resolution", "lyt_width", "lyt_height", 'cpn_ID',
+        ->fields("lyt_ID", "lyt_name","lyt_desc", "Resolution", "lyt_width", "lyt_height", 'cpn_ID',
                 "create_date", "create_by", "update_date", "update_by")
         ->callback_field("Resolution", array($this,'callback_resolution'))
                 
-        ->callback_before_insert(array($this,'clearResolution'))
-        ->callback_before_update(array($this,'clearResolution'))
+        ->callback_after_insert(array($this, "afterInsert"))
+        ->callback_after_update(array($this, "afterInsert"))
         ;
         $this->output();
+        
     }
     
+    function clearBeforeInsertAndUpdate($files_to_insert = "", $field_info = "" , $file = null, $row = null) {
+        
+        $this->next = $files_to_insert["next"];
+        $files_to_insert = parent::clearBeforeInsertAndUpdate($files_to_insert);
+        $files_to_insert = parent::setDefaultValue($files_to_insert);
+        return $files_to_insert;
+    }
+    
+    function afterInsert($layout , $layoutId){
+         if($this->next == "Y"){
+//             redirect("display?lyt_id=". $layoutId);
+         }
+     }
+     
     function callbackLytName($value = '', $primary_key = null)
     {
         return '<a href="'.site_url('display?lyt_id='.$primary_key->lyt_ID).'">'.$value.'</a>';
