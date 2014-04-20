@@ -38,7 +38,8 @@
 	$lang['form_button_clear'] 		= 'Clear';
 
 	$lang['delete_success_message'] = 'Your data has been successfully deleted from the database.';
-	$lang['delete_error_message'] 	= 'Your data was not deleted from the database.';
+//	$lang['delete_error_message'] 	= 'Your data was not deleted from the database.';
+        $lang['delete_error_message'] 	= 'Can’t be delete, the entity is being used.';
 
 	/* Javascript messages */
 	$lang['alert_add_form']			= 'The data you had insert may not be saved.\\nAre you sure you want to go back to list?';

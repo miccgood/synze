@@ -49,7 +49,7 @@
                 var delete_url = "<?php echo base_url("index.php/terminalgroup/index/delete") ; ?>";
                 delete_url += "/" + tmnGrpId;
                 var $delete_success_message = 'Your data has been successfully deleted from the database.';
-                var $delete_error_message = 'Your data was not deleted from the database.';
+                var $delete_error_message = 'Can’t be delete, the entity is being used.';
                 $.ajax({
 			url: delete_url,
 			dataType: 'json',
