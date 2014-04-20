@@ -30,13 +30,15 @@ class Monitor extends SpotOn {
         $result = $this->m->getTerminalStatusInIds($ids);
         $ret = array();
         foreach ($result as $key => $value) {
+            $tmn_status_message = $this->getStatusText($value, $value->tmn_status_id, "tmn_status_message", "tmn_monitor", "statusColor");
+            $tmn_status_upload_message = $this->getStatusText($value, $value->tmn_status_upload_id, "tmn_status_upload_message", "tmn_monitor", "uploadStatusColor");
             $status = array(
                 "tmn_monitor" => $value->tmn_monitor,
                 "tmn_status_id" => $value->tmn_status_id,
-                "tmn_status_message" => $value->tmn_status_message,
+                "tmn_status_message" => $tmn_status_message,
                 "tmn_status_update" => $value->tmn_status_update,
                 "tmn_status_upload_id" => $value->tmn_status_upload_id,
-                "tmn_status_upload_message" => $value->tmn_status_upload_message,
+                "tmn_status_upload_message" => $tmn_status_upload_message,
                 "tmn_status_upload_update" => $value->tmn_status_upload_update,
                 "incedent_per_day" => $value->incedent_per_day,
                 "incedent_per_month" => $value->incedent_per_month
@@ -53,7 +55,7 @@ class Monitor extends SpotOn {
         ->set_subject('Monitor')
         ->where("mst_tmn.cpn_ID" , $this->cpnId)
         ->set_relation("tmn_grp_ID", "mst_tmn_grp", "tmn_grp_name")
-        ->columns('tmn_grp_ID', 'tmn_name', 'tmn_status_id', 'upload_status_id', 'incedent_per_day', 'incedent_per_month')
+        ->columns('tmn_grp_ID', 'tmn_name', 'tmn_status_id', 'tmn_status_upload_id', 'incedent_per_day', 'incedent_per_month')
             ->order_by("tmn_name", "DESC")
             ->display_as('tmn_grp_ID', 'Player Group')
             ->display_as('tmn_name', 'Player')
@@ -66,13 +68,13 @@ class Monitor extends SpotOn {
             ->display_as('tmn_status_id', 'Player Status')
             ->display_as('tmn_status_message', 'Message')
             ->display_as('tmn_status_update', 'Status Update')
-            ->display_as('upload_status_id', 'Upload Status')
+            ->display_as('tmn_status_upload_id', 'Upload Status')
             ->display_as('incedent_per_day', 'Incedent Day')
             ->display_as('incedent_per_month', 'Incedent Month')    
                 
         
         ->callback_column("tmn_status_id", array($this, "_tmn_status_id"))
-        ->callback_column("upload_status_id", array($this, "_upload_status_id"))
+        ->callback_column("tmn_status_upload_id", array($this, "_tmn_status_upload_id"))
 //        ->callback_column("Story", array($this, "_story"))
         ->set_default_value($this->monitor) 
         ;
@@ -82,53 +84,42 @@ class Monitor extends SpotOn {
     }
     
     
-    function _upload_status_id($value = '', $row = null, $a = "", $pk = ""){
-        $message = $row->tmn_status_upload_message;
-        $active = $row->tmn_monitor;
-
-        $color = $this->getColor($active, $value, "uploadStatusColor");
-            
-        if($message == null || $active == null || $active != 1){
-            return '<div id="border-circle" >'
-                    . '<div id="circle" style="background: ' . $color .';"></div>'
-                . '</div> ';
-        } else {
-            $message = str_replace(",", "<br/>", $message);
-            return "<font style='color:$color;'> $message </font>";
-        }
-        
-        
-    }
-    function _tmn_status_id($value = '', $row = null, $a = "", $pk = ""){
-        $message = $row->tmn_status_message;
-        $active = $row->tmn_monitor;
-
-        $color = $this->getColor($active, $value, "statusColor");
-            
-         if($message == null || $active == null || $active != 1){
-            return '<div id="border-circle" >'
-                    . '<div id="circle" style="background: ' . $color .';"></div>'
-                . '</div> ';
-        } else {
-            $message = str_replace(",", "<br/>", $message);
-            return "<font style='color:$color;'> $message </font>";
-        }
-        
-        
+    function _tmn_status_upload_id($value = '', $row = null, $a = "", $pk = ""){
+        return $this->getStatusText($row, $value, "tmn_status_upload_message", "tmn_monitor", "uploadStatusColor");
     }
     
+    function _tmn_status_id($value = '', $row = null, $a = "", $pk = ""){
+        return $this->getStatusText($row, $value, "tmn_status_message", "tmn_monitor", "statusColor");
+    }
+    
+    private function getStatusText($row , $value, $status, $monitor, $mode){
+        $message = $row->$status;
+        $active = $row->$monitor;
+
+        $color = "black";// เป็นสีดำเมื่อหา statusId ไม่เจอ
+
+        if($active == null || $active != 1){
+            $message = "Not monitor";
+            $color = $this->getColor($active, "notmonitor", $mode);
+        } else {
+            $color = $this->getColor($active, $value, $mode);
+        }
+        
+        return "<font style='color:$color;'> " . str_replace(",", "<br/>", $message) . "</font>";
+        
+    }
     private function getColor($active, $id, $arrayStatus){
         
-        $color = "#cccccc";
+        $color = "black";
         
-        if($active != null && $active == 1){
-            foreach ($this->monitor[$arrayStatus] as $key => $value) {
-                if($id == $key){
-                    $color = $value;
-                    break;
-                }
+//        if($active != null && $active == 1){
+        foreach ($this->monitor[$arrayStatus] as $key => $value) {
+            if($id == $key){
+                $color = $value;
+                break;
             }
-        }  
+        }
+//        }  
         return $color;
     }
     function callbackTmnGrpName($value = '', $primary_key = null)

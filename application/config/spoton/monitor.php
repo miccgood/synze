@@ -16,11 +16,13 @@ $config["setInterval"] = 5; // sec
 
 
 $config["statusColor"] = array(
+                            "notmonitor" => "#cccccc" ,
                             "1" => "red" ,
                             "2" => "yellow" ,
                             "3" => "green" 
                             ); 
 $config["uploadStatusColor"] = array(
+                            "notmonitor" => "#cccccc" ,
                             "1" => "red" ,
                             "2" => "yellow" ,
                             "3" => "green" 
