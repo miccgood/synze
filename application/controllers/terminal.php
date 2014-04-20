@@ -31,7 +31,7 @@ class Terminal extends SpotOn {
         ->where("mst_tmn.cpn_ID" , $this->cpnId)
 //                ->set_relation("cat_ID", "mst_media_cat", "cat_name")
 //        ->set_relation("tmn_grp_ID", "mst_tmn_grp", "tmn_grp_name")
-        ->columns('tmn_grp_ID', 'tmn_name','tmn_desc', 'tmn_uuid')
+        ->columns('tmn_grp_ID', 'tmn_name','tmn_desc', 'tmn_uuid', "tmn_monitor")
         ->fields("tmn_grp_ID", 'tmn_name', 'tmn_desc', 'tmn_uuid', 'tmn_monitor', 'cpn_ID',
                 "create_date", "create_by", "update_date", "update_by")
 //            ->where("tmn_grp_ID", $tmnGrpId)
