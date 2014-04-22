@@ -16,6 +16,25 @@ class Programmer extends SpotOn {
         
     }
     
+    function sleep() {
+//        $seconds = $this->uri->segment(3);
+//        sleep( ( $seconds ? $seconds : 1));
+
+
+//        $my = new Th();
+//        var_dump($my->start());
+
+
+        $this->load->view("programmer", array("result" => "Success"));
+    }
+    
+    function ajax() {
+        set_time_limit (2);
+        $seconds = $this->uri->segment(3);
+        sleep( ( $seconds ? $seconds : 1));
+        echo json_encode(array("result" => "true"));
+    }
+    
     public function index() {
         
 //        $this->genLog();
@@ -294,4 +313,21 @@ class Programmer extends SpotOn {
         }
     }
     
+}
+
+
+class Th extends Thread {
+
+//    public function __construct($arg) {
+//        $this->arg = $arg;
+//    }
+
+    public function run() {
+//        if ($this->arg) {
+//            $sleep = mt_rand(1, 10);
+//            printf('%s: %s  -start -sleeps %d' . "\n", date("g:i:sa"), '$this->arg', $sleep);
+//            sleep($sleep);
+//            printf('%s: %s  -finish' . "\n", date("g:i:sa"), '$this->arg');
+//        }
+    }
 }
