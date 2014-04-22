@@ -552,17 +552,17 @@ class spot_on_model extends CI_Model  {
         }
         
         public function getMediaTemp(){
-            $result = $this->db->select("*")->where("item_type", "media")->get('log_item')->result();
+            $result = $this->db->select("*")->where($this->getWhere("item_type", "media"))->get('log_item')->result();
             return $this->getItem($result);
         }
         
         public function getPlayerTemp(){
-            $result = $this->db->select("*")->where("item_type", "tmn")->get('log_item')->result();
+            $result = $this->db->select("*")->where($this->getWhere("item_type", "tmn"))->get('log_item')->result();
             return $this->getItem($result);
         }
         
         public function getPlayerGroupTemp(){
-            $result = $this->db->select("*")->where("item_type", "tmn_grp")->get('log_item')->result();
+            $result = $this->db->select("*")->where($this->getWhere("item_type", "tmn_grp"))->get('log_item')->result();
             return $this->getItem($result);
         }
         
