@@ -82,7 +82,7 @@
         
         var $id = $("#field-lyt_ID").val();
         
-        function callbackAfterAdd (data){
+        function callbackAfterAddAndAfterClearForm (data){
             $("#select_resolution").val($("#select_resolution option:first").val());
         }
         

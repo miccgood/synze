@@ -71,9 +71,9 @@ $(function(){
 									form_success_message(data.success_message);
                                                                         
                                                                         
-                                                                        
-									clearForm();
                                                                         callbackAfterAdd(data);
+									clearForm();
+                                                                        callbackAfterAddAndAfterClearForm(data);
                                                                         
 								}
 								else
@@ -156,6 +156,6 @@ $(function(){
         function callbackAfterAdd (data){
             return false;
         } 
-        function callbackAfterAdd (data){
+        function callbackAfterAddAndAfterClearForm (data){
             return false;
         } 

@@ -123,6 +123,8 @@
 </div>
 <?php }?>
 <div style='height:10px;'></div>
+<div style='text-align: center;'><h3 style="color: #222;">  Table <?php echo $subject?> </h3></div>
+<div style='height:10px;'></div>
 <div class="dataTablesContainer">
 	<?php echo $list_view?>
 </div>
