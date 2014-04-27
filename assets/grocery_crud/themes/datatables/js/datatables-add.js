@@ -155,4 +155,7 @@ $(function(){
         
         function callbackAfterAdd (data){
             return false;
-        }
+        } 
+        function callbackAfterAdd (data){
+            return false;
+        } 
