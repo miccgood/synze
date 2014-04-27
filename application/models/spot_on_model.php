@@ -609,16 +609,16 @@ class spot_on_model extends CI_Model  {
                 $where["start_date <="] = date("Y-m-d", strtotime($stopDateTime));
             }
              $this->db->select("*")
-                ->where($where);//->limit(0);
+                ->where($where);
             
             $genBy = $_get["genReportBy"];
-            $orderBy = "";
-            if($genBy == 1){
-                $orderBy = "tmn_name";
-            } else if($genBy == 2){
-                //Media
-                $orderBy = "media_name";
-            }
+            $orderBy = "start_date, start_time";
+//            if($genBy == 1){
+//                $orderBy = "tmn_name";
+//            } else if($genBy == 2){
+//                //Media
+//                $orderBy = "media_name";
+//            }
             
             $this->db->save_queries = FALSE;
             $this->db->from('log');

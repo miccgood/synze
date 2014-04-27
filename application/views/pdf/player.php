@@ -83,7 +83,7 @@
             <td colspan="2"> Summary </td>
         </tr>
         <tr>
-            <td style="width: 130px;">Total Player</td>
+            <td style="width: 130px;">Total Media</td>
             <td><?php echo $countPlayer;?></td>
         </tr>
         <tr>

@@ -106,8 +106,8 @@ class Report extends SpotOnReport {
 //
 //
         $html = $this->output->get_output();
-        
-        
+//        
+//        
         $this->load->library('pdf');
         $mpdf = $this->pdf->load(); 
 //        $mpdf = new mPDF('c', 'A4-L');

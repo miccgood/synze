@@ -16,6 +16,25 @@ class Programmer extends SpotOn {
         
     }
     
+    function sleep() {
+//        $seconds = $this->uri->segment(3);
+//        sleep( ( $seconds ? $seconds : 1));
+
+
+//        $my = new Th();
+//        var_dump($my->start());
+
+
+        $this->load->view("programmer", array("result" => "Success"));
+    }
+    
+    function ajax() {
+        set_time_limit (2);
+        $seconds = $this->uri->segment(3);
+        sleep( ( $seconds ? $seconds : 1));
+        echo json_encode(array("result" => "true"));
+    }
+    
     public function index() {
         
 //        $this->genLog();
