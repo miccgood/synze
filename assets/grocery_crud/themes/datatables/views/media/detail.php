@@ -150,7 +150,7 @@
     
    <?php $fieldLenght = $fields[5]; //lenght?> 
                 <div class='form-field-box odd' id="<?php echo $fieldSize->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $fieldLenght->field_name; ?>_display_as_box" style="width: 150px; text-align: left;">
+                    <div class='form-display-as-box' id="<?php echo $fieldLenght->field_name; ?>_display_as_box">
     <?php echo $input_fields[$fieldLenght->field_name]->display_as ?><?php echo ($input_fields[$fieldLenght->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
                     </div>
                     <div class='form-input-box' id="<?php echo $fieldLenght->field_name; ?>_input_box">
