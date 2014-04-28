@@ -773,7 +773,8 @@ class Report extends SpotOnReport {
         $data["player"] = $this->m->getPlayerTemp();
         $data["playerGroup"] = $this->m->getPlayerGroupTemp();
         $data["media"] = $this->m->getMediaTemp();
-        
+        $mediaList = $data["media"];
+        $count = count($mediaList);
         return $data;
     }
     

@@ -562,21 +562,33 @@ class spot_on_model extends CI_Model  {
         public function getPlayerTemp(){
             $result = $this->db->select("*")
                     ->where($this->getWhere("item_type", "tmn"))
+                    ->order_by("item_name")
                     ->get('log_item')->result();
             return $this->getItem($result);
         }
         
         public function getPlayerGroupTemp(){
-            $result = $this->db->select("*")->where($this->getWhere("item_type", "tmn_grp"))->get('log_item')->result();
+            $result = $this->db->select("*")
+                    ->where($this->getWhere("item_type", "tmn_grp"))
+                    ->order_by("item_name")
+                    ->get('log_item')->result();
             return $this->getItem($result);
         }
         
         private function getItem($result){
-            $ret = array();
-            foreach ($result as $value) {
-                $ret[$value->item_ID] = $value->item_name;
-            }
-            return $ret;
+//            $ret = array();
+//            $count = count($result);
+//            foreach ($result as $value) {
+//                $ret[$value->item_ID] = $value->item_name;
+//            }
+            return $result;
+        }
+        
+        public function getLogItemByItemId($itemId, $itemType, $select = "item_name"){
+            $result = $this->db->select($select)
+                    ->where($this->getWhere(array("item_ID" => $itemId, "item_type" => $itemType)))
+                    ->get('log_item')->result();
+            return $result;
         }
         
         public function insertLogItem($set){
@@ -597,13 +609,16 @@ class spot_on_model extends CI_Model  {
             
             $where = array( );
             if($playerGroup != 0){
-                $where["tmn_grp_ID"] = $playerGroup;
+//                $where["tmn_grp_ID"] = $playerGroup;
+                $where["tmn_grp_name"] = $this->getLogItemByItemId($playerGroup, "tmn_grp");
             }
             if($player != 0){
-                $where["tmn_ID"] = $player;
+//                $where["tmn_ID"] = $player;
+                $where["tmn_name"] = $this->getLogItemByItemId($player, "tmn");
             }
             if($media != 0){
-                $where["media_ID"] = $media;
+//                $where["media_ID"] = $media;
+                $where["media_name"] = $this->getLogItemByItemId($player, "media");
             }
             if($fromDate != null || $fromDate != ""){
                 $startDateTime = $this->getStringDateFormat($fromDate);
@@ -624,7 +639,7 @@ class spot_on_model extends CI_Model  {
                 //Media
                 $orderBy = "media_name";
             }
-            $orderBy = ", start_date, start_time";
+            $orderBy .= ", start_date, start_time";
             $this->db->save_queries = FALSE;
             $this->db->from('log');
             $query = $this->db->order_by($orderBy)->get();

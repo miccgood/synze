@@ -38,7 +38,7 @@
                         <?php
 
                             foreach ($default_value["playerGroup"] as $key => $value) {
-                                echo "<option value='$key'> $value </option>";
+                                echo "<option value='$value->item_ID'> $value->item_name </option>";
                             }
                         ?>
                     </select>
@@ -52,7 +52,7 @@
                         <?php
 
                             foreach ($default_value["player"] as $key => $value) {
-                                echo "<option value='$key'> $value </option>";
+                                echo "<option value='$value->item_ID'> $value->item_name </option>";
                             }
                         ?>
                     </select>
@@ -64,9 +64,10 @@
                    <select id="genReportByMedia" style="width:250px;" class='chosen-select'>
                         <option value="0"> All </option>
                         <?php
-
-                            foreach ($default_value["media"] as $key => $value) {
-                                echo "<option value='$key'> $value </option>";
+                            $mediaList = $default_value["media"];
+                            $count = count($mediaList);
+                            foreach ($mediaList as $key => $value) {
+                                echo "<option value='$value->item_ID'> $value->item_name </option>";
                             }
                         ?>
                     </select>
