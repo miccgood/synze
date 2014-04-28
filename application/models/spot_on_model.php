@@ -552,12 +552,17 @@ class spot_on_model extends CI_Model  {
         }
         
         public function getMediaTemp(){
-            $result = $this->db->select("*")->where($this->getWhere("item_type", "media"))->get('log_item')->result();
+            $result = $this->db->select("*")
+                    ->where($this->getWhere("item_type", "media"))
+                    ->order_by("item_name")
+                    ->get('log_item')->result();
             return $this->getItem($result);
         }
         
         public function getPlayerTemp(){
-            $result = $this->db->select("*")->where($this->getWhere("item_type", "tmn"))->get('log_item')->result();
+            $result = $this->db->select("*")
+                    ->where($this->getWhere("item_type", "tmn"))
+                    ->get('log_item')->result();
             return $this->getItem($result);
         }
         
@@ -612,14 +617,14 @@ class spot_on_model extends CI_Model  {
                 ->where($where);
             
             $genBy = $_get["genReportBy"];
-            $orderBy = "start_date, start_time";
-//            if($genBy == 1){
-//                $orderBy = "tmn_name";
-//            } else if($genBy == 2){
-//                //Media
-//                $orderBy = "media_name";
-//            }
-            
+            $orderBy = "";
+            if($genBy == 1){
+                $orderBy = "tmn_name";
+            } else if($genBy == 2){
+                //Media
+                $orderBy = "media_name";
+            }
+            $orderBy = ", start_date, start_time";
             $this->db->save_queries = FALSE;
             $this->db->from('log');
             $query = $this->db->order_by($orderBy)->get();
