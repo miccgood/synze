@@ -98,8 +98,7 @@ class PlayList extends SpotOn {
      
      function afterInsert($playlist , $playlistId){
          $this->m->insertPlaylistItem($playlistId, $this->mediaTemp);
-         
-         if($this->getMode() == "L"){
+         if($this->getMode() == "L" && $this->crud->getState() == "insert"){
              $this->autoCreateStory($playlistId, $playlist["pl_name"]);
          }
      }
@@ -155,7 +154,42 @@ class PlayList extends SpotOn {
         return $arr[0] * 3600 + $arr[1] * 60 + $arr[2];
      } 
     public function _beforeDelete($primary_key) {
-        return $this->m->checkDeletePlaylist($primary_key);
+        
+        if($this->getMode() == "L"){
+            $ret = false;
+            $playlistResult = $this->m->getPlaylistById($primary_key);
+            $playlist = $playlistResult[0];
+            $playlistName = $playlist->pl_name;
+            $storyResult = $this->m->getStoryByName($playlistName);
+
+            $count = count($storyResult);
+            if($count == 1){
+                $story = $storyResult[0];
+                $storyId = $story->story_ID;
+                $checkStory = $this->m->checkDeleteStory($storyId);
+                if($checkStory){
+                    
+                    $this->m->deleteStoryItem($storyId);
+                    
+                    $this->m->deleteStory($storyId);
+                    
+                    $layoutId = $story->lyt_ID;
+                    
+                    $displayResult = $this->m->getDisplayByLayoutId($layoutId);
+                    
+                    foreach ($displayResult as $display) {
+                        $displayId = $display->dsp_ID;
+                        $this->m->deleteDisplay($displayId);
+                    }
+                    
+                    $this->m->deleteLayout($layoutId);
+                    $ret = true;
+                }
+            }
+            return $ret;
+        } else {
+            return $this->m->checkDeletePlaylist($primary_key);
+        }
     }
     
     

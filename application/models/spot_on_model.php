@@ -78,6 +78,19 @@ class spot_on_model extends CI_Model  {
         public function deleteStoryItem($storyId){
             return $this->db->delete("trn_dsp_has_pl", array("story_ID" => $storyId));
         }
+        
+        public function deleteStory($storyId){
+            return $this->db->delete("mst_story", array("story_ID" => $storyId));
+        }
+        
+        public function deleteLayout($layoutId){
+            return $this->db->delete("mst_lyt", array("lyt_ID" => $layoutId));
+        }
+        
+        public function deleteDisplay($displayId){
+            return $this->db->delete("mst_dsp", array("dsp_ID" => $displayId));
+        }
+        
         public function insertLayout($layout){
             $this->db->trans_start();
             $this->db->insert("mst_lyt", $layout);
@@ -231,6 +244,10 @@ class spot_on_model extends CI_Model  {
         
         public function getDisplayByLayoutId($layoutId) {
             return $this->db->select('*')->where('lyt_ID', $layoutId)->where('lyt_ID != ', 0)->get('mst_dsp')->result();
+	}
+        
+        public function getStoryByName($storyName) {
+            return $this->db->select('*')->where($this->getWhere('story_name', $storyName))->get('mst_story')->result();
 	}
         
         public function insertOrUpdateStoryItemByStoryId($storyId, $dspId, $playlistId) {
@@ -588,7 +605,10 @@ class spot_on_model extends CI_Model  {
             $result = $this->db->select($select)
                     ->where($this->getWhere(array("item_ID" => $itemId, "item_type" => $itemType)))
                     ->get('log_item')->result();
-            return $result;
+            foreach ($result as $value) {
+                return $value->item_name;
+            }
+            
         }
         
         public function insertLogItem($set){
@@ -618,7 +638,7 @@ class spot_on_model extends CI_Model  {
             }
             if($media != 0){
 //                $where["media_ID"] = $media;
-                $where["media_name"] = $this->getLogItemByItemId($player, "media");
+                $where["media_name"] = $this->getLogItemByItemId($media, "media");
             }
             if($fromDate != null || $fromDate != ""){
                 $startDateTime = $this->getStringDateFormat($fromDate);

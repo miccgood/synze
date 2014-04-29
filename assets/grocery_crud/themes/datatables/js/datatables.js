@@ -206,6 +206,7 @@ function delete_row(delete_url , row_id)
 		$.ajax({
 			url: delete_url,
 			dataType: 'json',
+                        cache: false,
 			success: function(data)
 			{
 				if(data.success)
