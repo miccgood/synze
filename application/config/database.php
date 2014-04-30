@@ -52,6 +52,7 @@ $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root'; 
 $db['default']['password'] = 'root'; 
 $db['default']['database'] = '821508_synze_test';
+//$db['default']['database'] = 'synze25561212';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
