@@ -19,7 +19,7 @@ class Story extends SpotOn {
         ->where("mst_story.cpn_ID" , $this->cpnId)
         ->set_relation('lyt_ID', 'mst_lyt', 'lyt_name')
         ->columns("story_name", "story_desc", "lyt_ID")
-        ->callback_column('story_name',array($this,'callbackStoryName'))
+//        ->callback_column('story_name',array($this,'callbackStoryName'))
         ->set_subject('Story')
         
         ->display_as('story_name', 'Name')

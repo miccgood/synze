@@ -40,6 +40,11 @@ class PlayList extends SpotOn {
         $ret = array("success" => false);
         if($this->nullToZero($playlistId) != "0"){
             $this->m->insertPlaylistItem($playlistId, $post["media"]);
+            
+            if($this->getMode() == "L"){
+                $this->autoCreateStory($playlistId, $playlist["pl_name"]);
+            }
+            
             $ret = array("success" => true, "pl_ID" => $playlistId);
         }
         
@@ -76,12 +81,12 @@ class PlayList extends SpotOn {
         return $this->getStringFormDuration($this->nullToZero($value));
     }
     
-    function _autoCreateStory($value = "" , $pk = "", $row = "" , $rows = "") {
-        if($row->crud_type == "hidden"){
-            return "";
-        }
-        return "<input type='checkbox' name='autoCreateStory' style='margin:5px;'/>";
-    }
+//    function _autoCreateStory($value = "" , $pk = "", $row = "" , $rows = "") {
+//        if($row->crud_type == "hidden"){
+//            return "";
+//        }
+//        return "<input type='checkbox' name='autoCreateStory' style='margin:5px;'/>";
+//    }
     
     
     function clearBeforeInsertAndUpdate($post) {
