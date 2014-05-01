@@ -36,7 +36,7 @@ class StoryItem extends SpotOn {
             $story["create_by"] = $this->userId;
             $storyId = $this->m->insertStory($story);
         }else{
-            $this->m->updateStory($story, $storyId);
+            $this->m->updateStoryById($story, $storyId);
         }
         if($this->nullToZero($storyId, 0) !== 0){
             $this->m->deleteStoryItem($storyId);

@@ -108,7 +108,7 @@ class spot_on_model extends CI_Model  {
             return $insert_id;
         }
         
-        public function updateStory($story, $storyId){
+        public function updateStoryById($story, $storyId){
             $where = array(
                 "story_ID" => $storyId
             );
@@ -133,6 +133,7 @@ class spot_on_model extends CI_Model  {
             return $insert_id;
         }
         public function updateDisplay($data){
+            $data = get_object_vars($data);
             return $this->db->where("dsp_ID", $data["dsp_ID"])->update("mst_dsp", $data);
         }
         public function getResolutionByLayoutId($layoutId){
@@ -248,6 +249,16 @@ class spot_on_model extends CI_Model  {
         
         public function getStoryByName($storyName) {
             return $this->db->select('*')->where($this->getWhere('story_name', $storyName))->get('mst_story')->result();
+	}
+        
+        public function updateStory($story){
+            $story = get_object_vars($story);
+            return $this->db->where("story_ID", $story["story_ID"])->update("mst_story", $story);
+        }
+        
+        public function updateLayout($layout) {
+            $layout = get_object_vars($layout);
+            return $this->db->where("lyt_ID", $layout["lyt_ID"])->update("mst_lyt", $layout);
 	}
         
         public function insertOrUpdateStoryItemByStoryId($storyId, $dspId, $playlistId) {

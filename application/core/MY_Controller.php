@@ -182,6 +182,9 @@ class SpotOn extends CI_Controller {
 //        $m = floor($sec / 3600);
 //        $h = $sec / 3600;
 //        $h = $sec / 3600;
+//        if(is_numeric($sec)){
+//            $sec = $sec / 1000;
+//        }
         $ret = "";
         foreach(array(3600=>':',60=>':',1=>'') as $p=>$suffix){
 

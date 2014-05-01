@@ -2,7 +2,7 @@
 
 class PlayList extends SpotOn {
 
-    
+    private $playlistName = "";
     function __construct() {
         parent::__construct();
         $this->indexArray = array("Media", "media_temp", "mediaTemp", "event", "autoCreateStory");
@@ -91,6 +91,21 @@ class PlayList extends SpotOn {
     
     function clearBeforeInsertAndUpdate($post) {
 //        $this->autoCreateStory = $post["autoCreateStory"];
+//        $this->playlistName = $post["pl_name"];
+        
+//        $playlistResult = $this->m->getPlaylistById($playlistId);
+        
+        if($this->crud->getState() == "update"){
+            $playlistId = $post["pl_ID"];
+        
+            $playlistResult = $this->m->getPlaylistById($playlistId);
+            $playlist = $playlistResult[0];
+
+            $this->playlistName = $playlist->pl_name;
+            
+        }
+        
+        
         $this->mediaTemp = split(",", trim($post["media_temp"], ","));
         
         $post = parent::clearBeforeInsertAndUpdate($post);
@@ -98,14 +113,19 @@ class PlayList extends SpotOn {
         
         $post["pl_lenght"] = $this->getDuration($post["pl_lenght"]);
                 
-         return $post;
+        return $post;
      }
      
      function afterInsert($playlist , $playlistId){
          $this->m->insertPlaylistItem($playlistId, $this->mediaTemp);
-         if($this->getMode() == "L" && $this->crud->getState() == "insert"){
-             $this->autoCreateStory($playlistId, $playlist["pl_name"]);
-         }
+         if($this->getMode() == "L"){
+             if($this->crud->getState() == "insert"){
+                 $this->autoCreateStory($playlistId, $playlist["pl_name"]);
+             } else if($this->crud->getState() == "update"){
+                 $this->autoUpdateStory($playlistId, $playlist["pl_name"]);
+             }
+             
+         } 
      }
      
      private function autoCreateStory($playlistId, $playListname){
@@ -121,6 +141,53 @@ class PlayList extends SpotOn {
          $storyId = $this->m->insertStory($story);
          
          $this->m->insertStoryItem($storyId, $displayId, $playlistId);
+         
+     }
+     
+     private function autoUpdateStory($playlistId, $playListname){
+//         $resolution = $this->playlist["default_layout_resolution"];
+//         
+//         $layout = $this->createLayout($playListname, $resolution);
+//         $layoutId = $this->m->insertLayout($layout);
+//         
+//         $display = $this->createDisplay($playListname, $resolution, $layoutId);
+//         $displayId = $this->m->insertDisplay($display);
+//         
+//         $story = $this->createStory($playListname, $layoutId);
+//         $storyId = $this->m->insertStory($story);
+//         
+//         $this->m->insertStoryItem($storyId, $displayId, $playlistId);
+         
+         
+         
+//        $playlistResult = $this->m->getPlaylistById($playlistId);
+//        $playlist = $playlistResult[0];
+//        $playListname = $playlist->pl_name;
+        $storyResult = $this->m->getStoryByName($this->playlistName);
+
+        $count = count($storyResult);
+        if($count == 1){
+            $story = $storyResult[0];
+            $story->story_name = $playListname;
+            
+            $this->m->updateStory($story);
+
+            $layoutId = $story->lyt_ID;
+
+            $displayResult = $this->m->getDisplayByLayoutId($layoutId);
+
+            foreach ($displayResult as $display) {
+                $display->dsp_name = $playListname;
+                $this->m->updateDisplay($display);
+            }
+
+            $layoutResult = $this->m->getLayoutById($layoutId);
+            $layout = $layoutResult[0];
+            $layout->lyt_name = $playListname;
+            $this->m->updateLayout($layout);
+            
+        }
+
          
      }
      

@@ -13,8 +13,6 @@ class Scheduling extends SpotOn {
         $post_data = parent::clearBeforeInsertAndUpdate($post_data);
         return $post_data;
     }
-     
-             
     
     public function index() {
         
@@ -33,6 +31,10 @@ class Scheduling extends SpotOn {
             $this->story[$story->story_ID] = $story->story_name;
         }
         
+        
+         if($state == "list"){ 
+             $this->crud->set_relation('story_ID', 'mst_story', 'story_name');
+         }
         $this->crud->set_table('mst_shd')
                 
         ->where("mst_shd.cpn_ID" , $this->cpnId)
