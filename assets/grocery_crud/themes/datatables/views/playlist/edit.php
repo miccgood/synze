@@ -54,7 +54,7 @@
 		</div>
 		<div class='buttons-box'>
                         <div class='form-button-box'>
-				<input  id="form-button-clone" type='button' value='Clone' class='ui-input-button' />
+				<input  id="form-button-clone" type='button' value='Save as new Playlist' class='ui-input-button' />
 			</div>
 			<div class='form-button-box'>
 				<input  id="form-button-save" type='submit' value='<?php echo $this->l('form_update_changes'); ?>' class='ui-input-button' />
