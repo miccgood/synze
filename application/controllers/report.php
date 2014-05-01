@@ -46,14 +46,14 @@ class Report extends SpotOnReport {
             $arrTmn = $this->getValueFromObj($value, "tmn_ID");
             $this->countPlayer[$arrTmn][$arrMedia] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countPlayer, $arrTmn), $arrMedia), 0)  + 1;
             $this->countMedia[$arrMedia][$arrTmn] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countMedia, $arrMedia), $arrTmn), 0) + 1;
-            $duration = $this->getDurationFormString( (int)$value->duration / 1000);
+            $duration = $this->getDurationFormString( floor($value->duration / 1000));
             $this->sumDurationMedia[$arrMedia] = floor($this->nullToZero($this->getValueFromArray($this->sumDurationMedia, $arrMedia), 0) + $duration);
             $this->sumDurationGroup[$arrTmn] = floor($this->nullToZero($this->getValueFromArray($this->sumDurationGroup, $arrTmn), 0) + $duration);
             
             
             
 //            $valuePrint = $this->setDataBeforePrint($value);
-            $value->duration = $this->getStringFormDuration($value->duration);
+            $value->duration = $this->getStringFormDuration(floor($value->duration / 1000));
             $arr = array($value);
             $valueFromArray = $this->getValueFromArray($dataGroupBy, $value->{$type."_ID"});
             $array = $this->getArray($valueFromArray);
