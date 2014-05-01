@@ -193,6 +193,21 @@ function loadDataTable(this_datatables) {
 	});
 }
 
+var add_edit_button_listener = function () {
+
+	//If dialog AJAX forms is turned on from grocery CRUD config
+	if (dialog_forms) {
+
+		$('.edit_button,.add_button').unbind('click');
+		$('.edit_button,.add_button').click(function(){
+
+			fnOpenEditForm($(this));
+
+			return false;
+		});
+
+	}
+}
 function datatables_get_chosen_table(table_as_object)
 {
 	chosen_table_index = oTableMapping[table_as_object.attr('id')];

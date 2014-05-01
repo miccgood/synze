@@ -28,7 +28,11 @@ class PlayList extends SpotOn {
         $post = $this->input->post();
         $playlist = $post["playlist"];
         $playlist["pl_lenght"] = $this->getDuration($playlist["pl_lenght"]);
-        $playlist["pl_expired"] = date("YmdHis", strtotime($playlist["pl_expired"]));
+        
+        $expireDate = $playlist["pl_expired"];
+        $expireDate = str_replace('/', '-', $expireDate);
+
+        $playlist["pl_expired"] = date("YmdHis", strtotime($expireDate));
         
         $playlist["create_date"] = date("YmdHis", time());
         $playlist["create_by"] = $this->userId;
