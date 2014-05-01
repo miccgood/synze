@@ -232,7 +232,7 @@ class Report extends SpotOnReport {
         $dataGroupBy = array();
         foreach ($data["data"] as $value) {
 //            $valuePrint = $this->setDataBeforePrint($value);
-            $value->duration = $this->getStringFormDuration($value->duration);
+            $value->duration = $this->getStringFormDuration(floor($value->duration / 1000));
             $arr = array($value);
             $valueFromArray = $this->getValueFromArray($dataGroupBy, $value->{$type."_ID"});
             $array = $this->getArray($valueFromArray);
@@ -356,7 +356,7 @@ class Report extends SpotOnReport {
         $workSheet->setCellValue('C1', $valuePrint["companyName"]);
         $workSheet->getStyle('C1')->getFont()->setBold(true);
         
-        $workSheet->setCellValue('K1', "Playback Report by Player");
+        $workSheet->setCellValue('K1', "Playback Report by Media");
         $workSheet->getStyle('K1')->getFont()->setBold(true);
 
         $workSheet->setCellValue('A3', "Media");
