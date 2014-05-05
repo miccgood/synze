@@ -16,6 +16,10 @@ class Programmer extends SpotOn {
         
     }
     
+    public function usege(){
+        echo memory_get_usage() / 1000000 . "MB\n"; 
+    }
+    
     public function index() {
         
 //        $this->genLog();
@@ -75,7 +79,7 @@ class Programmer extends SpotOn {
         }
         
         
-        for ($index = 0; $index < 10; $index++) {
+        for ($index = 0; $index < 10000; $index++) {
             $arr = array();
 //            mt_rand(5, 15);
 //            
@@ -102,6 +106,9 @@ class Programmer extends SpotOn {
             $shdId = $scheduling->shd_ID;
             
             $storyId =  $scheduling->story_ID;
+            if(!array_key_exists($storyId, $storyArray)){
+                continue;
+            }
             $story = $storyArray[$storyId];
             
             $storyItemList = $this->m->getStoryItemByStoryId($storyId);

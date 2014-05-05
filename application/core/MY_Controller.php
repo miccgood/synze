@@ -260,6 +260,11 @@ class SpotOnLov extends SpotOn {
 
 class SpotOnReport extends SpotOn {
     
+    protected $countPlayer = array();
+    protected $countMedia = array();
+    protected $sumDurationMedia = array();
+    protected $sumDurationGroup = array();  
+    
     protected function setDefaultAction(){
         
         
@@ -278,4 +283,57 @@ class SpotOnReport extends SpotOn {
             ->callback_before_delete(array($this,'_beforeDelete'));
             ;
     }
+    
+    protected function getData(){
+        $_get = $this->input->get();
+        
+        $data["data"] = $this->m->getDataForReport($_get);
+//        $this->countPlayerAndsumDuration($data);
+        return $data;
+    } 
+    
+    protected function countPlayerAndsumDuration($valuePrint) {
+        
+        foreach ($valuePrint["data"] as $value) {
+            $arrMedia = $this->getValueFromObj($value, "media_ID");
+//            $arrTmnGrp = $this->getValueFromObj($value, "tmn_grp_ID");
+            $arrTmn = $this->getValueFromObj($value, "tmn_ID");
+            $this->countPlayer[$arrTmn][$arrMedia] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countPlayer, $arrTmn), $arrMedia), 0)  + 1;
+            $this->countMedia[$arrMedia][$arrTmn] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countMedia, $arrMedia), $arrTmn), 0) + 1;
+            $duration = $this->getDurationFormString($value->duration);
+            $this->sumDurationMedia[$arrMedia] = $this->nullToZero($this->getValueFromArray($this->sumDurationMedia, $arrMedia), 0) + $duration;
+            $this->sumDurationGroup[$arrTmn] = $this->nullToZero($this->getValueFromArray($this->sumDurationGroup, $arrTmn), 0) + $duration;
+        }
+//        $valuePrint["countPlayer"] = 100;
+//        $valuePrint["sumDuration"] = 123;
+    }
+    
+    protected function getArray($input){
+        return ($input == null) ? array() : $input;
+    }
+//    protected function phptopdf_html($html,$save_directory,$save_filename)
+//    {		
+//            $API_KEY = 'ayc6isbj8k6gswmfy';
+//            $postdata = http_build_query(
+//                    array(
+//                            'html' => $html,
+//                            'key' => $API_KEY
+//                    )
+//            );
+//
+//            $opts = array('http' =>
+//                    array(
+//                            'method'  => 'POST',
+//                            'header'  => 'Content-type: application/x-www-form-urlencoded',				
+//                            'content' => $postdata
+//                    )
+//            );
+//
+//            $context  = stream_context_create($opts);
+//
+//
+//            $resultsXml = file_get_contents('http://phptopdf.com/htmltopdf.php', false, $context);
+//            file_put_contents($save_directory.$save_filename,$resultsXml);
+//    }
+        
 }

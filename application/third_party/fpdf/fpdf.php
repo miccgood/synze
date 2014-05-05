@@ -598,6 +598,7 @@ function AcceptPageBreak()
 
 function Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='')
 {
+        $txt = iconv( 'UTF-8','TIS-620',$txt);
 	// Output a cell
 	$k = $this->k;
 	if($this->y+$h>$this->PageBreakTrigger && !$this->InHeader && !$this->InFooter && $this->AcceptPageBreak())
@@ -793,7 +794,6 @@ function Write($h, $txt, $link='')
 	// Output text in flowing mode
 	$cw = &$this->CurrentFont['cw'];
 	$w = $this->w-$this->rMargin-$this->x;
-        $this->FontSize = ($this->FontSize == 0 ? 1 : $this->FontSize);
 	$wmax = ($w-2*$this->cMargin)*1000/$this->FontSize;
 	$s = str_replace("\r",'',$txt);
 	$nb = strlen($s);

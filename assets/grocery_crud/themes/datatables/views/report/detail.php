@@ -148,22 +148,22 @@
     };
 
     var getUrl = function($event){
-        return "<?php echo base_url("index.php/report") ?>" + "/" + $event;
+        return "<?php echo base_url("index.php") ?>" + "/" + $event;
     };
 
     $(function(){
         $("#preview").bind("click", function(e){
-            var $url = getUrl("preview");
+            var $url = getUrl("reportpdf/preview");
             send($url);
         });
 
         $("#excel").bind("click", function(e){
-            var $url = getUrl("excel");
+            var $url = getUrl("reportexcel");
             send($url);
         });
 
         $("#pdf").bind("click", function(e){
-            var $url = getUrl("pdf");
+            var $url = getUrl("reportpdf/download");
             send($url);
         });
     });

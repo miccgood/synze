@@ -1,10 +1,10 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Report extends SpotOnReport {
-    private $countPlayer = array();
-    private $countMedia = array();
-    private $sumDurationMedia = array();
-    private $sumDurationGroup = array();  
+//    private $countPlayer = array();
+//    private $countMedia = array();
+//    private $sumDurationMedia = array();
+//    private $sumDurationGroup = array();  
     
     function __construct() {
         parent::__construct();
@@ -108,6 +108,13 @@ class Report extends SpotOnReport {
         $html = $this->output->get_output();
 //        
 //        
+        
+//        $path = "assets/uploads/pdf/my_pdf_filename.pdf";
+//        $this->phptopdf_html($html,$path, 'my_pdf_filename.pdf');
+//echo "<a href='".base_url($path)."'>Download PDF</a>";
+        
+        
+        // ----------------
         $this->load->library('pdf');
         $mpdf = $this->pdf->load(); 
 //        $mpdf = new mPDF('c', 'A4-L');
@@ -117,6 +124,9 @@ class Report extends SpotOnReport {
 
         $mpdf->writeHTML($html);
         $mpdf->Output($filename, $options);
+        
+        
+        //-------------------
         
         
 //        $this->load->library('loadfpdf');
@@ -161,21 +171,21 @@ class Report extends SpotOnReport {
 
     }
     
-    private function countPlayerAndsumDuration($valuePrint) {
-        
-        foreach ($valuePrint["data"] as $value) {
-            $arrMedia = $this->getValueFromObj($value, "media_ID");
-//            $arrTmnGrp = $this->getValueFromObj($value, "tmn_grp_ID");
-            $arrTmn = $this->getValueFromObj($value, "tmn_ID");
-            $this->countPlayer[$arrTmn][$arrMedia] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countPlayer, $arrTmn), $arrMedia), 0)  + 1;
-            $this->countMedia[$arrMedia][$arrTmn] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countMedia, $arrMedia), $arrTmn), 0) + 1;
-            $duration = $this->getDurationFormString($value->duration);
-            $this->sumDurationMedia[$arrMedia] = $this->nullToZero($this->getValueFromArray($this->sumDurationMedia, $arrMedia), 0) + $duration;
-            $this->sumDurationGroup[$arrTmn] = $this->nullToZero($this->getValueFromArray($this->sumDurationGroup, $arrTmn), 0) + $duration;
-        }
-//        $valuePrint["countPlayer"] = 100;
-//        $valuePrint["sumDuration"] = 123;
-    }
+//    private function countPlayerAndsumDuration($valuePrint) {
+//        
+//        foreach ($valuePrint["data"] as $value) {
+//            $arrMedia = $this->getValueFromObj($value, "media_ID");
+////            $arrTmnGrp = $this->getValueFromObj($value, "tmn_grp_ID");
+//            $arrTmn = $this->getValueFromObj($value, "tmn_ID");
+//            $this->countPlayer[$arrTmn][$arrMedia] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countPlayer, $arrTmn), $arrMedia), 0)  + 1;
+//            $this->countMedia[$arrMedia][$arrTmn] = $this->nullToZero($this->getValueFromArray($this->getValueFromArray($this->countMedia, $arrMedia), $arrTmn), 0) + 1;
+//            $duration = $this->getDurationFormString($value->duration);
+//            $this->sumDurationMedia[$arrMedia] = $this->nullToZero($this->getValueFromArray($this->sumDurationMedia, $arrMedia), 0) + $duration;
+//            $this->sumDurationGroup[$arrTmn] = $this->nullToZero($this->getValueFromArray($this->sumDurationGroup, $arrTmn), 0) + $duration;
+//        }
+////        $valuePrint["countPlayer"] = 100;
+////        $valuePrint["sumDuration"] = 123;
+//    }
     function putChar($str,$wha,$cnt) {
         if(strlen($str) <= $cnt){
             return $str;
@@ -825,8 +835,8 @@ class Report extends SpotOnReport {
 //        $this->crud->unset_add()->unset_edit()->unset_delete();
     }
     
-    private function getArray($input){
-        return ($input == null) ? array() : $input;
-    }
+//    private function getArray($input){
+//        return ($input == null) ? array() : $input;
+//    }
     
 }
