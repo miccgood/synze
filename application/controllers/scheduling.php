@@ -9,6 +9,13 @@ class Scheduling extends SpotOn {
     }
     
     function clearBeforeInsertAndUpdate($post_data){
+        
+        $start = $post_data["shd_start_date"];
+        $stop = $post_data["shd_stop_date"];
+        
+        if(strtotime($start) > strtotime($stop)){
+            $post_data["shd_stop_date"] = $start;
+        }
         $this->scheduling = $post_data;
         $post_data = parent::clearBeforeInsertAndUpdate($post_data);
         return $post_data;
@@ -40,9 +47,9 @@ class Scheduling extends SpotOn {
         ->where("mst_shd.cpn_ID" , $this->cpnId)
 //        ->set_relation('story_ID', 'mst_story', 'story_name')
         ->set_subject('Scheduling')
-        ->columns("shd_name","story_ID", "shd_start_date", "shd_start_time")
+        ->columns("shd_name","story_ID", "shd_start_date", "shd_start_time", "shd_stop_date")
                 
-        ->fields("shd_ID", "shd_name","shd_desc", "story_ID", "shd_start_date", "shd_start_time", "player_group" ,
+        ->fields("shd_ID", "shd_name","shd_desc", "story_ID", "shd_start_date", "shd_start_time", "shd_stop_date", "player_group" ,
                 'cpn_ID',
                 "create_date", "create_by", "update_date", "update_by")
         
@@ -66,7 +73,7 @@ class Scheduling extends SpotOn {
         ->callback_after_update(array($this,'afterInsert'))
                 
                 
-        ->required_fields("shd_name", "story_ID", "shd_start_date", "shd_start_time", "player_group" )
+        ->required_fields("shd_name", "story_ID", "shd_start_date", "shd_start_time", "shd_stop_date", "player_group" )
         ;
         if($state == "list"){
             $this->crud->display_as('shd_start_date', 'Effective (yyyy/mm/dd)')

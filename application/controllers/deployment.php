@@ -13,6 +13,13 @@ class Deployment extends SpotOn {
     }
     
     function clearBeforeInsertAndUpdate($post_data){
+        $start = $post_data["shd_start_date"];
+        $stop = $post_data["shd_stop_date"];
+        
+        if(strtotime($start) > strtotime($stop)){
+            $post_data["shd_stop_date"] = $start;
+        }
+        
         $this->scheduling = $post_data;
         $post_data = parent::clearBeforeInsertAndUpdate($post_data);
         return $post_data;
@@ -84,9 +91,9 @@ class Deployment extends SpotOn {
         ->where("mst_shd.cpn_ID" , $this->cpnId)
 //        ->set_relation('story_ID', 'mst_story', 'story_name')     
         ->set_subject('Scheduling')
-        ->columns("shd_name","story_ID", "shd_start_date", "shd_start_time")
+        ->columns("shd_name","story_ID", "shd_start_date", "shd_start_time", "shd_stop_date")
                 
-        ->fields("player_group", "shd_ID", "shd_name","shd_desc", "story_ID", "shd_start_date", "shd_start_time", "dpm_ID" ,
+        ->fields("player_group", "shd_ID", "shd_name","shd_desc", "story_ID", "shd_start_date", "shd_start_time", "shd_stop_date", "dpm_ID" ,
                 'cpn_ID',
                 "create_date", "create_by", "update_date", "update_by")
         
@@ -109,11 +116,11 @@ class Deployment extends SpotOn {
         ->callback_after_insert(array($this,'afterInsert'))
         ->callback_after_update(array($this,'afterInsert'))
                 
-        ->required_fields("player_group", "shd_name", "story_ID", "shd_start_date", "shd_start_time")
+        ->required_fields("player_group", "shd_name", "story_ID", "shd_start_date", "shd_start_time", "shd_stop_date")
         ;
         if($countDeployment > 1){
             $this->isReadonly = true;
-            foreach (array("shd_name", "shd_desc", "shd_start_date", "shd_start_time") as $value) {
+            foreach (array("shd_name", "shd_desc", "shd_start_date", "shd_start_time", "shd_stop_date") as $value) {
                 $this->crud->field_type($value, 'readonly');
             }
         }
@@ -126,12 +133,13 @@ class Deployment extends SpotOn {
         $this->crud->set_table('trn_dpm')
                 
             ->where("trn_dpm.cpn_ID" , $this->cpnId)
-            ->set_relation('shd_ID', 'mst_shd', 'shd_name, shd_start_date, shd_start_time')
+            ->set_relation('shd_ID', 'mst_shd', 'shd_name, shd_stop_date, shd_start_date, shd_start_time')
             ->set_relation('tmn_grp_ID', 'mst_tmn_grp', 'tmn_grp_ID, tmn_grp_name')
 
             ->set_subject('Deployment')
             ->callback_column("shd_start_date", array($this, "_shd_start_date"))
-            ->columns("tmn_grp_ID", "shd_name", "shd_start_date", "shd_ID")
+            ->callback_column("shd_stop_date", array($this, "_shd_stop_date"))
+            ->columns("tmn_grp_ID", "shd_name", "shd_start_date", "shd_ID", "shd_stop_date")
 
                     ->add_action('Edit', '', '','ui-icon-pencil', array($this,'edit_participant'))
                     ->unset_edit()
@@ -157,7 +165,15 @@ class Deployment extends SpotOn {
     }
      
     function _shd_start_date($value) {
+        if($value){
+            return date("Y/m/d", strtotime($value));
+        }
+    }
+    
+    function _shd_stop_date($value) {
+        if($value){
         return date("Y/m/d", strtotime($value));
+        }
     }
     
     public function _beforeDelete($primary_key) {
