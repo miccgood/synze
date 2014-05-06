@@ -215,11 +215,13 @@ class PlayList extends SpotOn {
      }
      
      private function createDisplay($name, $resolution, $layoutId){
-         return array("dsp_name" => $name,
+        $width = $resolution["width"];
+        $height = $resolution["height"];
+        return array("dsp_name" => $name,
                         "dsp_left" => "0",
                         "dsp_top" => "0",
-                        "dsp_width" => $resolution["width"],
-                        "dsp_height" => $resolution["width"],
+                        "dsp_width" => $width,
+                        "dsp_height" => $height,
                         "dsp_zindex" => '1',
                         "lyt_ID" => $layoutId
                         );
@@ -338,7 +340,7 @@ class PlayList extends SpotOn {
             $mediaXmlList = json_encode($mediaXmlList);
             $this->crud->setCustomScript("var mediaList = $mediaXmlList;\n var groupList = $groupDaoList; ");
             if($state === "add"){
-                $this->crud->field_type("pl_type", "enum", array("video", "image", "scrolling test"), $playlist_type);
+                $this->crud->field_type("pl_type", "enum", array("video", "image", "scrolling text"), $playlist_type);
             }
         }
     }

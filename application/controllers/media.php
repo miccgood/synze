@@ -85,7 +85,7 @@ class Media extends SpotOn {
 //        ->field_type('cat_ID', 'dropdown', $this->mediaGroup, $this->nullToZero($cat_id))
         ->field_type("cat_id", "dropdown", $catigory, $cat_id)
         ->field_type('text_input', 'text')      
-        ->required_fields("media_filename", 'media_name', "media_filename_temp", "media_expire", "media_lenght", 'media_type', 'cat_id')
+        ->required_fields('media_name', "media_filename", "media_expire", "media_lenght", 'media_type', 'cat_id')
 
         ->set_field_upload('media_filename', 'assets/uploads/media')
         ->callback_before_upload(array($this, 'callbackBeforeUpload'))
@@ -168,6 +168,7 @@ class Media extends SpotOn {
         $type = $files_to_insert["media_type"];
         
         if($type === "scrolling text"){
+            $files_to_insert["media_filename"] = $files_to_insert["media_name"];
             $files_to_insert = $this->writeFile($files_to_insert);
             $files_to_insert["media_type"] = "scrolling text";
         }

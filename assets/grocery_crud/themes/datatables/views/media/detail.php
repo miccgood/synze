@@ -224,12 +224,16 @@
             $("#field-media_type").bind("change", function(e){
                 var $type = $(e.target).val()
                 if($type === "scrolling text"){
-                    $("#text_input_field_box, #media_filename_temp_field_box").show();
+//                    $("#text_input_field_box, #media_filename_temp_field_box").show();
+                    $("#text_input_field_box").show();
                     $("#media_filename_field_box").hide();
                     $("#field-media_size").prop({readonly : true});
+                    $("#media_type_field_box").removeClass("odd").addClass("even");
+                    
                 }else{
                     $("#text_input_field_box, #media_filename_temp_field_box").hide();
                     $("#media_filename_field_box").show();
+                    $("#media_type_field_box").removeClass("even").addClass("odd");
                 }
                 
                 $("#field-media_type_temp").val($type);
@@ -238,6 +242,11 @@
             
             $("#crudForm").bind("submit", function(){
                 $('#field-media_type').change().prop('disabled', false).trigger('liszt:updated');
+                
+                if($('#field-media_type').val() === "scrolling text"){
+                    $('field-media_filename_temp').val("gen");
+                    $("input[name=media_filename]").val("gen");
+                }
             });
             
             $("#field-media_filename_temp").keyup(function(e){
@@ -251,6 +260,11 @@
             
         });
         
+        function callbackAfterEdit(){
+            $('#field-media_type').change().prop('disabled', true).trigger('liszt:updated');
+
+            return false;
+        }
         
         function openWinAddGroup()
         {

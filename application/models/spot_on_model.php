@@ -133,7 +133,10 @@ class spot_on_model extends CI_Model  {
             return $insert_id;
         }
         public function updateDisplay($data){
-            $data = get_object_vars($data);
+            if(is_object($data)){
+                $data = get_object_vars($data);
+            }
+            
             return $this->db->where("dsp_ID", $data["dsp_ID"])->update("mst_dsp", $data);
         }
         public function getResolutionByLayoutId($layoutId){
