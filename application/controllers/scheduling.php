@@ -67,6 +67,7 @@ class Scheduling extends SpotOn {
                 ->display_as('player_group', 'Player Group')
                 
                 ->callback_column("shd_start_date", array($this, "_shd_start_date"))
+                ->callback_column("shd_stop_date", array($this, "_shd_start_date"))
                 ->callback_field("player_group", array($this, "_player_group"))
 //                ->callback_field("story_ID", array($this, "_story_ID"))
                 ->field_type('shd_ID', 'hidden')
@@ -80,6 +81,7 @@ class Scheduling extends SpotOn {
         ;
         if($state == "list"){
             $this->crud->display_as('shd_start_date', 'Effective (yyyy/mm/dd)')
+                    ->display_as('shd_stop_date', 'Expire (yyyy/mm/dd)')
              ->display_as('shd_start_time', 'Start Time');
         }
         $this->output();
@@ -88,6 +90,7 @@ class Scheduling extends SpotOn {
     function _shd_start_date($value) {
         return date("Y/m/d", strtotime($value));
     }
+    
     function _story_ID($value = '', $shd_ID = null, $row = "", $roe= ""){
 //        $result = $this->m->getTerminalGroup();
 //        $resultSelected = $this->m->getTerminalGroupByShdId($shd_ID);

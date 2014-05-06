@@ -151,7 +151,7 @@ class Deployment extends SpotOn {
                     ->display_as('shd_start_time', 'Start Time')
                     ->display_as('shd_stop_time', 'Stop Time')
                     ->display_as('shd_start_date', 'Effective (yyyy/mm/dd)')
-                    ->display_as('shd_stop_date', 'Expire Date')
+                    ->display_as('shd_stop_date', 'Expire (yyyy/mm/dd)')
                     ->display_as('tmn_grp_ID', 'Terminal Group')
                     ->display_as('player_group', 'Player Group')
 
