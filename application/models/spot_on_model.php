@@ -91,6 +91,10 @@ class spot_on_model extends CI_Model  {
             return $this->db->delete("mst_dsp", array("dsp_ID" => $displayId));
         }
         
+        public function deleteDisplayByLayoutId($layoutId){
+            return $this->db->delete("mst_dsp", array("lyt_ID" => $layoutId));
+        }
+        
         public function insertLayout($layout){
             $this->db->trans_start();
             $this->db->insert("mst_lyt", $layout);

@@ -42,6 +42,9 @@ class Layout extends SpotOn {
                 
         ->callback_after_insert(array($this, "afterInsert"))
         ->callback_after_update(array($this, "afterInsert"))
+                
+        ->required_fields('lyt_name', 'lyt_width', 'lyt_height')
+                
         ;
         $this->output();
         
@@ -103,7 +106,14 @@ class Layout extends SpotOn {
     }
     
     public function _beforeDelete($primary_key) {
-        return $this->m->checkDeleteLayout($primary_key);
+        if($this->m->checkDeleteLayout($primary_key)){
+            $this->m->deleteDisplayByLayoutId($primary_key);
+            return true;
+        } else {
+            return false;
+        }
+        
+        
     }
     
 }
