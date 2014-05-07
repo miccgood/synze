@@ -71,11 +71,15 @@
             //รูปแบบ id
 //            1 แบบโหลดมาจาก DB จะให้ ID จาก DB เลย
 //            2 สร้างใหม่จากหน้า จะมีคำว่า gen- นำหน้า ตามด้วยเลย count
+
+            var width = parseInt($($_containerId).width());//640px;  360px;
+            var height = parseInt($($_containerId).height());
+        
             var newLayoutId = "gen-" + $layoutCount;
-            createLayout(newLayoutId, "Zone", 0, 0, 200, 200, null);
+            createLayout(newLayoutId, "Zone", 0, 0, $_layoutWidth, $_layoutHeight, null);
             
             var $trId = "row-" + newLayoutId;
-            createRow($trId, "Zone", 0, 0, 200, 200, null);
+            createRow($trId, "Zone", 0, 0, $_layoutWidth, $_layoutHeight, null);
         });
 
         setCenter($("#layout1"));

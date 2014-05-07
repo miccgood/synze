@@ -11,9 +11,12 @@ class Scheduling extends SpotOn {
     function clearBeforeInsertAndUpdate($post_data){
         
         $start = $post_data["shd_start_date"];
+        $start = strtotime(str_replace('/', '-', $start));
         $stop = $post_data["shd_stop_date"];
+        $stop = str_replace('/', '-', $stop);
+        $stop = strtotime($stop);
         
-        if(strtotime($start) > strtotime($stop)){
+        if($start > $stop){
             $post_data["shd_stop_date"] = $start;
         }
         $this->scheduling = $post_data;
