@@ -80,12 +80,18 @@ class Layout extends SpotOn {
         $ret = "<select id='select_resolution'>";
         foreach ($this->layout['resolution'] as $keys => $values) {
              foreach ($values as $key => $value) {
-                  $ret .= "<option value='".$value["width"].','.$value["height"]."'>" . $key ;
-                  
-                  if($value["width"] != "" || $value["height"] != ""){
-                      $ret .= ' (' . $value["width"].'x'.$value["height"].')';
-                  }
-                  $ret .= "</option>";
+                 
+                $res2 = array_pop($value);
+                $res1 = array_pop($value);
+
+                $ret .= "<option value='".$res1.','.$res2."'>" . $key ;
+
+                $option = "";
+                if($res1 != "" || $res2 != ""){
+                    $option .= ' ( '.$res1.' x ' . $res2. ' )';
+                }
+                
+                $ret .= $option . "</option>";
              }
         }             
          $ret .= "</select>";

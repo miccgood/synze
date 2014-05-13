@@ -76,10 +76,14 @@
             var height = parseInt($($_containerId).height());
         
             var newLayoutId = "gen-" + $layoutCount;
-            createLayout(newLayoutId, "Zone", 0, 0, $_layoutWidth, $_layoutHeight, null);
+            
+            var widthInit = 200; //$_layoutWidth
+            var heightInit = 200; //$_layoutHeight
+            
+            createLayout(newLayoutId, "Zone", 0, 0, widthInit, heightInit, null);
             
             var $trId = "row-" + newLayoutId;
-            createRow($trId, "Zone", 0, 0, $_layoutWidth, $_layoutHeight, null);
+            createRow($trId, "Zone", 0, 0, widthInit, heightInit, null);
         });
 
         setCenter($("#layout1"));
@@ -87,9 +91,26 @@
 
     var initContainer = function($containerId){
         
-//        ดึงความกว้างจอการแสดงผล
         var width = parseInt($($containerId).width());//640px;  360px;
         var height = parseInt($($containerId).height());
+        
+        //ถ้าความสูง มากกว่าความกว้าง ให้เปลี่ยน แนวการแสดงผล
+        if($_layoutHeight > $_layoutWidth ){
+            $($containerId).width(height);
+            $($containerId).height(width);
+            
+            width = parseInt($($containerId).width());//360px; 640px;  
+            height = parseInt($($containerId).height());
+        } else if($_layoutHeight == $_layoutWidth ) {
+            $($containerId).width(height);
+            $($containerId).height(height);
+            
+            width = parseInt($($containerId).width());//360px;  360px;
+            height = parseInt($($containerId).height());
+        }
+        
+//        ดึงความกว้างจอการแสดงผล
+       
         //คำนวนความต่างของจอจริง กับค่าที่มาจาก DB เพิ่มนำไป render
         $_resWidth = $_layoutWidth / width;
         $_resHeight = $_layoutHeight / height;
@@ -143,7 +164,7 @@
         setSize($newLayout, width, height);
         $_maxZIndex = getMax($_maxZIndex, zindex);
         if(zindex == null || typeof zindex == "undefined"){
-            zindex = $_maxZIndex++;
+            zindex = ++$_maxZIndex;
         }
         setZIndex($newLayout, zindex);
     };
