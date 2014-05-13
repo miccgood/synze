@@ -31,3 +31,18 @@ $config["extention"]["image"] = array("jpg", "gif", "png");
 
 
 $config["allowed_formats"] = array_merge($config["extention"]["video"], $config["extention"]["image"]);
+
+$config["defaultTextSize"] = "14";
+
+$config["textSize"] = array("12","14","16","18","20","22","24","32","36","42","48","60","72");
+
+$config["defaultPlaySpeed"] = "400";
+
+$config["playSpeed"] = array(
+                            "0.5x" => "1000"
+                            ,"1x" => "400"
+                            ,"2x" => "300"
+                            ,"4x" => "200"
+                            ,"8x" => "100"
+                            ,"16x" => "10"
+                            );

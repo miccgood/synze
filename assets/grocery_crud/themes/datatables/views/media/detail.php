@@ -1,220 +1,22 @@
 <?php
-//            $counter = 0;
-//            foreach ($fields as $field) {
-//                $even_odd = $counter % 2 == 0 ? 'odd' : 'even';
-//                $counter++;
-                ?>
-
-
-
-<!--ต้นแบบ-->
-<!--                <div class='form-field-box <?php echo $even_odd ?>' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    <div class='clear'></div>
-                </div>-->
-<?php 
-    $ci = &get_instance();
-    $state = $ci->crud->getState();
-
+$counter = 0;
+        foreach($fields as $field)
+        {
+                $even_odd = $counter % 2 == 0 ? 'odd' : 'even';
+                $counter++;
 ?>
 
-    
-    <?php $field = $fields[3]; //type?>
 
-                <div class='form-field-box <?php echo ($state == "edit" ? "even" : "odd"); ?>' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    <div class='clear'></div>
-                </div>
-    
-    
-    
-
-    
-<?php $field = $fields[0]; //File Name?>
-
-                <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box" style="">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    <div class='clear'></div>
-                </div>
-
-<?php if($state != "edit"){ ?>    
-    <?php $field = $fields[13]; //File Name Temp?>
-
-    <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box" style="display: none;">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box" style="">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    <div class='clear'></div>
-                </div>
-    
-    
-<?php } ?>  
-    
-    
-<?php $field = $fields[1]; //Name?>
-
-                <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    <div class='clear'></div>
-                </div>
-    
-    
-<?php $field = $fields[2]; //desc?>
-
-                <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    <div class='clear'></div>
-                </div>
-    
-
-    <?php $field = $fields[7]; //cat_ID?>
-
-                <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box" style="">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    
-                    <span class="datatables-add-button" style="position: relative;" onclick="openWinAddGroup()">
-            <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="/" onclick="return false;" >
-                    <span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>
-                    <span class="ui-button-text">Add</span>
-            </a>
-        </span>
-        
-        <span class="datatables-add-button" style="position: relative;" onclick="deleteGroup()" >
-            <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="/" onclick="return false;">
-                    <span class="ui-button-icon-primary ui-icon ui-icon-circle-minus"></span>
-                    <span class="ui-button-text">Delete</span>
-            </a>
-        </span>
-                    
-                    <div class='clear'></div>
-                </div>
-<!--     <?php $field = $fields[10]; //checksum?>
-
-                <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box" style="">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    <div class='clear'></div>
-                </div>-->
-    
-
-
-<?php $fieldSize = $fields[4]; //size?>
-                <div class='form-field-box even' id="<?php echo $fieldSize->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $fieldSize->field_name; ?>_display_as_box">
-    <?php echo $input_fields[$fieldSize->field_name]->display_as ?><?php echo ($input_fields[$fieldSize->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $fieldSize->field_name; ?>_input_box">
-    <?php echo $input_fields[$fieldSize->field_name]->input ?> 
-                    </div>
-                    <div class='clear'></div>
-                  </div>  
-    
-    
-    
-   <?php $fieldLenght = $fields[5]; //lenght?> 
-                <div class='form-field-box odd' id="<?php echo $fieldSize->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $fieldLenght->field_name; ?>_display_as_box">
-    <?php echo $input_fields[$fieldLenght->field_name]->display_as ?><?php echo ($input_fields[$fieldLenght->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $fieldLenght->field_name; ?>_input_box">
-    <?php echo $input_fields[$fieldLenght->field_name]->input ?> 
-                    </div>
-                    <div class='clear'></div>
-                    
-                    <script>
-                        
-                        $(function(){
-                            
-                            
-                            $("#field-media_type").width("90px").trigger('liszt:updated');
-                            $("#field-media_filename_temp, #field-media_name, #field-media_desc, #field-media_checksum, #field-media_filename_temp").width("300px");
-                            $("#field-media_size, #field-media_lenght").width("90px");
-//                            $("#form_input").slideDown( "slow");
-                        });
-                    </script>
-                    
-                </div>
-
-
-
-<?php $field = $fields[5]; //lenght?>
-<!--                <div class='form-field-box <?php echo $even_odd ?>' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-                            
-                    </div>
-                    <div class='clear'></div>
-                </div>-->
-
-
-
-<?php $field = $fields[6]; //Media expire?>
-                <div class='form-field-box even' id="<?php echo $field->field_name; ?>_field_box">
-                    <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
-    <?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                    </div>
-                    <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-    <?php echo $input_fields[$field->field_name]->input ?>
-                    </div>
-                    <div class='clear'></div>
-                </div>
-
-    
-<?php $field = $fields[12]; //Media expire?>
-            <div class='form-field-box odd' id="<?php echo $field->field_name; ?>_field_box" style="display: none;">
-                <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
-<?php echo $input_fields[$field->field_name]->display_as ?><?php echo ($input_fields[$field->field_name]->required) ? "<span class='required' style=\"color: red;\"> * </span> " : "" ?> :
-                </div>
-                <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
-<?php echo $input_fields[$field->field_name]->input ?>
-                </div>
-                <div class='clear'></div>
-            </div>
-
-
-
-<?php // } ?>
-
-    
+<div class='form-field-box <?php echo $even_odd?>' id="<?php echo $field->field_name; ?>_field_box">
+        <div class='form-display-as-box' id="<?php echo $field->field_name; ?>_display_as_box">
+                <?php echo $input_fields[$field->field_name]->display_as?><?php echo ($input_fields[$field->field_name]->required)? " <span class='required'>*</span> " : ""?> :
+        </div>
+        <div class='form-input-box' id="<?php echo $field->field_name; ?>_input_box">
+                <?php echo $input_fields[$field->field_name]->input?>
+        </div>
+        <div class='clear'></div>
+</div>
+<?php }?>
     <script type="text/javascript">
         $(function(){
 //            $(".form-content, .form-div").slideDown(2000);
@@ -257,6 +59,21 @@
                 $("#size").html($(this).val());
             });
             
+            $('<span class="datatables-add-button" style="position: relative;" onclick="openWinAddGroup()">'+
+                    '<a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="/" onclick="return false;" >'+
+                        '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'+
+                        '<span class="ui-button-text">Add</span>'+
+                    '</a>'+
+                '</span>'+
+            '<span class="datatables-add-button" style="position: relative;" onclick="deleteGroup()" >'+
+                '<a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="/" onclick="return false;">'+
+                '   <span class="ui-button-icon-primary ui-icon ui-icon-circle-minus"></span>'+
+                '    <span class="ui-button-text">Delete</span>'+
+                '</a>'+
+            '</span>    '
+            
+            ).insertBefore( $("#cat_id_field_box").find("div.clear"));
+
             
         });
         
@@ -318,4 +135,73 @@
 
         }
         
+                        
+        $(function(){
+
+
+            $("#field-media_type").width("90px").trigger('liszt:updated');
+            $("#field-media_filename_temp, #field-media_name, #field-media_desc, #field-media_checksum, #field-media_filename_temp").width("300px");
+            $("#field-media_size, #field-media_lenght").width("90px");
+//                            $("#form_input").slideDown( "slow");
+        });
     </script>
+    
+    
+<style type="text/css">
+
+    #textPicker, #bgPicker {
+        margin:0;
+        padding:0;
+        border:0;
+        width:80px;
+        height:20px;
+        border-right:20px solid black;
+        line-height:25px;
+    }
+</style>
+<script type="text/javascript">
+	
+        $(function(){
+            $('#textPicker, #bgPicker').colpick({
+                layout:'hex',
+                submit:0,
+                colorScheme:'light',
+                onChange:function(hsb,hex,rgb,el,bySetColor) {
+                        $(el).css('border-color','#'+hex);
+                        // Fill the text box just if the color was set using the picker, and not the colpickSetColor function.
+                        if(!bySetColor) $(el).val("#" + hex);
+                }
+            }).keyup(function(){
+//                var $value = this.value;
+//                
+//                if($value === "" || $value === null){
+//                    $value = "#000000";
+//                }
+//                
+//                $(this).colpickSetColor($value);
+//                $(this).val($value);
+                $(this).change();
+            }).change(function(){
+                var $value = this.value;
+                
+                if($value === "" || $value === null){
+                    $value = "#000000";
+                }
+                
+                $(this).colpickSetColor($value);
+                $(this).val($value);
+            });
+            //#000000 => black
+            $("#textSize").css({"min-width" : "55px", width : "55px", height : "28px"});
+            $("#playSpeed").css({"min-width" : "55px", width : "65px", height : "28px"});
+            
+            $("#text_input_input_box").css({"border-color": "#dedede", 
+             "border-weight":"1px", 
+             "border-style":"solid",
+             "padding" : "10px", 
+             "border-radius" : "10px"});
+         
+             $('#textPicker, #bgPicker').change();
+        });
+    
+</script>

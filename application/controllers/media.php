@@ -1,12 +1,18 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Media extends SpotOn {
+    
+    protected $media = null;
     function __construct() {
         parent::__construct();
         $this->load->library('getid3/getid3');
         $this->config->load('media', true);
         $this->media = $this->config->item('media');
         $this->indexArray = array("media_filename_temp", "text_input", "media_type_temp");
+        
+        
+//        $this->xml_writer->initiate(array("width" => "1920", "height" => "1080"));
+        
     }
     
     private function getCatId() {
@@ -58,18 +64,19 @@ class Media extends SpotOn {
             ->display_as('media_size', 'Size (byte)')
             ->display_as('media_lenght', 'Lenght (sec)')
 
-        ->fields('media_filename', 
+        ->fields(
+                'media_type',
+                'media_filename', 
                 'media_name', 
                 'media_desc', 
-                'media_type', 
+                'cat_id', 
                 'media_size', 
                 'media_lenght', 
                 'media_expire', 
-                'cat_id', 
+                
                 'media_path', 
                 "page", 
                 'media_checksum', 
-                'media_timeout', 
                 'text_input', 
                 'media_filename_temp',
                 'cpn_ID',
@@ -144,15 +151,88 @@ class Media extends SpotOn {
     
     function _text_input($value = "", $field_info = "" , $file = null, $row = null){
         $state = $this->crud->getState();
+        
+        $data = "";
+        $textcolor = "";
+        $textSize = "";
+        $bgcolor = "";
+        $playSpeed = "";
+
         if($state === "edit"){
             $media_path = $this->getMediaPath($row->media_filename);
             if(file_exists($media_path) && $row->media_filename != null && $row->media_filename!= ""){
 
-                $value = file_get_contents($media_path, FILE_READ_MODE);
+                $sXML = file_get_contents($media_path, FILE_READ_MODE);
+                
+                $oXML = new SimpleXMLElement($sXML);
+
+                
+                $array = (array)$oXML;
+                
+                $data = $array["data"];
+                $textcolor = $array["textcolor"];
+                $textSize = $array["textsize"];
+                $bgcolor = $array["bgcolor"];
+                $playSpeed = $array["playspeed"];
+                
             }
         }
         
-         return '<textarea name="input_text" id="field-text_input">' . $value . '</textarea>';
+        
+        $ret = '';
+
+        $ret .= 'Text Color : <input type="text" id="textPicker" name="textcolor" value="'.$textcolor.'"></input> ';
+            
+        $ret .= ' <span style="margin-left:10px;" > ';
+            $ret .= ' Text Size : <select id="textSize" name="textSize" >';
+
+            $defaultTextSize = $this->media["defaultTextSize"];
+                    
+            foreach ($this->media["textSize"] as $size) {
+                
+                
+                if($textSize == $size || ( $defaultTextSize == $size && $state == "add")){
+                    $ret .= '<option value="' . $size . '" selected=selected >' . $size . '</option>';
+                } else {
+                    $ret .= '<option value="' . $size . '" >' . $size . '</option>';
+                }
+            }
+
+            $ret .= '</select>';
+        
+        $ret .= ' </span> ';
+        
+        $ret .= ' <div class="clear"></div> <br/>';
+        
+        $ret .= ' <span style="margin-left:10px;" > ';
+        
+            $ret .= 'Bg Color :  <input type="text" id="bgPicker" name="bgcolor" value="'.$bgcolor.'"></input> ';
+
+            $ret .= ' <span style="margin-left:16px;"> ';
+                $ret .= 'Speed : <select id="playSpeed" name="playSpeed" >';
+                
+                    $defaultPlaySpeed = $this->media["defaultPlaySpeed"];
+                    
+                    foreach ($this->media["playSpeed"] as $speed => $speedValue) {
+                        if($playSpeed == $speedValue || ($defaultPlaySpeed == $speedValue && $state == "add") ){
+                            $ret .= '<option value="' . $speedValue . '" selected=selected >' . $speed . '</option>';
+                        } else {
+                            $ret .= '<option value="' . $speedValue . '" >' . $speed . '</option>';
+                        }
+                        
+                    }
+
+                $ret .= '</select>';
+            $ret .= '</span>';
+        $ret .= '</span>';
+        
+        $ret .= ' <div class="clear"></div> <br/>';
+        
+        $ret .= ' <textarea name="input_text" id="field-text_input">' . $data . '</textarea> ';
+        
+        
+        
+        return $ret ;
     }
     
     function _media_size($value = "", $field_info = "" , $file = null, $row = null){
@@ -171,6 +251,13 @@ class Media extends SpotOn {
             $files_to_insert["media_filename"] = $files_to_insert["media_name"];
             $files_to_insert = $this->writeFile($files_to_insert);
             $files_to_insert["media_type"] = "scrolling text";
+            
+            unset($files_to_insert["input_text"]);
+            unset($files_to_insert["textcolor"]);
+            unset($files_to_insert["textSize"]);
+            unset($files_to_insert["bgcolor"]);
+            unset($files_to_insert["playSpeed"]);
+        
         }
         $files_to_insert["media_lenght"] = $files_to_insert["media_lenght"] * 1000;
         $files_to_insert = parent::clearBeforeInsertAndUpdate($files_to_insert);
@@ -202,7 +289,7 @@ class Media extends SpotOn {
                  //gen prefix
                 $uniqid = uniqid();
                 //ชื่อไฟล์ที่จะใช้จริง
-                $file_name = $uniqid."-".$file.".txt";
+                $file_name = $uniqid."-".$file.".xml";
                 //path ไฟล์จริงใน server
                 $media_path = $this->getMediaPath($file_name);
             } while (file_exists($media_path));
@@ -214,7 +301,10 @@ class Media extends SpotOn {
         }
         
         //เตรียมข้อมูลที่จะเขียนลงไฟล์
-        $writeDate = $files_to_insert["input_text"];
+//        $writeDate = $files_to_insert["input_text"];
+        
+        $writeDate = $this->getDataFromPost($files_to_insert);
+        
         
         file_put_contents($media_path, $writeDate, LOCK_EX);
 
@@ -225,6 +315,24 @@ class Media extends SpotOn {
         return $files_to_insert;
     }
     
+    private function getDataFromPost($files_to_insert){
+        $data = $files_to_insert["input_text"];
+        $textcolor = $files_to_insert["textcolor"];
+        $textSize = $files_to_insert["textSize"];
+        $bgcolor = $files_to_insert["bgcolor"];
+        $playSpeed = $files_to_insert["playSpeed"];
+        
+        $this->load->library('xml_writer');
+        $this->xml_writer->setRootName('root');
+        $this->xml_writer->initiate();
+        $this->xml_writer->addNode('data', $data);
+        $this->xml_writer->addNode('textcolor', $textcolor);
+        $this->xml_writer->addNode('textsize', $textSize);
+        $this->xml_writer->addNode('bgcolor', $bgcolor);
+        $this->xml_writer->addNode('playspeed', $playSpeed);
+        
+        return $this->xml_writer->getXml(FALSE);
+    }
 //    protected function getMediaByState($media_filename){
 //        
 //        $state = $this->crud->getState();
