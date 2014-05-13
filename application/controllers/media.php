@@ -10,9 +10,6 @@ class Media extends SpotOn {
         $this->media = $this->config->item('media');
         $this->indexArray = array("media_filename_temp", "text_input", "media_type_temp");
         
-        
-//        $this->xml_writer->initiate(array("width" => "1920", "height" => "1080"));
-        
     }
     
     private function getCatId() {
@@ -248,7 +245,7 @@ class Media extends SpotOn {
         $type = $files_to_insert["media_type"];
         
         if($type === "scrolling text"){
-            $files_to_insert["media_filename"] = $files_to_insert["media_name"];
+            
             $files_to_insert = $this->writeFile($files_to_insert);
             $files_to_insert["media_type"] = "scrolling text";
             
@@ -266,21 +263,13 @@ class Media extends SpotOn {
     }
     
     function writeFile($files_to_insert = "", $field_info = "" , $file = null, $row = null){
-//        $file_name_check = $files_to_insert["media_filename"];
-//        $media_path = $this->getMediaPath($file_name_check);
-//        if(file_exists($media_path)){
-//            //กันเผื่อว่าไม่ใช่ไฟล์ txt
-//            $ext = pathinfo($file_name_check, PATHINFO_EXTENSION);
-//            if($ext == "txt"){
-//                unlink($media_path);
-//                $files_to_insert["media_filename"] = $this->subString($files_to_insert["media_filename"], "-");
-//            }
-//        }
-        
         
         $state = $this->crud->getState();
         
         if($state === "insert"){
+            //เฉพาะ mode insert เอาชื่อ media_name มาเป็นชื่อไฟล์
+            $files_to_insert["media_filename"] = $files_to_insert["media_name"];
+            
             $not_allowed_file_name = $this->media['not_allowed_file_name'];
             //validate ชื่อไฟล์
             $file = str_replace($not_allowed_file_name , "_", $files_to_insert["media_filename"]);
@@ -297,7 +286,9 @@ class Media extends SpotOn {
             $files_to_insert["media_filename"] = $file_name;
             $files_to_insert["media_path"] = trim($this->media['text_url'], "/")."/" .$file_name;
         }else if($state === "update"){
+//            $files_to_insert["media_filename"] = $files_to_insert["media_filename"].".xml";
             $media_path = $this->getMediaPath($files_to_insert["media_filename"]);
+            
         }
         
         //เตรียมข้อมูลที่จะเขียนลงไฟล์
@@ -333,29 +324,6 @@ class Media extends SpotOn {
         
         return $this->xml_writer->getXml(FALSE);
     }
-//    protected function getMediaByState($media_filename){
-//        
-//        $state = $this->crud->getState();
-//        
-//        if($state === "insert"){
-//            $not_allowed_file_name = $this->media['not_allowed_file_name'];
-//            //validate ชื่อไฟล์
-//            $file = str_replace($not_allowed_file_name , "_", $media_filename);
-//
-//            do {
-//                 //gen prefix
-//                $uniqid = uniqid();
-//                //ชื่อไฟล์ที่จะใช้จริง
-//                $file_name = $uniqid."-".$file.".txt";
-//                //path ไฟล์จริงใน server
-//                $media_path = $this->getMediaPath($file_name);
-//            } while (file_exists($media_path));
-//            return $media_path;
-//        }else if($state === "update"){
-//            $media_path = $this->getMediaPath($media_filename);
-//            return $media_path;
-//        }
-//    }
     
     function callbackAfterUpload($files_to_upload = "", $field_info = "" , $file = null, $row = null) {
 
@@ -380,25 +348,13 @@ class Media extends SpotOn {
         }else if(in_array(strtolower($ext), array_map('strtolower', $this->media["extention"]["image"]))){
             $files_to_upload[0]->type = "image";
         }
-        //เปลี่ยน requirement เป็นไม่ upload file text แล้ว
-//        else if(in_array($ext, $this->media["extention"]["text"])){
-//            $files_to_upload[0]->type = "text";
-//        }
-
+        
         $files_to_upload[0]->ext = $ext;
         $files_to_upload[0]->path = $this->media['media_url'].'/'.$fileObj->name;
 
         $files_to_upload[0]->checkSum =  md5_file($fileName);
 
 
-
-//        $pos = strrpos($fileObj->name, "-");
-//        if ($pos !== false) { // note: three equal signs
-//            $name = substr($fileObj->name, $pos+1);
-//            $ext = ".".$ext;
-//            $files_to_upload[0]->name = str_replace($ext, "", $name);
-//        }
-//        $search = substr($fileObj->name, 0, strpos($fileObj->name, "-") + 1);
         $files_to_upload[0]->name = $fileObj->name;//str_replace($search, "" , $fileObj->name);
 
         return $files_to_upload;

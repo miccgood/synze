@@ -46,8 +46,13 @@ $counter = 0;
                 $('#field-media_type').change().prop('disabled', false).trigger('liszt:updated');
                 
                 if($('#field-media_type').val() === "scrolling text"){
-                    $('field-media_filename_temp').val("gen");
-                    $("input[name=media_filename]").val("gen");
+                    if($('field-media_filename_temp').val() == ""){
+                        $('field-media_filename_temp').val("gen");
+                    }
+                    if($("input[name=media_filename]").val() == ""){
+                        $("input[name=media_filename]").val("gen");
+                    }
+                    
                 }
             });
             
