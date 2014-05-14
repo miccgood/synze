@@ -197,13 +197,13 @@ $counter = 0;
                 $(this).val($value);
             });
             //#000000 => black
-            $("#textSize").css({"min-width" : "55px", width : "55px", height : "28px"});
-            $("#playSpeed").css({"min-width" : "55px", width : "65px", height : "28px"});
-            
-            $("#text_input_input_box").css({"border-color": "#dedede", 
+            $("#textSize").css({"min-width" : "55px", width : "55px", height : "30px"});
+            $("#playSpeed").css({"min-width" : "55px", width : "65px", height : "30px"});
+            $("#direction").css({"min-width" : "55px", width : "75px", height : "30px"});
+            $("#text_input_input_box").css({"border-color": "#cdcdcd", 
              "border-weight":"1px", 
              "border-style":"solid",
-             "padding" : "10px", 
+             "padding" : "15px", 
              "border-radius" : "10px"});
          
              $('#textPicker, #bgPicker').change();

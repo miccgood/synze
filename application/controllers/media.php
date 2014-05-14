@@ -154,7 +154,8 @@ class Media extends SpotOn {
         $textSize = "";
         $bgcolor = "";
         $playSpeed = "";
-
+        $directionIn = "";
+        
         if($state === "edit"){
             $media_path = $this->getMediaPath($row->media_filename);
             if(file_exists($media_path) && $row->media_filename != null && $row->media_filename!= ""){
@@ -166,11 +167,12 @@ class Media extends SpotOn {
                 
                 $array = (array)$oXML;
                 
-                $data = $array["data"];
+                $data = $array["text"];
                 $textcolor = $array["textcolor"];
-                $textSize = $array["textsize"];
-                $bgcolor = $array["bgcolor"];
-                $playSpeed = $array["playspeed"];
+                $textSize = $array["size"];
+                $bgcolor = $array["backgroundcolor"];
+                $playSpeed = $array["speed"];
+                $directionIn = $array["direction"];
                 
             }
         }
@@ -198,6 +200,27 @@ class Media extends SpotOn {
             $ret .= '</select>';
         
         $ret .= ' </span> ';
+        
+//        defaultDirection
+         $ret .= ' <span style="margin-left:10px;" > ';
+            $ret .= ' Direction : <select id="direction" name="direction" >';
+
+            $defaultDirection = $this->media["defaultDirection"];
+                    
+            foreach ($this->media["direction"] as $keyDirection => $direction) {
+                
+                
+                if($directionIn == $keyDirection || ( $defaultDirection == $keyDirection && $state == "add")){
+                    $ret .= '<option value="' . $keyDirection . '" selected=selected >' . $direction . '</option>';
+                } else {
+                    $ret .= '<option value="' . $keyDirection . '" >' . $direction . '</option>';
+                }
+            }
+
+            $ret .= '</select>';
+        
+        $ret .= ' </span> ';
+        
         
         $ret .= ' <div class="clear"></div> <br/>';
         
@@ -254,6 +277,7 @@ class Media extends SpotOn {
             unset($files_to_insert["textSize"]);
             unset($files_to_insert["bgcolor"]);
             unset($files_to_insert["playSpeed"]);
+            unset($files_to_insert["direction"]);
         
         }
         $files_to_insert["media_lenght"] = $files_to_insert["media_lenght"] * 1000;
@@ -312,16 +336,17 @@ class Media extends SpotOn {
         $textSize = $files_to_insert["textSize"];
         $bgcolor = $files_to_insert["bgcolor"];
         $playSpeed = $files_to_insert["playSpeed"];
+        $direction = $files_to_insert["direction"];
         
         $this->load->library('xml_writer');
-        $this->xml_writer->setRootName('root');
+        $this->xml_writer->setRootName('scrollingtext');
         $this->xml_writer->initiate();
-        $this->xml_writer->addNode('data', $data);
+        $this->xml_writer->addNode('text', $data);
+        $this->xml_writer->addNode('speed', $playSpeed);
+        $this->xml_writer->addNode('backgroundcolor', $bgcolor);
         $this->xml_writer->addNode('textcolor', $textcolor);
-        $this->xml_writer->addNode('textsize', $textSize);
-        $this->xml_writer->addNode('bgcolor', $bgcolor);
-        $this->xml_writer->addNode('playspeed', $playSpeed);
-        
+        $this->xml_writer->addNode('size', $textSize);
+        $this->xml_writer->addNode('direction', $direction);
         return $this->xml_writer->getXml(FALSE);
     }
     

@@ -46,3 +46,7 @@ $config["playSpeed"] = array(
                             ,"8x" => "100"
                             ,"16x" => "10"
                             );
+$config["defaultDirection"] = "right";
+
+$config["direction"] = array("up" => "Up", "right" => "Right", "down" => "Down", "left" => "Left");
+
