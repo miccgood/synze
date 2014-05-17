@@ -1,13 +1,17 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Login extends CI_Controller {
-
+    
     function __construct() {
         parent::__construct();
         $this->load->database();
         $this->load->library('session');
         $this->load->helper('url');
         $this->load->model('spot_on_model', "m");
+        
+        $this->config->load('permission', true);
+        $this->configPermission = $this->config->item('permission');
+        
     }
     
     public function check() {
@@ -23,7 +27,9 @@ class Login extends CI_Controller {
                 $this->session->set_userdata("userTypeCode", $user->user_type_code);
                 $this->session->set_userdata("permission", $permission);
                 
-                if($user->user_type_code == "01"){
+                $adminCodeList = $this->configPermission["adminCodeList"];
+                        
+                if(in_array($user->user_type_code, $adminCodeList)){
                     redirect("admin");
                 } else {
                     redirect("media");

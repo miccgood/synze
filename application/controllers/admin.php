@@ -1,6 +1,11 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Admin extends SpotOn {
+    
+    public static $SUPER_ADMIN_CODE = "01";
+    public static $ADMIN_CODE = "02";
+    public static $USER = "03";
+    
     function __construct() {
         $this->autoSetDefaultValue = TRUE;
         parent::__construct();
@@ -8,16 +13,20 @@ class Admin extends SpotOn {
     
     function index() {
         
+        $where = $this->getMainWhere();
+        $whereCpn = $this->getWhereCpn();
+        $whereUser = $this->getWhereUser();
+        
         $this->crud->set_table('mst_user')
         ->set_subject('User')
-        ->display_as("user_displayname" , "Name")
+        ->display_as("user_displayname" , "Display Name")
         ->display_as("permission_ID" , "Page")
         ->display_as("cpn_ID" , "Company")
         ->display_as("user_type_ID" , "User Type")
-        ->set_relation('user_type_ID', 'mst_user_type', 'user_type_name')
-        ->set_relation('cpn_ID', 'mst_cpn', 'cpn_name')
+        ->set_relation('user_type_ID', 'mst_user_type', 'user_type_name', $whereUser, "user_type_code")
+        ->set_relation('cpn_ID', 'mst_cpn', 'cpn_name', $whereCpn)
         ->set_relation_n_n('permission_ID', 'trn_permission', 'mst_permission', 'user_ID', 'permission_ID', 'page_name','seq')
-        ->where("cpn_ID" , $this->cpnId)
+        ->where($where)
         ->columns('cpn_ID', 'user_displayname', 'user_type_ID', 'permission_ID')
         ->fields('cpn_ID', 'user_displayname', 'user_type_ID', 'permission_ID')
         ;
@@ -25,8 +34,70 @@ class Admin extends SpotOn {
         
     }
     
-    protected function setDefaultAction(){
+    private function getMainWhere(){
+        $userTypeCode = $this->getUserTypeCode();
         
+        $where = array();
+        
+        switch ($userTypeCode) {
+            case Admin::$SUPER_ADMIN_CODE:
+                //ถ้าเป็น super admin ให้เห็นได้ทุกอย่าง
+//                $where = array();
+                break;
+            case Admin::$ADMIN_CODE:
+                //ถ้าเป็น admin ให้เห็นแค่ cpn ของตัวเอง
+                $where = array("mst_user.cpn_ID" => $this->cpnId, "user_type_code <> " => Admin::$SUPER_ADMIN_CODE);
+                break;
+            default:
+                break;
+        }
+        
+        return $where;
+    }
+    
+    private function getWhereCpn(){
+        $userTypeCode = $this->getUserTypeCode();
+        
+        $where = array();
+        
+        switch ($userTypeCode) {
+            case Admin::$SUPER_ADMIN_CODE:
+                //ถ้าเป็น super admin ให้เห็นได้ทุกอย่าง
+//                $where = array();
+                break;
+            case Admin::$ADMIN_CODE:
+                //ถ้าเป็น admin ให้เห็นแค่ cpn ของตัวเอง
+                $where = array("cpn_ID" => $this->cpnId);
+                break;
+            default:
+                break;
+        }
+        
+        return $where;
+    }
+    
+    private function getWhereUser(){
+        $userTypeCode = $this->getUserTypeCode();
+        
+        $where = array();
+        
+        switch ($userTypeCode) {
+            case Admin::$SUPER_ADMIN_CODE:
+                //ถ้าเป็น super admin ให้เห็นได้ทุกอย่าง
+//                $where = array();
+                break;
+            case Admin::$ADMIN_CODE:
+                //ถ้าเป็น admin ให้เห็นแค่ cpn ของตัวเอง
+                $where = array("user_type_code <> " => Admin::$SUPER_ADMIN_CODE);
+                break;
+            default:
+                break;
+        }
+        
+        return $where;
+    }
+    
+    protected function setDefaultAction(){
         
         $this->crud
             ->set_theme('datatables')
@@ -43,11 +114,11 @@ class Admin extends SpotOn {
             ->callback_before_update(array($this,'clearBeforeInsertAndUpdate'))
             ->callback_before_delete(array($this,'_beforeDelete'))
             ->set_default_value(array("permissionEdit" => $this->permissionEdit))
-            ;
+            ; 
             
-            if(!$this->permissionEdit){
-                $this->crud->unset_delete();
-            }
+//            if(!$this->permissionEdit){
+//                $this->crud->unset_delete();
+//            }
             
     }
     

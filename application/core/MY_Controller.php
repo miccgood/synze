@@ -25,18 +25,14 @@ class SpotOn extends CI_Controller {
         $this->load->library('stringutils', FALSE);
         $this->load->library('session');
         
-        
-        
         $this->load->model('spot_on_model', 'm');
         
-        $this->crud = new Grocery_CRUD();
-        $this->cpnId = $this->session->userdata("cpnID");
-        $this->userId = $this->session->userdata("userID");
-        $this->permission = $this->session->userdata("permission");
-        $this->userTypeCode = $this->session->userdata("userTypeCode");
-        $this->permissionView = true;
-                
-        $this->permissionEdit = $this->getPermission();
+        $this->config->load('permission', true);
+        $this->configPermission = $this->config->item('permission');
+        
+        
+        $this->init();
+        
         
         if($this->nullToZero($this->cpnId) == 0 || $this->nullToZero($this->userId) == 0){
             if($this->cpnId !== false){
@@ -49,24 +45,21 @@ class SpotOn extends CI_Controller {
         $this->setDefaultAction();
     }
 
-    public function getUserTypeCode(){
-        return $this->userTypeCode;
-    }
     
-    public function getPermissionEdit(){
-        return $this->permissionEdit;
-    }
-      
-    public function getPermissionView(){
-        return $this->permissionView;
+    private function init(){
+        $this->crud = new Grocery_CRUD();
+        $this->cpnId = $this->session->userdata("cpnID");
+        $this->userId = $this->session->userdata("userID");
+        $this->permission = $this->session->userdata("permission");
+        $this->userTypeCode = $this->session->userdata("userTypeCode");
+        $this->permissionView = true;
+                
+        $this->permissionEdit = $this->getPermission();
     }
     
     private function getPermission(){
         
-        $this->config->load('permission', true);
-        $this->mapPermission = $this->config->item('permission');
-        
-        $mapPermission = $this->mapPermission["mapPermission"];
+        $mapPermission = $this->configPermission["mapPermission"];
         
         $page = $this->router->class;
         
@@ -82,13 +75,16 @@ class SpotOn extends CI_Controller {
                 $this->crud->unset_add();
             }
         } else if($page == "admin"){
-            if($this->userTypeCode != "01"){
+            $adminCodeList = $this->configPermission["adminCodeList"];
+            //ถ้าไม่ใช่ adminห้ามเข้า
+            if(!in_array($this->userTypeCode, $adminCodeList)){
                 $this->permissionView = FALSE;
             }
         }
         
         return $permissionEdit;
     }
+    
     protected function output() {
         $output = $this->crud->render();
         $this->load->view('main.php', $output);
@@ -120,10 +116,31 @@ class SpotOn extends CI_Controller {
             
     }
     
-    protected function setFancyBox(){
-        $this->crud->set_css("assets/fancyapps/source/jquery.fancybox.css?v=2.1.5");
-        $this->crud->set_js("assets/fancyapps/source/jquery.fancybox.js?v=2.1.5");
+    public function getUserTypeCode(){
+        return $this->userTypeCode;
     }
+    
+    public function getUserPermissionAdminPage(){
+        $ret = FALSE;
+        $adminCodeList = $this->configPermission["adminCodeList"];
+        if(in_array($this->userTypeCode, $adminCodeList)){
+            $ret = TRUE;
+        }
+        return $ret;
+    }
+    
+    public function getPermissionEdit(){
+        return $this->permissionEdit;
+    }
+      
+    public function getPermissionView(){
+        return $this->permissionView;
+    }
+    
+//    protected function setFancyBox(){
+//        $this->crud->set_css("assets/fancyapps/source/jquery.fancybox.css?v=2.1.5");
+//        $this->crud->set_js("assets/fancyapps/source/jquery.fancybox.js?v=2.1.5");
+//    }
     
     public function clearBeforeInsertAndUpdate($array) {
         unset($array['page']);

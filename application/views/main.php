@@ -56,9 +56,8 @@
                     <div class="usermanage">
                         <div class="username">VGI Global Media</div>
                         <div class="logout">
-                        <?php   
-                            $userTypeCode = $ci->getUserTypeCode(); 
-                            if($userTypeCode == "01"){
+                        <?php
+                            if($ci->getUserPermissionAdminPage()){
                         ?>
                             <a href="<?php echo site_url("admin");?>">Admin</a> / 
                         <?php 
