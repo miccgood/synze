@@ -12,10 +12,11 @@ class Admin extends SpotOn {
         ->set_subject('User')
         ->display_as("user_displayname" , "Name")
         ->display_as("permission_ID" , "Page")
+        ->set_relation('user_type_ID', 'mst_user_type', 'user_type_name')
         ->set_relation_n_n('permission_ID', 'trn_permission', 'mst_permission', 'user_ID', 'permission_ID', 'page_name','seq')
         ->where("cpn_ID" , $this->cpnId)
-        ->columns('user_displayname', 'permission_ID')
-        ->fields('user_displayname', 'permission_ID')
+        ->columns('user_displayname', 'user_type_ID', 'permission_ID')
+        ->fields('user_displayname', 'user_type_ID', 'permission_ID')
         ;
         $this->output();
         
