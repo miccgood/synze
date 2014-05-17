@@ -16,9 +16,18 @@ class Login extends CI_Controller {
         if($username !== FALSE && $password !== FALSE){
             $user = $this->m->checkLogin($username, $password);
             if($user !== NULL){
+                $permission = $this->m->getPermission($user->user_ID);
+                
                 $this->session->set_userdata("cpnID", $user->cpn_ID);
                 $this->session->set_userdata("userID", $user->user_ID);
-                redirect("media");
+                $this->session->set_userdata("userTypeCode", $user->user_type_code);
+                $this->session->set_userdata("permission", $permission);
+                
+                if($user->user_type_code == "01"){
+                    redirect("admin");
+                } else {
+                    redirect("media");
+                }
             }else{
                 $data["error"] = "Username or Password Wrong";
                 $this->load->view('login', $data);

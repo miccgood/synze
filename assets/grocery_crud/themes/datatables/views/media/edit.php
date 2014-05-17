@@ -37,6 +37,8 @@ $this->set_js_lib($this->default_javascript_path.'/jquery_plugins/colpick.js');
             <div id='report-error' class='report-div error'></div>
             <div id='report-success' class='report-div success'></div>
         </div>
+        <?php if($this->default_value["permissionEdit"]){ ?>
+        
         <div class='buttons-box'>
             <div class='form-button-box'>
                 <input  id="form-button-save" type='submit' value='<?php echo $this->l('form_update_changes'); ?>' class='ui-input-button' />
@@ -54,6 +56,32 @@ $this->set_js_lib($this->default_javascript_path.'/jquery_plugins/colpick.js');
             </div>
             <div class='clear'></div>
         </div>
+        
+         <?php 
+                        } else {  ?>
+        
+        <div class='buttons-box'>
+<?php if (!$this->unset_back_to_list) { ?>
+                <div class='form-button-box'>
+                    <input type='button' value='<?php echo $this->l('form_back'); ?>' class='ui-input-button' id="cancel-button" />
+                </div>
+<?php } ?>
+            <div class='form-button-box loading-box'>
+                <div class='small-loading' id='FormLoading'><?php echo $this->l('form_update_loading'); ?></div>
+            </div>
+            
+            <div class='clear'></div>
+        </div>
+        
+        <script type="text/javascript" >
+            $(function(){
+                $("#cat_id_field_box .datatables-add-button, .datepicker-input-clear").hide();
+                $(":text").prop({disabled:true}).css({"background-color": "#dedede"});
+                $('.chosen-select').prop('disabled', true).trigger('liszt:updated');
+                
+            });
+        </script>
+        <?php }?>
         </form>
     </div>
 </div>

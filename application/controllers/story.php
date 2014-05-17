@@ -13,6 +13,12 @@ class Story extends SpotOn {
     
     public function index() {
         
+        $icon = 'ui-icon-pencil';
+        $text = 'Edit';
+        if(!$this->getPermissionEdit()){
+            $icon = 'ui-icon-document';
+            $text = 'View';
+        }
         
         $this->crud->set_table('mst_story')
                 
@@ -32,7 +38,7 @@ class Story extends SpotOn {
         ->fields("story_name","story_desc", "lyt_ID", "page")
         ->field_type('page', 'hidden', 'story')
                 
-        ->add_action('Edit', '', 'storyitem/index','ui-icon-pencil', array($this,'edit_participant'))
+        ->add_action($text, '', 'storyitem/index',$icon, array($this,'edit_participant'))
         ->unset_edit();
         ;
         $this->output();

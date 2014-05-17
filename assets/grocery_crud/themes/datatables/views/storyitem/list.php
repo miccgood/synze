@@ -96,7 +96,7 @@
     #container { width: 640px; height: 360px; position: relative; z-index: 100;margin: auto;border: 2px solid gray;overflow:hidden;}
     #container h3 { text-align: center; margin: 0; margin-bottom: 10px; background-color: cornsilk; }
     #layout1 {z-index: 101;}
-    .grayInput {background-color: #dedede;}
+/*    .grayInput {background-color: #dedede;}*/
     div.inline { float: left;}
     
     /* #layout1 { background-position: top left; width: 150px; height: 150px; }*/
@@ -478,6 +478,13 @@
                 <tr>
                     <td colspan="2" align="center"> 
                         
+                        
+
+                        
+                        
+                        
+                        
+                    <?php if($this->default_value["permissionEdit"]){ ?>
                         <span class="datatables-add-button">
                             <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
                                     <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
@@ -493,8 +500,8 @@
                                     <!--<button id="addLayout"> Add Layout </button>-->
                             </a>
                         </span>
-                        
-                        
+
+
                         <?php if(!is_null($back_url) && $back_url != ""){?>
 
                             <span class="datatables-add-button">
@@ -505,6 +512,21 @@
                             </span>
                         <?php }?>
 
+                    <?php } else {  ?>
+                        <?php if(!is_null($back_url) && $back_url != ""){?>
+
+                            <span class="datatables-add-button">
+                                <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary back-to-list" href="<?php echo $back_url?>" onclick="return confirmGoBackToList()">
+                                        <span class="ui-button-icon-primary ui-icon ui-icon-arrow-1-w"></span>
+                                        <span class="ui-button-text">Back</span>
+                                </a>
+                            </span>
+                        <?php }?>
+                    <?php }?>
+        
+        
+        
+        
                         <script type="text/javascript">
                             function confirmGoBackToList(){
                                 var message_alert_edit_form = "The data you had change may not be saved.\nAre you sure you want to go back to list?";
@@ -734,3 +756,15 @@
         $("#inputDuration").val(getFormatTime(highest));
     }
     </script>
+
+    
+    
+    <?php if(!$this->default_value["permissionEdit"]){ ?>
+        <script type="text/javascript" >
+            $(function(){
+                $(":text").prop({disabled:true}).css({"background-color": "#dedede"});
+                $('.chosen-select').prop('disabled', true).trigger('liszt:updated');
+            });
+        </script>
+
+    <?php } 

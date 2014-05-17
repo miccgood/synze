@@ -18,7 +18,7 @@
 	$lang['list_paging_next'] 		= 'Next';
 	$lang['list_paging_last'] 		= 'Last';
 	$lang['list_loading'] 			= 'Loading...';
-
+        $lang['form_back'] 				= 'Back';
 	$lang['form_edit'] 				= 'Edit';
 	$lang['form_back_to_list'] 		= 'Back to list';
 	$lang['form_update_changes'] 	= 'Update changes';

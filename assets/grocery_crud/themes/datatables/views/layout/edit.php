@@ -51,23 +51,61 @@
 			<div id='report-error' class='report-div error'></div>
 			<div id='report-success' class='report-div success'></div>
 		</div>
-		<div class='buttons-box'>
-			<div class='form-button-box'>
-				<input  id="form-button-save" type='submit' value='<?php echo $this->l('form_update_changes'); ?>' class='ui-input-button' />
-			</div>
-			<?php 	if(!$this->unset_back_to_list) { ?>
-			<div class='form-button-box'>
-				<input type='button' value='<?php echo $this->l('form_update_and_next'); ?>' class='ui-input-button' id="save-and-next"/>
-			</div>
-			<div class='form-button-box'>
-				<input type='button' value='<?php echo $this->l('form_cancel'); ?>' class='ui-input-button' id="cancel-button" />
-			</div>
-			<?php }?>
-			<div class='form-button-box loading-box'>
-				<div class='small-loading' id='FormLoading'><?php echo $this->l('form_update_loading'); ?></div>
-			</div>
-			<div class='clear'></div>
-		</div>
+    
+    
+    <?php if($this->default_value["permissionEdit"]){ ?>
+        <div class='buttons-box'>
+                <div class='form-button-box'>
+                        <input  id="form-button-save" type='submit' value='<?php echo $this->l('form_update_changes'); ?>' class='ui-input-button' />
+                </div>
+                <?php 	if(!$this->unset_back_to_list) { ?>
+                <div class='form-button-box'>
+                        <input type='button' value='<?php echo $this->l('form_update_and_next'); ?>' class='ui-input-button' id="save-and-next"/>
+                </div>
+                <div class='form-button-box'>
+                        <input type='button' value='<?php echo $this->l('form_cancel'); ?>' class='ui-input-button' id="cancel-button" />
+                </div>
+                <?php }?>
+                <div class='form-button-box loading-box'>
+                        <div class='small-loading' id='FormLoading'><?php echo $this->l('form_update_loading'); ?></div>
+                </div>
+                <div class='clear'></div>
+        </div>
+
+     <?php 
+                    } else {  ?>
+    <div class='buttons-box'>
+
+
+        <div class='form-button-box'>
+                <input type='button' value='<?php echo $this->l('list_paging_next'); ?>' class='ui-input-button' id="next-button"/>
+        </div>
+        <?php if (!$this->unset_back_to_list) { ?>
+            <div class='form-button-box'>
+                <input type='button' value='<?php echo $this->l('form_back'); ?>' class='ui-input-button' id="cancel-button" />
+            </div>
+        <?php } ?>
+        <div class='form-button-box loading-box'>
+            <div class='small-loading' id='FormLoading'><?php echo $this->l('form_update_loading'); ?></div>
+        </div>
+
+        <div class='clear'></div>
+    </div>
+    <script type="text/javascript" >
+        $(function(){
+//            $(".datatables-add-button, .datepicker-input-clear").hide();
+            $(":text").prop({disabled:true}).css({"background-color": "#dedede"});
+            $('#select_resolution').prop('disabled', true).trigger('liszt:updated');
+
+            $(".ui-multiselect li").unbind();
+            $(".ui-multiselect select").prop({disabled:true});
+            $(".ui-multiselect .ui-icon").hide();
+        });
+    </script>
+    <?php }?>
+        
+        
+        
 	</form>
 </div>
 </div>
@@ -81,4 +119,9 @@
 	var message_update_error = "<?php echo $this->l('update_error')?>";
         var $id = $("#field-lyt_ID").val();
         
+        $(function(){
+            $("#next-button").click(function(e){
+                window.location = $next_url + $id;
+            });
+        });
 </script>

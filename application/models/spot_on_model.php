@@ -60,7 +60,8 @@ class spot_on_model extends CI_Model  {
         }
         
         function checkLogin($user, $pass){
-            $count = $this->db->select("cpn_ID, user_ID")
+            $count = $this->db->select("cpn_ID, user_ID, mst_user_type.user_type_code")
+                        ->join('mst_user_type', 'mst_user_type.user_type_ID = mst_user.user_type_ID', 'inner')
                         ->where("user_username" , $user)
                         ->where("user_password" , $pass)
                         ->get("mst_user")
@@ -71,6 +72,22 @@ class spot_on_model extends CI_Model  {
             return NULL;
 //            return $this->db->get('mst_media')->result();
         }
+        
+        function getPermission($userId){
+            $permission = $this->db->select("page_code, page_name")
+                        ->join('mst_permission', 'mst_permission.permission_ID = trn_permission.permission_ID', 'inner')
+                        ->where("user_ID" , $userId)
+//                        ->where("user_password" , $pass)
+                        ->get("trn_permission")
+                        ->result_array();
+            $ret = array();
+            foreach ($permission as $value) {
+                $ret[$value["page_code"]] = $value["page_name"];
+            }
+            return $ret;
+//            return $this->db->get('mst_media')->result();
+        }
+        
         private function setDefaltCreateRow($row){
             $row["create_date"] = date('Y-m-d H:i:s');
         }

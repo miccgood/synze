@@ -11,8 +11,9 @@ class Admin extends SpotOn {
         $this->crud->set_table('mst_user')
         ->set_subject('User')
         ->display_as("user_displayname" , "Name")
+        ->display_as("permission_ID" , "Page")
         ->set_relation_n_n('permission_ID', 'trn_permission', 'mst_permission', 'user_ID', 'permission_ID', 'page_name','seq')
-//        ->where("terminal.cpn_ID" , $this->cpnId)
+        ->where("cpn_ID" , $this->cpnId)
         ->columns('user_displayname', 'permission_ID')
         ->fields('user_displayname', 'permission_ID')
         ;

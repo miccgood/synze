@@ -1,4 +1,7 @@
 @charset "utf-8";
+
+.grayInput {background-color: #dedede;}
+
 body {
 	font: 150% Verdana, Arial, Helvetica, sans-serif;
 	background-color: #BDBDBD;

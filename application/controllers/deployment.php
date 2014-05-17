@@ -130,6 +130,12 @@ class Deployment extends SpotOn {
      }
      
      private function modeList(){
+        $icon = 'ui-icon-pencil';
+        $text = 'Edit';
+        if(!$this->getPermissionEdit()){
+            $icon = 'ui-icon-document';
+            $text = 'View';
+        }
         $this->crud->set_table('trn_dpm')
                 
             ->where("trn_dpm.cpn_ID" , $this->cpnId)
@@ -141,7 +147,7 @@ class Deployment extends SpotOn {
             ->callback_column("shd_stop_date", array($this, "_shd_stop_date"))
             ->columns("tmn_grp_ID", "shd_name", "shd_start_date", "shd_ID", "shd_stop_date")
 
-                    ->add_action('Edit', '', '','ui-icon-pencil', array($this,'edit_participant'))
+                    ->add_action($text , '', '', $icon, array($this,'edit_participant'))
                     ->unset_edit()
 
                     ->display_as('shd_ID', 'Start Time')

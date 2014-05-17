@@ -483,40 +483,64 @@
     <br/>-->
     
 
+    <?php if($this->default_value["permissionEdit"]){ ?>
+       
+        <div>
 
-<div>
+
+            <span class="datatables-add-button">
+                <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
+                        <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
+                        <span class="ui-button-text" id="saveLayout"> Update Change </span>
+                        <!--<button id="addLayout"> Add Layout </button>-->
+                </a>
+            </span>
+
+            <span class="datatables-add-button">
+                <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
+                        <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
+                        <span class="ui-button-text" id="save_and_go_back_to_list"> Update and go back to list </span>
+                        <!--<button id="addLayout"> Add Layout </button>-->
+                </a>
+            </span>
+
+
+        <?php if(!is_null($back_url) && $back_url != ""){?>
+
+            <span class="datatables-add-button">
+                <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary back-to-list" href="<?php echo $back_url?>" onclick="return confirmGoBackToList()">
+                        <span class="ui-button-icon-primary ui-icon ui-icon-circle-close"></span>
+                        <span class="ui-button-text">Cancel</span>
+                </a>
+            </span>
+        <?php }?>
+
+        <br/>
+
+        </div>
+
+     <?php 
+                    } else {  ?>
+    <div class='buttons-box'>
+
+
+        <?php if(!is_null($back_url) && $back_url != ""){?>
+
+            <span class="datatables-add-button">
+                <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary back-to-list" href="<?php echo $back_url?>" onclick="return confirmGoBackToList()">
+                        <span class="ui-button-icon-primary ui-icon ui-icon-arrow-1-w"></span>
+                        <span class="ui-button-text">Back</span>
+                </a>
+            </span>
+        <?php }?>
+
+        <div class='clear'></div>
+    </div>
+    <?php }?>
     
-
-    <span class="datatables-add-button">
-        <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
-                <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
-                <span class="ui-button-text" id="saveLayout"> Update Change </span>
-                <!--<button id="addLayout"> Add Layout </button>-->
-        </a>
-    </span>
-
-    <span class="datatables-add-button">
-        <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
-                <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
-                <span class="ui-button-text" id="save_and_go_back_to_list"> Update and go back to list </span>
-                <!--<button id="addLayout"> Add Layout </button>-->
-        </a>
-    </span>
     
-     
-<?php if(!is_null($back_url) && $back_url != ""){?>
-
-    <span class="datatables-add-button">
-        <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary back-to-list" href="<?php echo $back_url?>" onclick="return confirmGoBackToList()">
-                <span class="ui-button-icon-primary ui-icon ui-icon-circle-close"></span>
-                <span class="ui-button-text">Cancel</span>
-        </a>
-    </span>
-<?php }?>
-
-<br/>
-
-</div>
+    
+    
 <script type="text/javascript">
     function confirmGoBackToList(){
         var message_alert_edit_form = "The data you had change may not be saved.\nAre you sure you want to go back to list?";
@@ -652,4 +676,26 @@
         $('#'+id).remove();
     }
     
-    </script>
+</script>
+
+
+
+
+
+
+    <?php if(!$this->default_value["permissionEdit"]){ ?>
+       <script type="text/javascript" >
+            $(function(){
+                
+                $("#" + $_tableId + " td , " + $_containerId + " .layout-default").unbind();
+    //            $(".datatables-add-button, .datepicker-input-clear").hide();
+    //            $(":text").prop({disabled:true}).css({"background-color": "#dedede"});
+    //            $('#select_resolution').prop('disabled', true).trigger('liszt:updated');
+    //
+    //            $(".ui-multiselect li").unbind();
+    //            $(".ui-multiselect select").prop({disabled:true});
+    //            $(".ui-multiselect .ui-icon").hide();
+            });
+        </script>   
+
+    <?php }?>

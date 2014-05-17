@@ -2,7 +2,10 @@
 	<thead>
 		<tr>
 			<?php foreach($columns as $column){?>
-				<th><?php echo $column->display_as; ?></th>
+				
+ <!---				<th><?php echo $column->display_as; ?></th>-->
+ 				<?php $text_align = (empty($column->align) ? '' : ('style="text-align:'.$column->align.'"')); ?>
+ 				<th <?php echo $text_align;?>><?php echo $column->display_as; ?></th>
 			<?php }?>
 			<?php if(!$unset_delete || !$unset_edit || !$unset_read || !empty($actions)){?>
 			<th class='actions'><?php echo $this->l('list_actions'); ?></th>
@@ -13,7 +16,9 @@
 		<?php foreach($list as $num_row => $row){ ?>
 		<tr id='row-<?php echo $num_row?>'>
 			<?php foreach($columns as $column){?>
-				<td><?php echo $row->{$column->field_name}?></td>
+				<!--<td><?php echo $row->{$column->field_name}?></td>-->
+ 				<?php $text_align = (empty($column->align) ? '' : ('align="'.$column->align.'"')); ?>
+ 				<td <?php echo $text_align;?>><?php echo $row->{$column->field_name}?></td>
 			<?php }?>
 			<?php if(!$unset_delete || !$unset_edit || !$unset_read || !empty($actions)){?>
 			<td class='actions'>
@@ -35,25 +40,12 @@
 					</a>
 				<?php }?>
 
-				<?php if(!$unset_edit){
-                                    
-                                            if($this->default_value["permissionEdit"]){ ?>
-                                    
-                                            <a href="<?php echo $row->edit_url?>" class="edit_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button">
-                                                    <span class="ui-button-icon-primary ui-icon ui-icon-pencil"></span>
-                                                    <span class="ui-button-text">&nbsp;<?php echo $this->l('list_edit'); ?></span>
-                                            </a>
-                                            
-                                            <?php 
-                                            } else {  ?>
-                            
-                                            <a href="<?php echo $row->edit_url?>" class="edit_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button">
-                                                    <span class="ui-button-icon-primary ui-icon ui-icon-document"></span>
-                                                    <span class="ui-button-text">&nbsp;<?php echo $this->l('list_view'); ?></span>
-                                            </a>
-                                            
-                                        <?php }
-                                        }   ?>
+				<?php if(!$unset_edit){?>
+					<a href="<?php echo $row->edit_url?>" class="edit_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button">
+						<span class="ui-button-icon-primary ui-icon ui-icon-pencil"></span>
+						<span class="ui-button-text">&nbsp;<?php echo $this->l('list_edit'); ?></span>
+					</a>
+				<?php }?>
 				<?php if(!$unset_delete){?>
 					<a onclick = "javascript: return delete_row('<?php echo $row->delete_url?>', '<?php echo $num_row?>')"
 						href="javascript:void(0)" class="delete_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button">

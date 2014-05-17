@@ -10,7 +10,7 @@
 
 body {
 	background-color: #fff;
-	margin: 40px;
+	margin: 0px;
 	font: 13px/20px normal Helvetica, Arial, sans-serif;
 	color: #4F5155;
 }
@@ -40,7 +40,7 @@ code {
 	display: block;
 	margin: 14px 0 14px 0;
 	padding: 12px 10px 12px 10px;
-}
+} 
 
 #container {
 	margin: 10px;

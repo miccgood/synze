@@ -55,7 +55,16 @@
                     <div class="userimage"><img src="<?php echo base_url() ?>theme/images/vgi_logo.jpg" class="img-logo"></div>
                     <div class="usermanage">
                         <div class="username">VGI Global Media</div>
-                        <div class="logout"><a href="<?php echo site_url("login/logout");?>">Logout</a></div>
+                        <div class="logout">
+                        <?php   
+                            $userTypeCode = $ci->getUserTypeCode(); 
+                            if($userTypeCode == "01"){
+                        ?>
+                            <a href="<?php echo site_url("admin");?>">Admin</a> / 
+                        <?php 
+                            }
+                        ?>  
+                        <a href="<?php echo site_url("login/logout");?>">Logout</a></div>
                     </div>
                 </div>
             </div>
@@ -138,7 +147,14 @@
             </div>
             <div class="content-outer">
                 <div class="content-inner">
-                    <?php echo $output; ?>
+                    <?php 
+                        $permissionView = $ci->getPermissionView();
+                        if($permissionView){
+                            echo $output; 
+                        } else {
+                            show_error("You no right to access this page", 500, "Error Permission Denied");
+                        }
+                    ?>
                 </div>
             </div>
         </div>

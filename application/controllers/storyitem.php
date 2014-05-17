@@ -103,7 +103,7 @@ class StoryItem extends SpotOn {
         $data["displayAll"] = $this->m->getDisPlay();
         $data["layout"] = $this->m->getLayoutById($layoutId);
         $data["display"] = $this->m->getDisplayByLayoutId($layoutId);
-        
+        $data["permissionEdit"] = $this->permissionEdit;
         return $data;
     }
     protected function setDefaultAction() {

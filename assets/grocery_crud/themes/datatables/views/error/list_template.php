@@ -109,154 +109,24 @@
 	<p><?php echo $success_message; ?></p>
 <?php }
 ?></div>
-
-
-<?php if(!is_null($back_url) && $back_url != ""){?>
-
-<!--<span class="datatables-add-button">
-<a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="<?php echo $back_url?>">
-	<span class="ui-button-icon-primary ui-icon ui-icon-circle-arrow-w"></span>
-	<span class="ui-button-text">Back</span>
-</a>
-</span>-->
-<?php }?>
-
 <?php if(!$unset_add){?>
-<!--<span class="datatables-add-button">
+<span class="datatables-add-button">
 <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="<?php echo $add_url?>">
 	<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>
 	<span class="ui-button-text"><?php echo $this->l('list_add'); ?> <?php echo $subject?></span>
 </a>
-</span>-->
+</span>
 <?php }?>
+<?php if(!is_null($back_url) && $back_url != ""){?>
 
-<?php if($this->default_value["permissionEdit"]){ ?>
-		
 <span class="datatables-add-button">
-<a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
-	<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>
-	<span class="ui-button-text" id="addLayout"> Add Zone </span>
-        <!--<button id="addLayout"> Add Layout </button>-->
+<a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="<?php echo $back_url?>">
+	<span class="ui-button-icon-primary ui-icon ui-icon-circle-arrow-w"></span>
+	<span class="ui-button-text">Back</span>
 </a>
 </span>
-        
-<?php } ?>
-        
-
-
-<!--<span class="datatables-add-button">
-<a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
-	<span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
-	<span class="ui-button-text" id="saveLayout"> Save </span>
-        <button id="addLayout"> Add Layout </button>
-</a>
-</span>-->
-
-
-
-<!--<div style='text-align: center;'><h3 style="color: #222;">  Table <?php echo $subject?> </h3></div>-->
+<?php }?>
+<div style='text-align: center;'><h3 style="color: #222;">  Table <?php echo $subject?> </h3></div>
 <div class="dataTablesContainer">
 	<?php echo $list_view?>
 </div>
-
-<?php // echo var_dump($this); ?>
-
-
-<script type="text/javascript">
-    $(function(){
-        var save_and_go_back_to_list = false;
-        $("#save_and_go_back_to_list").unbind().bind("click", function(){
-            save_and_go_back_to_list = true;
-            $("#saveLayout").click();
-        });
-        $("#saveLayout").unbind().bind("click", function(){
-            if(!validate()){
-                alert("validate Error");
-            }
-            var url = "display/ajax";
-            var dataToBeSent = getDataFromTable();
-            var data = { name: "John", location: "Boston" };
-            $.post(url, dataToBeSent, function(data, textStatus) {
-               console.log( "success" );
-              }, "json")
-            .done(function() {
-                if(save_and_go_back_to_list){
-                    window.location = "<?php echo $back_url?>";
-                }else{
-                    document.cookie="show=success";
-                    location.reload();
-                }
-                
-            })
-            .fail(function() {
-                 $("#report-error").fadeIn(1000).delay(3000).fadeOut(1000);
-            })
-            .always(function() {
-              console.log( "complete" );
-            });
-        });
-        var isShow = getCookie("show");
-        if(isShow != "" && isShow == "success"){
-            document.cookie="show=false";
-            $("#report-success").fadeIn(1000).delay(3000).fadeOut(1000);
-        }
-       
-        
-    });
-    
-    function getCookie(cname)
-    {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) 
-          {
-          var c = ca[i].trim();
-          if (c.indexOf(name)==0) return c.substring(name.length,c.length);
-          }
-        return "";
-    }
-
-    function validate(){
-        return true;
-    }
-    
-    function getDataFromTable(){
-        var $ret = new Array();
-//        ค้นหา tr 
-        $("table tbody").find("tr").each(function(e2){
-            var $id = $(this).attr("id");
-            if($id){
-                var zone = new Object();
-                zone.dsp_ID = $(this).attr("id").replace("row-", "")
-
-    //            หา td
-                $(this).find('td').each(function(e3){
-                    var name = $(this).attr("name");
-                    if(typeof name == "undefined" || name == "undefined"){
-                        return ;
-                    }
-    //                ตรวจสอบว่า เป็น input หรือไม่ จะได้ดึงข้อมูลมาถูก
-                    if($(this).find('input').size() > 0 ){
-                        var inputValue = $(this).find('input').val();
-                        zone[name] = inputValue.trim();
-                    }else{
-                        var tdValue = $(this).html();
-                        zone[name] = tdValue.trim();
-                    }
-                });
-                $ret[$ret.length] = zone;
-            }
-        });
-        var jObject={};
-        for(i in $ret)
-        {
-            jObject[i] = $ret[i];
-        }
-        return  jObject;
-    }
-    
-</script>
-
-<div class='line-1px'></div>
-<div id='report-error' class='report-div error'><p>Your data has been Error updated. </p></div>
-<div id='report-success' class='report-div success'><p>Your data has been successfully updated. <a href="http://localhost/synzes/index.php/layout/index">Go back to list</a></p></div>

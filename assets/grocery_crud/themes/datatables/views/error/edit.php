@@ -51,17 +51,7 @@
 			<div id='report-error' class='report-div error'></div>
 			<div id='report-success' class='report-div success'></div>
 		</div>
-    
-                
-                
 		<div class='buttons-box'>
-                <?php 
-                
-                $ci = &get_instance();
-                $isReadonly = $ci->isReadonly();
-                if($isReadonly != "readonly"){
-                    if($this->default_value["permissionEdit"]){
-                ?>
 			<div class='form-button-box'>
 				<input  id="form-button-save" type='submit' value='<?php echo $this->l('form_update_changes'); ?>' class='ui-input-button' />
 			</div>
@@ -69,35 +59,15 @@
 			<div class='form-button-box'>
 				<input type='button' value='<?php echo $this->l('form_update_and_go_back'); ?>' class='ui-input-button' id="save-and-go-back-button"/>
 			</div>
-			
-			<?php }?>
-                    <?php } else { ?>
-                        
-                    <script type="text/javascript" >
-                        $(function(){
-                            $(".datepicker-input-clear").hide();
-                            $(":text").prop({disabled:true}).css({"background-color": "#dedede"});
-                            $('.chosen-select').prop('disabled', true).trigger('liszt:updated');
-                        });
-                    </script>
-                    <?php 
-                    }
-                }
-                ?>
-                    
-                        <div class='form-button-box'>
+			<div class='form-button-box'>
 				<input type='button' value='<?php echo $this->l('form_cancel'); ?>' class='ui-input-button' id="cancel-button" />
 			</div>
+			<?php }?>
 			<div class='form-button-box loading-box'>
 				<div class='small-loading' id='FormLoading'><?php echo $this->l('form_update_loading'); ?></div>
 			</div>
 			<div class='clear'></div>
-                        
-                        
-                        
 		</div>
-    
-                
 	</form>
 </div>
 </div>
@@ -107,8 +77,8 @@
 
 	var message_alert_edit_form = "<?php echo $this->l('alert_edit_form')?>";
 	var message_update_error = "<?php echo $this->l('update_error')?>";
+        
+        
 </script>
 
-
-
-
+<?php include 'scriptMedia.php';?>

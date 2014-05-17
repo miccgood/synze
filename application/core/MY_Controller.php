@@ -10,6 +10,8 @@ class SpotOn extends CI_Controller {
     
     protected $isReadonly = false;
     
+    
+    
     function __construct() {
         parent::__construct();
 
@@ -30,8 +32,11 @@ class SpotOn extends CI_Controller {
         $this->crud = new Grocery_CRUD();
         $this->cpnId = $this->session->userdata("cpnID");
         $this->userId = $this->session->userdata("userID");
-        
-        
+        $this->permission = $this->session->userdata("permission");
+        $this->userTypeCode = $this->session->userdata("userTypeCode");
+        $this->permissionView = true;
+                
+        $this->permissionEdit = $this->getPermission();
         
         if($this->nullToZero($this->cpnId) == 0 || $this->nullToZero($this->userId) == 0){
             if($this->cpnId !== false){
@@ -41,11 +46,49 @@ class SpotOn extends CI_Controller {
         }else{
             $this->m->setCpnId($this->cpnId);
         }
-        
-        
         $this->setDefaultAction();
     }
 
+    public function getUserTypeCode(){
+        return $this->userTypeCode;
+    }
+    
+    public function getPermissionEdit(){
+        return $this->permissionEdit;
+    }
+      
+    public function getPermissionView(){
+        return $this->permissionView;
+    }
+    
+    private function getPermission(){
+        
+        $this->config->load('permission', true);
+        $this->mapPermission = $this->config->item('permission');
+        
+        $mapPermission = $this->mapPermission["mapPermission"];
+        
+        $page = $this->router->class;
+        
+        $permissionEdit = false;
+        if(array_key_exists($page, $mapPermission)){
+            $page_code = $mapPermission[$page];
+            
+            //ดึง permission ใหม่ทุกครั้ง
+            $this->permission = $this->m->getPermission($this->userId);
+            if(array_key_exists($page_code, $this->permission)){
+                $permissionEdit = true;
+            } else {
+                $this->crud->unset_add();
+            }
+        } else if($page == "admin"){
+            if($this->userTypeCode != "01"){
+                $this->permissionView = FALSE;
+            }
+        }
+        
+        return $permissionEdit;
+    }
     protected function output() {
         $output = $this->crud->render();
         $this->load->view('main.php', $output);
@@ -58,6 +101,7 @@ class SpotOn extends CI_Controller {
             ->set_theme('datatables')
             ->field_type("cpn_ID", "hidden", $this->cpnId) 
             ->field_type("page", "hidden", $this->router->class)
+            ->field_type("permissionEdit", "invisible", $this->permissionEdit)
             ->field_type("create_date", "hidden")
             ->field_type("create_by", "hidden")    
             ->field_type("update_date", "hidden")    
@@ -66,8 +110,14 @@ class SpotOn extends CI_Controller {
             ->unset_print()->unset_export()->unset_read()
             ->callback_before_insert(array($this,'clearBeforeInsertAndUpdate'))
             ->callback_before_update(array($this,'clearBeforeInsertAndUpdate'))
-            ->callback_before_delete(array($this,'_beforeDelete'));
+            ->callback_before_delete(array($this,'_beforeDelete'))
+            ->set_default_value(array("permissionEdit" => $this->permissionEdit))
             ;
+            
+            if(!$this->permissionEdit){
+                $this->crud->unset_delete();
+            }
+            
     }
     
     protected function setFancyBox(){
