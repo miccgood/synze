@@ -24,7 +24,7 @@ class Admin extends SpotOn {
         ->display_as("cpn_ID" , "Company")
         ->display_as("user_type_ID" , "User Type")
         ->set_relation('user_type_ID', 'mst_user_type', 'user_type_name', $whereUser, "user_type_code")
-        ->set_relation('cpn_ID', 'mst_cpn', 'cpn_name', $whereCpn)
+        ->set_relation('cpn_ID', 'mst_cpn', 'cpn_name', $whereCpn, "cpn_name")
         ->set_relation_n_n('permission_ID', 'trn_permission', 'mst_permission', 'user_ID', 'permission_ID', 'page_name','seq')
         ->where($where)
         ->columns('cpn_ID', 'user_displayname', 'user_type_ID', 'permission_ID')

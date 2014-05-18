@@ -101,6 +101,8 @@ class StoryItem extends SpotOn {
         $data["storyItem"] = $this->m->getStoryItemByStoryId($storyId);
         $data["layoutAll"] = $this->m->getLayout();
         $data["displayAll"] = $this->m->getDisPlay();
+        
+        $layoutId = $this->nullToZero($this->getValueFromObj($data["story"][0], "lyt_ID"), 0);
         $data["layout"] = $this->m->getLayoutById($layoutId);
         $data["display"] = $this->m->getDisplayByLayoutId($layoutId);
         $data["permissionEdit"] = $this->permissionEdit;

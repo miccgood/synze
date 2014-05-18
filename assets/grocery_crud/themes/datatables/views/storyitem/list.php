@@ -123,7 +123,15 @@
     
     var $_resWidth = 0;//1280
     var $_resHeight = 0;//720
+    
+    var $_containerWidthTemplate = parseInt($($_containerId).width());;//640px
+    var $_containerHeightTemplate = parseInt($($_containerId).height());//360px
+    
     $(function() {
+        
+        $_containerWidthTemplate = parseInt($($_containerId).width());;//640px
+        $_containerHeightTemplate = parseInt($($_containerId).height());//360px
+    
         initContainer($_containerId);
         $_tableTemplate = $("#"+$_tableId).find("tbody");
         $_layoutTemplate = $("#layout1").clone(true);
@@ -169,16 +177,52 @@
 //        setCenter($("#layout1"));
     });
 
-    var initContainer = function($containerId){
+//    var initContainer = function($containerId){
+//        
+////        ดึงความกว้างจอการแสดงผล
+//        var width = parseInt($($containerId).width());//640px;  360px;
+//        var height = parseInt($($containerId).height());
+//        //คำนวนความต่างของจอจริง กับค่าที่มาจาก DB เพิ่มนำไป render
+//        $_resWidth = $_layoutWidth / width;
+//        $_resHeight = $_layoutHeight / height;
+//        
+//    };
+
+var initContainer = function($containerId){
+        //set ค่ากลับเป็นแบบเริ่มต้นก่อน
+        $($containerId).width($_containerWidthTemplate);
+        $($containerId).height($_containerHeightTemplate);
         
-//        ดึงความกว้างจอการแสดงผล
+        //ข้อมูลส่วนแสดงผลบนจอ
         var width = parseInt($($containerId).width());//640px;  360px;
         var height = parseInt($($containerId).height());
+        
+        //ข้อมูลที่เลือก
+        $_layoutHeight = parseInt($_layoutHeight);
+        $_layoutWidth = parseInt($_layoutWidth);
+        
+        if($_layoutHeight > $_layoutWidth ){
+            $($containerId).width(height);
+            $($containerId).height(width);
+            
+            width = parseInt($($containerId).width());//360px; 640px;  
+            height = parseInt($($containerId).height());
+        } else if($_layoutHeight == $_layoutWidth ) {
+            $($containerId).width(height);
+            $($containerId).height(height);
+
+            width = parseInt($($containerId).width());//360px;  360px;
+            height = parseInt($($containerId).height());
+        }
+//        ดึงความกว้างจอการแสดงผล
+       
         //คำนวนความต่างของจอจริง กับค่าที่มาจาก DB เพิ่มนำไป render
+        
         $_resWidth = $_layoutWidth / width;
         $_resHeight = $_layoutHeight / height;
         
     };
+    
     
     var setOffset = function($obj, x, y, width, height) {
 //        $obj.css({top: y, left: x, width: width, height: height});
