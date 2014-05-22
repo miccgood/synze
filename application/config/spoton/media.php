@@ -32,9 +32,26 @@ $config["extention"]["image"] = array("jpg", "gif", "png");
 
 $config["allowed_formats"] = array_merge($config["extention"]["video"], $config["extention"]["image"]);
 
+//"display" => คือเอาไว้แสดงผลกับหน้าจอ 
+//"value" => ค่าที่เอาไปใช้หรือเก็บลงไฟล์
+
+                          //"value" 
 $config["defaultTextSize"] = "14";
 
-$config["textSize"] = array("12","14","16","18","20","22","24","32","36","42","48","60","72");
+                      //"display"=>"value"
+$config["textSize"] = array("12px" => "12" ,
+                            "14px" => "14" ,
+                            "16px" => "16" ,
+                            "24px" => "18" ,
+                            "20px" => "20" ,
+                            "22px" => "22" ,
+                            "24px" => "24" ,
+                            "32px" => "32" ,
+                            "36px" => "36" ,
+                            "42px" => "42" ,
+                            "48px" => "48" ,
+                            "60px" => "60" ,
+                            "72px" => "72" );
 
 $config["defaultPlaySpeed"] = "400";
 

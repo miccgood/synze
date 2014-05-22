@@ -62,7 +62,7 @@
 <?php   } ?>
 			<div class='form-button-box loading-box'>
 				<div class='small-loading' id='FormLoading'><?php echo $this->l('form_insert_loading'); ?></div>
-			</div>
+			</div> 
 			<div class='clear'></div>
 		</div>
 	<?php echo form_close(); ?>
@@ -73,5 +73,6 @@
 	var list_url = '<?php echo $list_url?>';
 
 	var message_alert_add_form = "<?php echo $this->l('alert_add_form')?>";
-	var message_insert_error = "<?php echo $this->l('insert_error')?>";
+//	var message_insert_error = "<?php echo $this->l('insert_error')?>";
+        var message_insert_error = "You don't have permissions for this operation";
 </script>

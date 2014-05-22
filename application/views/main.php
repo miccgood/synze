@@ -151,7 +151,7 @@
                         if($permissionView){
                             echo $output; 
                         } else {
-                            show_error("You no right to access this page", 500, "Error Permission Denied");
+                            show_error("You don't have permissions for this operation", 500, "Error Permission Denied");
                         }
                     ?>
                 </div>

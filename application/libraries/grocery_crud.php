@@ -4425,6 +4425,8 @@ class Grocery_CRUD extends grocery_CRUD_States
 	{
 		$this->pre_render();
 
+                $ci = &get_instance();
+                
 		if( $this->state_code != 0 )
 		{
 			$this->state_info = $this->getStateInfo();
@@ -4440,8 +4442,9 @@ class Grocery_CRUD extends grocery_CRUD_States
 			case 1://list
 				if($this->unset_list)
 				{
-					throw new Exception('You don\'t have permissions for this operation', 14);
-					die();
+                                    $ci->setPermissionView(false);
+//					throw new Exception('You don\'t have permissions for this operation', 14);
+//					die();
 				}
 
 				if($this->theme === null)
@@ -4459,8 +4462,9 @@ class Grocery_CRUD extends grocery_CRUD_States
 			case 2://add
 				if($this->unset_add)
 				{
-					throw new Exception('You don\'t have permissions for this operation', 14);
-					die();
+                                    $ci->setPermissionView(false);
+//					throw new Exception('You don\'t have permissions for this operation', 14);
+//					die();
 				}
 
 				if($this->theme === null)
@@ -4476,8 +4480,9 @@ class Grocery_CRUD extends grocery_CRUD_States
 			case 3://edit
 				if($this->unset_edit)
 				{
-					throw new Exception('You don\'t have permissions for this operation', 14);
-					die();
+                                    $ci->setPermissionView(false);
+//					throw new Exception('You don\'t have permissions for this operation', 14);
+//					die();
 				}
 
 				if($this->theme === null)
@@ -4535,8 +4540,9 @@ class Grocery_CRUD extends grocery_CRUD_States
 
 				if($this->unset_list)
 				{
-					throw new Exception('You don\'t have permissions for this operation', 14);
-					die();
+                                    $ci->setPermissionView(false);
+//					throw new Exception('You don\'t have permissions for this operation', 14);
+//					die();
 				}
 
 				if($this->theme === null)
@@ -4658,8 +4664,9 @@ class Grocery_CRUD extends grocery_CRUD_States
 			case 18: //read
 				if($this->unset_read)
 				{
-					throw new Exception('You don\'t have permissions for this operation', 14);
-					die();
+                                    $ci->setPermissionView(false);
+//					throw new Exception('You don\'t have permissions for this operation', 14);
+//					die();
 				}
 
 				if($this->theme === null)

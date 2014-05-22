@@ -17,6 +17,8 @@ class Admin extends SpotOn {
         $whereCpn = $this->getWhereCpn();
         $whereUser = $this->getWhereUser();
         
+        $state = $this->crud->getState();
+        
         $this->crud->set_table('mst_user')
         ->set_subject('User')
         ->display_as("user_displayname" , "Display Name")
@@ -45,8 +47,10 @@ class Admin extends SpotOn {
 //                $where = array();
                 break;
             case Admin::$ADMIN_CODE:
-                //ถ้าเป็น admin ให้เห็นแค่ cpn ของตัวเอง
-                $where = array("mst_user.cpn_ID" => $this->cpnId, "user_type_code <> " => Admin::$SUPER_ADMIN_CODE);
+                //ถ้าเป็น admin ให้เห็นแค่ cpn ของตัวเอง และ ไม่เห็น SUPER_ADMIN
+                $where = array("mst_user.cpn_ID" => $this->cpnId, 
+                    "user_type_code <> " => Admin::$SUPER_ADMIN_CODE,
+                    "user_ID <> " => $this->userId);
                 break;
             default:
                 break;
@@ -121,10 +125,39 @@ class Admin extends SpotOn {
 //            }
             
     }
-    
-    public function _beforeDelete($primary_key) {
-        return $this->m->checkDeleteTerminal($primary_key);
+    public function clearBeforeInsertAndUpdate($array) {
+        
+        $permissionMap = 
+                array(
+                    Admin::$SUPER_ADMIN_CODE => array(Admin::$SUPER_ADMIN_CODE, Admin::$ADMIN_CODE, Admin::$USER),
+                    Admin::$ADMIN_CODE => array(Admin::$ADMIN_CODE, Admin::$USER),
+                    Admin::$USER => array()
+                );
+        
+        //ดึงข้อมูลขึ้นมาว่าตอนนี้ userType เป็นอะไร
+        $userTypeCodeDao = $this->m->getUserTypeCodeByUserId($this->userId);
+        
+        //ดึงสิทธืที่ user คนนี้ สามารถกำหนดให้ได้ออกมา
+        $permissionArray = $permissionMap[$userTypeCodeDao];
+        
+        //ดึงสิทธืส่งเข้ามา
+        $userTypeId = $array['user_type_ID'];
+        
+        
+        $userTypeCodeXml = $this->m->getUserTypeCodeById($userTypeId);
+        
+        $isPermissionUpdate = false;
+        if(in_array($userTypeCodeXml, $permissionArray)){
+            $isPermissionUpdate = true;
+        }
+        
+        
+        if($isPermissionUpdate){
+            parent::clearBeforeInsertAndUpdate($array);
+        }
+        
+        
+        return $isPermissionUpdate;
     }
-    
     
 }

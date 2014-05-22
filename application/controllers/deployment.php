@@ -90,7 +90,7 @@ class Deployment extends SpotOn {
                 
         ->where("mst_shd.cpn_ID" , $this->cpnId)
 //        ->set_relation('story_ID', 'mst_story', 'story_name')     
-        ->set_subject('Scheduling')
+        ->set_subject('Deployment')
         ->columns("shd_name","story_ID", "shd_start_date", "shd_start_time", "shd_stop_date")
                 
         ->fields("player_group", "shd_ID", "shd_name","shd_desc", "story_ID", "shd_start_date", "shd_start_time", "shd_stop_date", "dpm_ID" ,

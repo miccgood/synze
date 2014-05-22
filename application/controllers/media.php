@@ -27,10 +27,14 @@ class Media extends SpotOn {
     function index() {
         
         $cat_id = $this->getCatId();
-        if(StringUtils::isStringNotBlankOrNull($cat_id)){
-            $this->crud->where('mst_media.cat_ID', $cat_id);
-            $this->session->set_userdata("cat_id",$cat_id);
+        $state = $this->crud->getState();
+        if($state != "list" && $state != "success"){
+            if(StringUtils::isStringNotBlankOrNull($cat_id)){
+                $this->crud->where('mst_media.cat_ID', $cat_id);
+                $this->session->set_userdata("cat_id",$cat_id);
+            }
         }
+        
         
         
 //        $mediaGroupList = $this->m->selectCat();
@@ -105,7 +109,7 @@ class Media extends SpotOn {
 //        ->callback_before_insert(array($this, 'callbackBeforeInsert'))     
 //        ->callback_before_update(array($this, 'callbackBeforeUpdate'))
                 ;
-        $state = $this->crud->getState();
+        
         $this->crud->setCustomScript(" "
                 . "$(function(){ "
                 . " if('$state' != 'add'){"
@@ -187,13 +191,11 @@ class Media extends SpotOn {
 
             $defaultTextSize = $this->media["defaultTextSize"];
                     
-            foreach ($this->media["textSize"] as $size) {
-                
-                
+            foreach ($this->media["textSize"] as $sizeHtml => $size) {
                 if($textSize == $size || ( $defaultTextSize == $size && $state == "add")){
-                    $ret .= '<option value="' . $size . '" selected=selected >' . $size . '</option>';
+                    $ret .= '<option value="' . $size . '" selected=selected >' . $sizeHtml . '</option>';
                 } else {
-                    $ret .= '<option value="' . $size . '" >' . $size . '</option>';
+                    $ret .= '<option value="' . $size . '" >' . $sizeHtml . '</option>';
                 }
             }
 
@@ -228,7 +230,7 @@ class Media extends SpotOn {
         
             $ret .= 'Bg Color :  <input type="text" id="bgPicker" name="bgcolor" value="'.$bgcolor.'"></input> ';
 
-            $ret .= ' <span style="margin-left:16px;"> ';
+            $ret .= ' <span style="margin-left:28px;"> ';
                 $ret .= 'Speed : <select id="playSpeed" name="playSpeed" >';
                 
                     $defaultPlaySpeed = $this->media["defaultPlaySpeed"];

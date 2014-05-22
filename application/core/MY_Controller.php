@@ -30,10 +30,10 @@ class SpotOn extends CI_Controller {
         $this->config->load('permission', true);
         $this->configPermission = $this->config->item('permission');
         
-        
         $this->init();
         
-        
+        $this->session->set_userdata("userTypeCode", $this->userTypeCode);
+                
         if($this->nullToZero($this->cpnId) == 0 || $this->nullToZero($this->userId) == 0){
             if($this->cpnId !== false){
                 $this->session->set_userdata("message_login", "Company Id Wrong");
@@ -54,6 +54,8 @@ class SpotOn extends CI_Controller {
         $this->userTypeCode = $this->session->userdata("userTypeCode");
         $this->permissionView = true;
                 
+        $this->userTypeCode = $this->m->getUserTypeCodeByUserId($this->userId);
+        
         $this->permissionEdit = $this->getPermission();
     }
     
@@ -76,7 +78,7 @@ class SpotOn extends CI_Controller {
             }
         } else if($page == "admin"){
             $adminCodeList = $this->configPermission["adminCodeList"];
-            //ถ้าไม่ใช่ adminห้ามเข้า
+            //ถ้าไม่ใช่ admin ห้ามเข้า
             if(!in_array($this->userTypeCode, $adminCodeList)){
                 $this->permissionView = FALSE;
             }
@@ -135,6 +137,10 @@ class SpotOn extends CI_Controller {
       
     public function getPermissionView(){
         return $this->permissionView;
+    }
+    
+    public function setPermissionView($permissionView){
+        $this->permissionView = $permissionView;
     }
     
 //    protected function setFancyBox(){

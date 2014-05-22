@@ -73,5 +73,7 @@
 	var list_url = '<?php echo $list_url?>';
 
 	var message_alert_edit_form = "<?php echo $this->l('alert_edit_form')?>";
-	var message_update_error = "<?php echo $this->l('update_error')?>";
+//	var message_update_error = "<?php echo $this->l('update_error')?>";
+        
+        var message_update_error = "You don't have permissions for this operation";
 </script>

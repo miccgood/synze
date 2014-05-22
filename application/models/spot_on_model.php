@@ -59,6 +59,33 @@ class spot_on_model extends CI_Model  {
             return $ret;
         }
         
+        function getUserTypeCodeByUserId($userId){
+            
+            $count = $this->db->select("mst_user_type.user_type_code")
+                        ->join('mst_user_type', 'mst_user_type.user_type_ID = mst_user.user_type_ID', 'inner')
+                        ->where("user_ID" , $userId)
+                        ->get("mst_user")
+                        ->result();
+            foreach ($count as $value) {
+                return $value->user_type_code;
+            }
+            return NULL;
+//            return $this->db->get('mst_media')->result();
+        }
+        
+        function getUserTypeCodeById($userTypeId){
+            
+            $count = $this->db->select("user_type_code")
+                        ->where("user_type_ID" , $userTypeId)
+                        ->get("mst_user_type")
+                        ->result();
+            foreach ($count as $value) {
+                return $value->user_type_code;
+            }
+            return NULL;
+//            return $this->db->get('mst_media')->result();
+        }
+        
         function checkLogin($user, $pass){
             $count = $this->db->select("cpn_ID, user_ID, mst_user_type.user_type_code")
                         ->join('mst_user_type', 'mst_user_type.user_type_ID = mst_user.user_type_ID', 'inner')
