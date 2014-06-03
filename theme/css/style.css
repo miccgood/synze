@@ -1,0 +1,538 @@
+@charset "utf-8";
+
+.grayInput {background-color: #dedede;}
+
+body {
+	font: 150% Verdana, Arial, Helvetica, sans-serif;
+	background-color: #BDBDBD;
+	margin: 0;
+	padding: 0;
+	color: #000;
+	overflow: hidden;
+}
+
+/* ~~ Element/tag selectors ~~ */
+ul, ol, dl { /* Due to variations between browsers, it's best practices to zero padding and margin on lists. For consistency, you can either specify the amounts you want here, or on the list items (LI, DT, DD) they contain. Remember that what you do here will cascade to the .nav list unless you write a more specific selector. */
+	padding: 0;
+	margin: 0;
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 /* removing the top margin gets around an issue where margins can escape from their containing div. The remaining bottom margin will hold it away from any elements that follow. */
+	padding-right: 15px;
+	padding-left: 15px; /* adding the padding to the sides of the elements within the divs, instead of the divs themselves, gets rid of any box model math. A nested div with side padding can also be used as an alternate method. */
+}
+a img { /* this selector removes the default blue border displayed in some browsers around an image when it is surrounded by a link */
+	border: none;
+}
+
+a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
+	text-decoration: none;
+}
+
+/* ~~ this container surrounds all other divs giving them their percentage-based width ~~ */
+.synzecontainer {
+	width: 100%;
+	height: 100%;
+	max-width: 1920px;/* a max-width may be desirable to keep this layout from getting too wide on a large monitor. This keeps line length more readable. IE6 does not respect this declaration. */
+	min-width: 780px;/* a min-width may be desirable to keep this layout from getting too narrow. This keeps line length more readable in the side columns. IE6 does not respect this declaration. */
+	background-color: #FFF;
+	margin: 0 0 0 0; /* the auto value on the sides, coupled with the width, centers the layout. It is not needed if you set the .container's width to 100%. */
+}
+
+/* ~~ the header is not given a width. It will extend the full width of your layout. It contains an image placeholder that should be replaced with your own linked logo ~~ */
+.header {
+	position: absolute;
+	width: 100%;
+	height:92px;
+	padding:10px;
+	background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0, #D9E7F4),
+	color-stop(1, #AFC0D1)
+);
+	background-image: -o-linear-gradient(bottom, #D9E7F4 0%, #AFC0D1 100%);
+	background-image: -moz-linear-gradient(bottom, #D9E7F4 0%, #AFC0D1 100%);
+	background-image: -webkit-linear-gradient(bottom, #D9E7F4 0%, #AFC0D1 100%);
+	background-image: -ms-linear-gradient(bottom, #D9E7F4 0%, #AFC0D1 100%);
+	background-image: linear-gradient(to bottom, #D9E7F4 0%, #AFC0D1 100%);
+	
+	border-bottom-color: rgb(66, 85, 125);
+	border-bottom-width: 3px;
+	border-bottom-style: solid;
+	-webkit-box-shadow:  0px 1px 5px 1px #ccc;
+    box-shadow:  0px 1px 5px 1px #ccc;
+	z-index: 60;
+}
+
+.header .logo{
+	display:inline-block;
+	margin-top: 8px;
+	margin-left: 40px;
+}
+
+.header .userinfo{
+	display:block;
+	text-align:right;
+	float:right;
+}
+
+.header .userimage{
+	display:block;
+	float:right;
+	border-color:#fff;
+	border-width: 1px;
+	border-style: solid;
+}
+
+.header .usermanage{
+	display:block;
+	float:right;
+	vertical-align:central;
+	height:60px;
+	padding: 10px 10px 0 0;
+}
+
+.header .usermanage .username{
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.header .usermanage .logout{
+	margin-top: 5px;
+	color: rgb(234, 56, 60);
+	
+}
+
+/* ~~ These are the columns for the layout. ~~ 
+
+1) Padding is only placed on the top and/or bottom of the divs. The elements within these divs have padding on their sides. This saves you from any "box model math". Keep in mind, if you add any side padding or border to the div itself, it will be added to the width you define to create the *total* width. You may also choose to remove the padding on the element in the div and place a second div within it with no width and the padding necessary for your design.
+
+2) No margin has been given to the columns since they are all floated. If you must add margin, avoid placing it on the side you're floating toward (for example: a right margin on a div set to float right). Many times, padding can be used instead. For divs where this rule must be broken, you should add a "display:inline" declaration to the div's rule to tame a bug where some versions of Internet Explorer double the margin.
+
+3) Since classes can be used multiple times in a document (and an element can also have multiple classes applied), the columns have been assigned class names instead of IDs. For example, two sidebar divs could be stacked if necessary. These can very easily be changed to IDs if that's your preference, as long as you'll only be using them once per document.
+
+4) If you prefer your nav on the right instead of the left, simply float these columns the opposite direction (all right instead of all left) and they'll render in reverse order. There's no need to move the divs around in the HTML source.
+
+*/
+
+.mainleft {
+  height: 100%;
+  float: left;
+  position: absolute;
+  padding: 92px 0 0 0;
+  width: 270px;
+  margin-right: 15px;
+  margin-bottom: 0;
+  z-index: 50;
+}
+
+.sidebar1 {
+    overflow: auto;
+	float: left;
+	display:block;
+	width: 270px;
+	height:100%;
+	background-color: rgb(235, 238, 244);//#EBEEF4;
+	padding: 10px 15px 0 15px;
+	top: 80px;
+	bottom:0;
+	border-right-color: rgb(160, 167, 184);
+	border-right-width: 2px;
+	border-right-style: solid;
+	-webkit-box-shadow: inset 0px 0px 5px 3px rgba(208, 216, 245, 1);
+box-shadow: inset 0px 0px 5px 3px rgba(208, 216, 245, 1);
+}
+
+.divider {
+	background-color: rgb(202, 213, 227);
+	height: 1px;
+	margin: 5px 0 20px 0;
+}
+
+.content-outer {
+	position: absolute;
+	//padding-top: 92px;
+	width: 100%;
+	height: 100%;
+	padding-left: 270px;
+	padding-top: 92px;
+}
+
+.content-inner {
+        overflow: auto;
+	position: relative;
+	padding: 10px;
+	width: 100%;
+	height: 100%;
+	//padding-left: 270px;
+	//padding-top: 92px;
+	background: #dee4ef; /* Old browsers */
+background: -moz-linear-gradient(top,  #dee4ef 0%, #ffffff 15%, #ffffff 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dee4ef), color-stop(15%,#ffffff), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #dee4ef 0%,#ffffff 15%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #dee4ef 0%,#ffffff 15%,#ffffff 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #dee4ef 0%,#ffffff 15%,#ffffff 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #dee4ef 0%,#ffffff 15%,#ffffff 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dee4ef', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+
+
+
+}
+
+h1.title {
+	color: rgb(89, 89, 89);
+	margin-bottom: 20px;
+}
+
+/* ~~ The navigation list styles (can be removed if you choose to use a premade flyout menu like Spry) ~~ */
+ul.nav {
+	list-style: none; /* this removes the list marker */
+	//border-top: 1px solid #666; /* this creates the top border for the links - all others are placed using a bottom border on the LI */
+}
+ul.nav li {
+	//border-bottom: 1px solid #666; /* this creates the button separation */
+	color: #FF8A0B;
+	vertical-align:middle;
+}
+ul.nav a, ul.nav a:visited { /* grouping these selectors makes sure that your links retain their button look even after being visited */
+	padding: 5px 5px 5px 15px;
+	display: block; /* this gives the link block properties causing it to fill the whole LI containing it. This causes the entire area to react to a mouse click. */
+	text-decoration: none;
+	background-color: #EBEEF4;
+	color: #000;
+}
+ul.nav a:hover, ul.nav a:active, ul.nav a:focus { /* this changes the background and text color for both mouse and keyboard navigators */
+	background-color: #EBEEF4;
+	color: #FFF;
+}
+
+/* ~~ The footer ~~ */
+.footer {
+	padding: 10px 0;
+	background-color: #6F7D94;
+	position: relative;/* this gives IE6 hasLayout to properly clear */
+	clear: both; /* this clear property forces the .container to understand where the columns end and contain them */
+}
+
+/* ~~ miscellaneous float/clear classes ~~ */
+.fltrt {  /* this class can be used to float an element right in your page. The floated element must precede the element it should be next to on the page. */
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { /* this class can be used to float an element left in your page. The floated element must precede the element it should be next to on the page. */
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { /* this class can be placed on a <br /> or empty div as the final element following the last floated div (within the #container) if the #footer is removed or taken out of the #container */
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
+
+.oneline {
+	width: 100%;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.oneline *{
+	display:block;
+	float: left;
+	vertical-align: middle;
+}
+
+.stretchedToMargin {
+    display: block;
+    position:absolute;
+    height:auto;
+    bottom:0;
+    top:0;
+    left:0;
+    right:0;
+}
+
+.right{
+	float:right;
+    display: block;
+}
+
+.filterbar{
+	margin: 10px 0 10px 0;
+}
+
+.tdetail tr{
+	height: 40px;
+}
+
+thead th {
+  text-align: center;
+  background: #B9CDE5;
+}
+
+tr:nth-child(even) {background: #EDF2F9;}
+tr:nth-child(odd) {background: #F9FBFD;}
+
+tr:hover {background: #D8E3F0; }
+
+
+table td {
+border: 1px solid #FFF;
+}
+
+.newitembtn{
+	width:100%;
+	margin-bottom:10px;
+}
+
+.pagecontrol{
+	//margin:10px;
+	padding: 10px;
+	position: absolute;
+	bottom:0;
+	width: 100%;
+}
+
+.pagecontrol label{
+	margin-left: 5px;
+}
+
+.pagecontrol .currentpage{
+	width: 50px;
+	text-align:right;
+}
+
+.preview{
+}
+
+.preview .previewvideo{
+	display:block;
+	float:left;
+	border-width:1px;
+	border-style:solid;
+	border-color:#CCC;
+	width:800px;
+	height:450px;
+	position:relative;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.preview .previewdisplay{
+	display: inline-block;
+	border-color:rgb(241, 246, 252);
+	border-width:2px;
+	border-style:solid;
+}
+
+.preview .previewdisplay .displayblock{
+	display:block;
+	float:left;
+	text-align:center;
+	vertical-align:text-bottom;
+}
+
+.preview .previewdisplay .displayblock .blockname{
+	line-height: 400px;
+	display: inline;
+	position: absolute;
+	color: rgb(149, 179, 215);
+	font-size:24px;
+	font-weight:800;
+	margin-left: -60px;
+}
+
+.preview .previewdisplay #blocka{
+	width: 400px;
+	height: 450px;
+}
+
+.preview .previewdisplay #blockb{
+	width: 400px;
+	height: 450px;
+}
+
+.preview .previewdisplay .displayblock .blockedit{
+	opacity: 0;
+	margin: 0;
+	display:block;
+	position: relative;
+	float:left;
+	top: 0;
+	left: 0;
+	width: 400px;
+	height: 450px;
+	//margin: 0 15px;
+	//border-radius: 6px;
+	//background: rgba(40, 45, 55, 0.75);
+	overflow: hidden;
+	text-align: center;
+	padding-top: 235px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	transition: opacity 0.2s linear 0s;
+	-webkit-transition: opacity 0.2s ease 0s;
+	-moz-transition: opacity 0.25s linear 0s;
+	-o-transition: opacity 0.25s linear 0s;
+	border-color:rgb(198, 217, 241);
+	border-width:2px;
+	border-style:solid;
+}
+
+.preview .previewdisplay .displayblock:hover .blockedit{
+	opacity: 1;
+}
+
+.preview .previewvideo .playicon{
+	margin-top: 195px;
+	margin-left: 45%;
+    width: 80px;
+	height: 60px;
+}
+
+.preview .previewdetail{
+	display:block;
+	float:right;
+	width:40%;
+	height:450px;
+	text-align:left;
+	padding: 30px;;
+}
+
+.preview .previewdetail *{
+	margin: 5px;
+}
+
+.preview .previewdetail .dimensionselector{
+	//float: left;
+	padding-top: 10px;
+	display: inline-block;
+}
+
+::-webkit-scrollbar
+{
+  width: 12px;  /* for vertical scrollbars */
+  height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(247, 247, 247, 0.5);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: rgba(229, 237, 249, 0.7);
+}
+
+/** list view **/
+ul.list { list-style: none; width: 100%; 
+    overflow: scroll;
+    overflow-x: hidden;
+	height: 700px;
+	margin: 10px;
+	min-width: 770px;
+	padding: 0 15px 15px 0;}
+
+ul.list li { display: block; background: #FFF; padding: 10px 15px; width: 100%; height:250px;
+border-top: 2px solid  rgb(225, 235, 248);
+border-buttom: 2px solid  rgb(225, 235, 248);}
+ul.list li.alt { background: #d7dfe0; }
+ul.list li section.left { display: block; float: left; 
+//width: 450px; 
+position: relative; }
+ul.list li section.right { display: block; float: right; margin-right: 10px; width: 250px; text-align: right; }
+ul.list li section.left .divthumb { float: left; border: 1px solid  rgb(241, 246, 252); 
+//width: 240px; height: 180px; 
+margin-right:10px;}
+ul.list li section.left img.thumb { float: left; 
+	//margin: 60px 90px 60px 90px; 
+}
+ul.list li section.left img.featured-banner { position: absolute; left: -18px; top: 35px; }
+ul.list li section.left h3 { font-family: "Trebuchet MS", Arial, sans-serif; font-weight: bold; color: #707375; font-size: 1.4em; line-height: 1.6em; }
+ul.list li section.left .detail {
+	color: rgb(55, 96, 146);
+	float: left;
+	width: 300px;
+	margin-top: 10px;
+}
+ul.list li section.left span.meta { color: #93989b; font-weight: normal; font-size: 1.1em; }
+ul.list li section.right span.price { font-weight: bold; display: block; margin-bottom: 15px; color: #ad3939; font-size: 1.6em; text-align: right; }
+ul.list li section.right a.firstbtn { margin-right: 7px; }
+ul.list li section.right .log {
+	color: rgb(55, 96, 146);
+	margin-top:10px;
+}
+
+/** grid view **/
+ul.grid { 
+	list-style: none; 
+	margin: 0 auto;  
+    overflow: scroll;
+    overflow-x: hidden;
+	height: 700px;
+	width: 100%;
+	margin: 10px;}
+ul.grid li { position: relative; display: block; float: left; width: 400px; height: 300px; border-right: 1px solid #b6bdbe; padding: 5px 22px; margin-bottom: 20px; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; }
+ul.grid li.third { border: 0; }
+
+ul.grid li section.left { position: relative; }
+ul.grid li section.right { /* nothing */ }
+
+ul.grid li section.left div.divthumb {
+    width: 350px;
+    height: 210px;
+}
+
+ul.grid li section.left div.divthumb .thumb{
+    //display: block;
+    margin: 0 0 0 20px;
+    position: relative;
+}
+
+ul.grid li section.left img.featured-banner { position: absolute; top: 0; }
+
+ul.grid li section.left h3 { font-family: "Trebuchet MS", Arial, sans-serif; font-weight: bold; text-transform: uppercase; color: #707375; font-size: 1.4em; line-height: 1.5em; }
+//ul.grid li section.left span.meta { display: block; color: #93989b; font-weight: normal; font-size: 1.1em; margin-bottom: 7px; }
+ul.grid li section.left div.divthumb {
+	//background:url('../images/play.png') no-repeat center center;
+}
+ul.grid li section.left .detail .description {
+	display: none;
+}
+ul.grid li section.left .detail .duration{
+	margin-left: 10px;
+}
+ul.grid li section.right div.log {
+    display: none;
+}
+ul.grid li section.right span.price { font-weight: bold; display: block; margin-bottom: 5px; color: #ad3939; font-size: 1.75em; }
+
+ul.grid li section.right span.darkview {
+opacity: 0;
+margin: 0;
+position: absolute;
+top: 0;
+left: 0;
+width: 370px;
+height: 300px;
+margin: 0 15px;
+border-radius: 6px;
+background: rgba(40, 45, 55, 0.3);
+overflow: hidden;
+text-align: right;
+padding: 240px 20px 0 0;
+box-sizing: border-box;
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+transition: opacity 0.2s linear 0s;
+-webkit-transition: opacity 0.2s ease 0s;
+-moz-transition: opacity 0.25s linear 0s;
+-o-transition: opacity 0.25s linear 0s;
+}
+ul.grid li:hover section.right span.darkview { opacity: 1; }
+
+ul.grid li section.right span.darkview a.firstbtn { display: block; margin-bottom: 10px; }
