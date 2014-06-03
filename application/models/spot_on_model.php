@@ -711,7 +711,7 @@ class spot_on_model extends CI_Model  {
                 $where["start_date <="] = date("Y-m-d", strtotime($stopDateTime));
             }
              $this->db->select("*")
-                ->where($where);
+                ->where($this->getWhere($where));
             
             $genBy = $_get["genReportBy"];
             $orderBy = "";
