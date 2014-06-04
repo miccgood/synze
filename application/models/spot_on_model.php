@@ -435,7 +435,7 @@ class spot_on_model extends CI_Model  {
                     "shd_ID" =>$deployment->shd_ID,
                     "tmn_grp_ID" =>$deployment->tmn_grp_ID
                 );
-            $this->db->update("trn_dpm", $data, array("dpm_ID", $dpmId));
+            $this->db->update("trn_dpm", $data, array("dpm_ID" => $dpmId));
             return $dpmId;
 	}
         
