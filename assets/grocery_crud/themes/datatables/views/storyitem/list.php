@@ -34,15 +34,17 @@
     }
     
     
-    
     $storyItem = array();
     $storyItemMapPl = array();
+    $storyItemMapVolumn = array();
     foreach ($default_value["storyItem"] as $key => $value) {
         $storyItem[$value->dsp_ID] = $value;
         
         $storyItemMapPl[$value->dsp_ID] = $value->pl_ID;
+        
+        $storyItemMapVolumn[$value->dsp_ID] = $value->volumn;
     }
-    
+ 
     
     $displayAll = array();
     foreach ($default_value["displayAll"] as $key => $value) {
@@ -101,6 +103,46 @@
     
     /* #layout1 { background-position: top left; width: 150px; height: 150px; }*/
     /*#layout1, #container { padding: 0.0em; }*/
+    
+    
+
+    .slider-tooltip {
+        position: absolute;
+        z-index: 1020;
+        display: block;
+        padding: 5px;
+        font-size: 11px;
+        visibility: visible;
+        margin-top: -2px;
+        bottom:-35%;
+        margin-left: -0.6em;
+    }
+
+    .slider-tooltip .slider-tooltip-arrow {
+        bottom: 0;
+        left: 50%;
+        margin-left: -5px;
+        border-top: 5px solid #000000;
+        border-right: 5px solid transparent;
+        border-left: 5px solid transparent;
+        position: absolute;
+        width: 0;
+        height: 0;
+    }
+
+    .slider-tooltip-inner {
+        max-width: 200px;
+        padding: 1px 6px;
+        color: #000;
+        text-align: center;
+        text-decoration: none;
+        background-color: #e7e7e7;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+
 </style>
 <?php $uniqid = uniqid(); ?>
 <script>
@@ -287,17 +329,20 @@ var initContainer = function($containerId){
         var $tr = $_trTemplate.clone(true);
         
         var $tdName = $_tdTemplate.clone(true);
-        var $tdDesc = $_tdTemplate.clone(true);
+//        var $tdDesc = $_tdTemplate.clone(true);
         var $tdPlaylist = $_tdTemplate.clone(true);
         var $tdDuration = $_tdTemplate.clone(true);
+        var $tdVolumn = $_tdTemplate.clone(true);
           
         var $selectTemplate = getPlaylistTemplate();
+        var $volumnTemplate = getVolumnTemplate();
         
         $tr.attr("id", id)
         .append($tdName.attr("name", "dsp_name").html(name))
-        .append($tdDesc.attr("name", "pl_desc").html(""))
+//        .append($tdDesc.attr("name", "pl_desc").html(""))
         .append($tdPlaylist.attr("name", "playlist").html($selectTemplate))
         .append($tdDuration.attr("name", "duration").html(getFormatTime(0)))
+        .append($tdVolumn.attr("name", "volumn").html($volumnTemplate))
         .addClass(($count%2 === 0 ? "odd" : "even"))
         ;
         
@@ -465,7 +510,7 @@ var initContainer = function($containerId){
 <div class='clear' style="width: 100%; height: 20px;"></div>
 <!--position: relative; margin: auto;-->
 <div style="min-width: 1024px; width: 100%;" class="divDetail">
-    <div style="width: 1200px; position: relative; z-index: 100;margin: auto;" class="divDetail">
+    <div style="width: 1220px; position: relative; z-index: 100;margin: auto;" class="divDetail">
 
         <div class="inline">
             <table cellpadding="50px" cellspacing="50px" border="1" class="display" style="min-width: 300px;border: 2px solid #E5EFFD;">
@@ -521,13 +566,6 @@ var initContainer = function($containerId){
                 ?>
                 <tr>
                     <td colspan="2" align="center"> 
-                        
-                        
-
-                        
-                        
-                        
-                        
                     <?php if($this->default_value["permissionEdit"]){ ?>
                         <span class="datatables-add-button">
                             <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
@@ -605,7 +643,9 @@ var initContainer = function($containerId){
                                     <?php foreach($columns as $column){?>
 
              <!---				<th><?php echo $column->display_as; ?></th>-->
-                                            <th style="text-align:center;" name="<?php echo $column->field_name ?>"><?php echo $column->display_as; ?></th>
+                                <th style="text-align:center;" name="<?php echo $column->field_name ?>"><?php echo $column->display_as; ?> 
+                                    <span id="tooltip-<?php echo $column->field_name ?>" style="margin-right: -10px;"></span>
+                                </th>
                                     <?php }?>
                             </tr>
                     </thead>
@@ -651,11 +691,14 @@ var initContainer = function($containerId){
     var $_playlist = playlist;
     var $_display = <?php  echo json_encode($display); ?>;
     var $_storyItemMapPl = <?php  echo json_encode($storyItemMapPl); ?>;
+    var $_storyItemMapVolumn = <?php  echo json_encode($storyItemMapVolumn); ?>;
+    
     var $_displayAll = <?php  echo json_encode($displayAll); ?>;
     var $_layoutAll = <?php  echo json_encode($layoutAll); ?>;
     $(function(){
         init();
         initPlaylist();
+        initVolumn();
         getMaxDuration();
         bindEvent();
     });
@@ -685,7 +728,7 @@ var initContainer = function($containerId){
         
         
         $("[name=dsp_name], th[name=pl_desc]").width("100px");
-        $("[name=playlist]").width("250px");
+        $("[name=playlist]").width("200px");
         $("[name=duration]").width("10px");
         
         $(".divDetail").height($("#" + $_tableId).height() );
@@ -702,13 +745,12 @@ var initContainer = function($containerId){
         
         return $selectTemplate;
     }
+    
+    function getVolumnTemplate(){
+        return $('<div name="volumnInput" class="volumnInput"></div>');
+    }
+    
     function initPlaylist(){
-        
-//        var $selectTemplate = $("<select name='playlist' class='chosen-select' style='width:100%; max-width: 200px;'> <option value='0'></option> </select>");
-//        
-//        $.each($_playlist, function($index, $value){
-//            $selectTemplate.append($("<option ></option>").attr("value", $index).html($value["name"].substring(0, 20)));
-//        });
         
         var $selectTemplate = getPlaylistTemplate();
         $("#" + $_tableId).find("tbody").find("tr").each(function(){
@@ -716,7 +758,7 @@ var initContainer = function($containerId){
                 return;
             var $dspId = $(this).attr("id").replace("row-", "");
             var $plId = $_storyItemMapPl[$dspId];
-            var $select = $selectTemplate.clone(true)
+            var $select = $selectTemplate.clone(true);
             if(nullToZero($plId) !== 0){
                 $select.find('option[value=' + $plId + ']').prop('selected',true);
             }
@@ -734,10 +776,61 @@ var initContainer = function($containerId){
         });
         
     }    
+    var sliderTooltip =  function( event, ui ) {
+//                     $( this ).dequeue();
+                            $("#tooltip-volumn")
+                            .html(" " + ui.value)
+                            .show()
+                            .delay(5000)
+                            .queue(function(next) {
+                                $("#tooltip-volumn").hide().html("");
+                                next();
+//                                $( this ).dequeue();
+                            });
+                        }
+    function initVolumn(){
+        
+        var $volumnTemplate = getVolumnTemplate();
+        $("#" + $_tableId).find("tbody").find("tr").each(function(){
+            if($(this).find(".dataTables_empty").size() > 0)
+                return;
+            var $volumn = $volumnTemplate.clone(true);
+            
+            var $dspId = $(this).attr("id").replace("row-", "");
+            var volumnValue = $_storyItemMapVolumn[$dspId];
+                
+                
+//            var sliderTooltip = function(event, ui) {
+//                var curValue = ui.value || volumnValue;
+//                var tooltip = '<div class="slider-tooltip"><div class="slider-tooltip-inner">' + curValue + '</div></div>';
+//
+//                $('.ui-slider-handle').html(tooltip);
+//
+//            };
+                
+            $(this).find("td[name=volumn]").html($volumn);
+            
+            $(this).find( "div[name=volumnInput]" ).slider({
+                range: "min",
+                value: parseInt(volumnValue),
+                min: 0,
+                max: 100,
+//                create: sliderTooltip,
+                slide: sliderTooltip
+            });
+          
+//            $(this).find( "div[name=volumnInput]" ).slider( "value" , "10");
+        });
+        
+        
+//          $( "div[name=volumnInput]" ).slider( "value" );
+    }    
     
+//    
+            
     function bindEvent(){
         bindEventPlaylist();
-        
+        bindEventVolumn();
         $("#selectLayout").bind("change", function(e){
             
             clearScreen($_containerId);
@@ -756,10 +849,23 @@ var initContainer = function($containerId){
             });
 //            initPlaylist();
             bindEventPlaylist();
+            bindEventVolumn();
         });
     }
     
+    function bindEventVolumn(){
+        $(".volumnInput").slider({
+            range: "min",
+//            value: 37,
+            min: 0,
+            max: 100,
+//            slide: function( event, ui ) {
+//              $( "#amount" ).val( "$" + ui.value );
+//            }
+            slide: sliderTooltip
+          });
     
+    }
     function bindEventPlaylist(){
         $(".chosen-select").chosen().not("#selectLayout").bind("change", function(e){
             var $value = $_playlist[$(this).val()];

@@ -43,8 +43,9 @@ class StoryItem extends SpotOn {
             foreach ($storyItem as $value) {
                 $dspId = $value["dsp_ID"];
                 $plId = $value["pl_ID"];
+                $volumn = $value["volumn"];
                 if( $dspId !== FALSE && $plId !== FALSE && $dspId !== null && $plId !==  null){
-                    $this->m->insertStoryItem($storyId, $dspId, $plId);
+                    $this->m->insertStoryItem($storyId, $dspId, $plId, $volumn);
                 }
             }
             $ret = array("success" => true, "story_id" => $storyId);
@@ -52,7 +53,7 @@ class StoryItem extends SpotOn {
             $ret = array("success" => false);
         }
         
-        return json_encode($ret);
+        echo json_encode($ret);
     }
     
     
@@ -60,7 +61,15 @@ class StoryItem extends SpotOn {
         
         $storyId = $this->nullToZero($this->input->get("story_id"), 0);
         $layoutId = $this->nullToZero($this->input->get("lyt_id"), 0);
-        $this->storyId = $storyId;
+        
+        
+        $story = $this->m->getStoryById($storyId);
+        if($story){
+            $this->storyId = $story[0]->story_ID;
+            $this->layoutId = $layoutId = $story[0]->lyt_ID;
+        }
+        
+        
         $this->session->set_userdata("story_id", $storyId);
         $this->session->set_userdata("lyt_id", $layoutId);
         
@@ -70,7 +79,8 @@ class StoryItem extends SpotOn {
         $data = $this->getDefaultValue($storyId, $layoutId);
         
         $this->crud->set_table('mst_dsp')
-        ->columns("dsp_name", "pl_desc", "playlist", "duration")
+//        ->columns("dsp_name", "pl_desc", "playlist", "duration", "volumn")
+        ->columns("dsp_name", "playlist", "duration", "volumn")
         ->where("lyt_ID", $layoutId)
         ->where("lyt_ID != ", 0)
         ->set_subject('Story')
@@ -78,7 +88,8 @@ class StoryItem extends SpotOn {
         ->display_as('dsp_name', 'Zone')
         ->display_as('pl_desc', 'Description')       
         ->display_as('PlayList', 'PlayList')        
-        ->display_as('duration', 'Duration')    
+        ->display_as('duration', 'Duration')          
+        ->display_as('volumn', 'Volumn')  
                 
         ->fields("story_name","story_desc", "lyt_ID", "page")
         
@@ -86,8 +97,9 @@ class StoryItem extends SpotOn {
                 
         ->setCustomScript("var playlist = $playlistXml;")
         ->set_default_value($data)
-        ->setBackUrl(site_url('story'));
+        ->setBackUrl(site_url('story'))
         ;
+        
         
         
         

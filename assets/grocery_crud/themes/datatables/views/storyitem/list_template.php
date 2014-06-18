@@ -173,6 +173,10 @@
                 if(save_and_go_back_to_list){
                     window.location = "<?php echo $back_url?>";
                 } else {
+                    if(data){
+                        var storyId = data.story_id;
+                        $("#storyId").val(storyId);
+                    }
                     form_success_message("<p>Your data has been successfully updated. <a href='<?php echo base_url("index.php/story");?>'>Go back to list</a></p>") ;
                 }
             })
@@ -229,6 +233,7 @@
                 var storyItem = new Object();
                 storyItem.dsp_ID = $id.replace("row-", "");
                 storyItem.pl_ID = $(this).find("select[name=playlist]").val();
+                storyItem.volumn = $(this).find("div[name=volumnInput]").slider( "value" );
                 $ret[$ret.length] = storyItem;
             }
             

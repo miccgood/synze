@@ -144,7 +144,7 @@ class PlayList extends SpotOn {
          $story = $this->createStory($playListname, $layoutId);
          $storyId = $this->m->insertStory($story);
          
-         $this->m->insertStoryItem($storyId, $displayId, $playlistId);
+         $this->m->insertStoryItem($storyId, $displayId, $playlistId, 100);
          
      }
      

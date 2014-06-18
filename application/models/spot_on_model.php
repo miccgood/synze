@@ -163,11 +163,12 @@ class spot_on_model extends CI_Model  {
             return $this->db->update("mst_story", $story, $where);
         }
         
-        public function insertStoryItem($storyId, $dspId, $plId){
+        public function insertStoryItem($storyId, $dspId, $plId, $volumn){
             $set = array(
                 "story_ID" => $storyId,
                 "dsp_ID" => $dspId,
-                "pl_ID" => $plId
+                "pl_ID" => $plId,
+                "volumn" => $volumn
             );
             return $this->db->insert("trn_dsp_has_pl", $set);
         }
