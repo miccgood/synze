@@ -22,6 +22,8 @@ class Admin extends SpotOn {
         $this->crud->set_table('mst_user')
         ->set_subject('User')
         ->display_as("user_displayname" , "Display Name")
+        ->display_as("user_username" , "Username")
+        ->display_as("user_password" , "Password")
         ->display_as("permission_ID" , "Page")
         ->display_as("cpn_ID" , "Company")
         ->display_as("user_type_ID" , "User Type")
@@ -30,7 +32,8 @@ class Admin extends SpotOn {
         ->set_relation_n_n('permission_ID', 'trn_permission', 'mst_permission', 'user_ID', 'permission_ID', 'page_name','seq')
         ->where($where)
         ->columns('cpn_ID', 'user_displayname', 'user_type_ID', 'permission_ID')
-        ->fields('cpn_ID', 'user_displayname', 'user_type_ID', 'permission_ID')
+        ->fields('cpn_ID', 'user_displayname', 'user_username', 'user_password', 'user_type_ID', 'permission_ID')
+        ->field_type('user_password', 'password')
         ;
         $this->output();
         
