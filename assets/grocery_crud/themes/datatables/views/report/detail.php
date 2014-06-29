@@ -109,6 +109,10 @@
                             <span class="ui-button-icon-primary ui-icon ui-icon-document"></span>
                             <span class="ui-button-text">PDF</span>
                     </a>
+                    <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="csv">
+                            <span class="ui-button-icon-primary ui-icon ui-icon-document"></span>
+                            <span class="ui-button-text">CSV</span>
+                    </a>
 
                     </div>
 
@@ -164,6 +168,11 @@
 
         $("#pdf").bind("click", function(e){
             var $url = getUrl("reportpdf/download");
+            send($url);
+        });
+        
+        $("#csv").bind("click", function(e){
+            var $url = getUrl("reportcsv/download");
             send($url);
         });
     });

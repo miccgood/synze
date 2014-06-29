@@ -37,12 +37,12 @@ class Programmer extends SpotOn {
     
     public function index() {
         
-//        $this->genLog();
-//        $this->genMedia();
-//        $this->genPlaylist();
-//        $this->genTerminal();
-//        $this->genTerminalGroup();
-//        $this->genLog();
+        $this->genLog();
+        $this->genMedia();
+        $this->genPlaylist();
+        $this->genTerminal();
+        $this->genTerminalGroup();
+        $this->genLog();
     }
     
     private function genLog(){
@@ -121,6 +121,10 @@ class Programmer extends SpotOn {
             $shdId = $scheduling->shd_ID;
             
             $storyId =  $scheduling->story_ID;
+            if(!in_array($storyId, $storyArray)){
+                continue;
+            }
+                
             $story = $storyArray[$storyId];
             
             $storyItemList = $this->m->getStoryItemByStoryId($storyId);
