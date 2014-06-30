@@ -1,13 +1,13 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class ReportExcel extends SpotOnReport {
+class ReportCSV extends SpotOnReport {
     
     
     function __construct() {
         parent::__construct();
     }
 
-    function excel(){
+    function download(){
         
         $_get = $this->input->get();
         
@@ -61,13 +61,13 @@ class ReportExcel extends SpotOnReport {
             
             if($genBy == 1 ){
                 $this->countPlayerAndsumDuration($valuePrint);
-                array_merge($csvData, $this->headerPlayer($valuePrint, $key));
-                array_merge($csvData, $this->tablePlayer($valuePrint));
+                $csvData = array_merge($csvData, $this->headerPlayer($valuePrint, $key));
+                $csvData = array_merge($csvData, $this->tablePlayer($valuePrint));
             }else{
                 $this->countPlayerAndsumDuration($valuePrint);
 //                $this->countPlayerAndsumDuration($valuePrint, "media_ID");
-                array_merge($csvData, $this->headerMedia($valuePrint, $key));
-                array_merge($csvData, $this->tableMedia($valuePrint));
+                $csvData = array_merge($csvData, $this->headerMedia($valuePrint, $key));
+                $csvData = array_merge($csvData, $this->tableMedia($valuePrint));
             }
         }
         
@@ -81,7 +81,7 @@ class ReportExcel extends SpotOnReport {
         $ret = array();
         
         
-        array_push($ret, array("Company Name", "Media", "From", "To", "Total Player ", "Total Duration "));
+        array_push($ret, array("Company_Name", "Media", "From", "To", "Total_Player", "Total_Duration"));
         
         array_push($ret,
             array($valuePrint["companyName"], 
@@ -99,12 +99,12 @@ class ReportExcel extends SpotOnReport {
         
         $ret = array();
         
-        array_push($ret, array("CompanyName", 
+        array_push($ret, array("Company_Name", 
             "Player", 
-            "Player Group", 
+            "Player_Group", 
             "From", "To", 
-            "Total Media ", 
-            "Total Duration "));
+            "Total_Media ", 
+            "Total_Duration "));
         
         
         array_push($ret, array($valuePrint["companyName"], 
@@ -169,15 +169,15 @@ class ReportExcel extends SpotOnReport {
         
     }
     
-    function download() {
-//        $this->genReport('F', "report.pdf");
-        
-        
-        $data = $this->getData();
-        
-        
-        $this->array_to_csv_download2($data, "numbers.csv" );
-    }
+//    function download() {
+////        $this->genReport('F', "report.pdf");
+//        
+//        
+//        $data = $this->getData();
+//        
+//        
+//        $this->array_to_csv_download2($data, "numbers.csv" );
+//    }
 //    
 //    function array_to_csv_download($array, $filename = "export.csv", $delimiter=",") {
 //        // open raw memory as file so no temp files needed, you might run out of memory though
