@@ -29,6 +29,7 @@ class ReportExcel extends SpotOnReport {
             $valueFromArray = $this->getValueFromArray($dataGroupBy, $value->{$type."_ID"});
             $array = $this->getArray($valueFromArray);
             $dataGroupBy[$value->{$type."_ID"}] = array_merge($array, $arr);
+            // test
         }
 
 //        $this->load->view('pdf/header');
@@ -156,6 +157,7 @@ class ReportExcel extends SpotOnReport {
                 $data->start_time, $data->stop_time, 
                 $data->duration, $data->pl_name, 
                 $data->dsp_name, $data->story_name));
+            
             $id++;
         }
         
