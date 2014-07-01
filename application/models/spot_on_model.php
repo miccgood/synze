@@ -87,8 +87,9 @@ class spot_on_model extends CI_Model  {
         }
         
         function checkLogin($user, $pass){
-            $count = $this->db->select("cpn_ID, user_ID, mst_user_type.user_type_code")
+            $count = $this->db->select("mst_user.cpn_ID, user_ID, user_displayname, mst_user_type.user_type_code, mst_cpn.cpn_name")
                         ->join('mst_user_type', 'mst_user_type.user_type_ID = mst_user.user_type_ID', 'inner')
+                        ->join('mst_cpn', 'mst_user.cpn_ID = mst_cpn.cpn_ID', 'inner')
                         ->where("user_username" , $user)
                         ->where("user_password" , $pass)
                         ->get("mst_user")

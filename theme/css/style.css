@@ -91,11 +91,16 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 	float:right;
 	vertical-align:central;
 	height:60px;
-	padding: 10px 10px 0 0;
+	padding: 0px 10px 0 0;
+}
+
+.header .usermanage .cpnname{
+	font-size: 18px;
+	font-weight: bold;
 }
 
 .header .usermanage .username{
-	font-size: 18px;
+	font-size: 14px;
 	font-weight: bold;
 }
 

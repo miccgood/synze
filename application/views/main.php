@@ -54,7 +54,8 @@
                 <div class="userinfo right">
                     <div class="userimage"><img src="<?php echo base_url() ?>theme/images/vgi_logo.jpg" class="img-logo"></div>
                     <div class="usermanage">
-                        <div class="username">VGI Global Media</div>
+                        <div class="cpnname"><?php  echo $ci->getCpnName(); ?></div>
+                        <div class="username"><?php  echo $ci->getDisplayName(); ?></div>
                         <div class="logout">
                         <?php
                             if($ci->getUserPermissionAdminPage()){
@@ -158,5 +159,44 @@
             </div>
         </div>
     </body>
+    
+    <script type="text/javascript">
+        
+        $(function(){
+            var newDate = new Date();
+            var day = newDate.getDate();
+            var month = newDate.getMonth() + 1;
+            var year = newDate.getFullYear();
+
+            $(".datepicker-input").not(".datepicker-not-min-date").each(function(){
+                
+                var date = $(this).datepicker('getDate');
+                if(date !== null){
+                     var diff = diffDate(date, newDate);
+                
+                    if(diff >= 0){
+                        day = date.getDate();
+                        month = date.getMonth() + 1;
+                        year = date.getFullYear();
+                    }
+                }
+               
+                
+                $(this).datepicker("option", "minDate", day+"/"+month+"/"+year);
+
+
+
+//                $(this).datepicker('setDate', day+"/"+month+"/"+year);
+            });
+        });
+        
+        var diffDate = function(d1, d2) {
+            var t2 = d2.getTime();
+            var t1 = d1.getTime();
+            return parseInt(t2-t1);
+//            return parseInt((t2-t1)/(24*3600*1000));
+        }; 
+        
+    </script>
 </html>
 

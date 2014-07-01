@@ -27,6 +27,9 @@ class Login extends CI_Controller {
                 $this->session->set_userdata("userTypeCode", $user->user_type_code);
                 $this->session->set_userdata("permission", $permission);
                 
+                $this->session->set_userdata("displayName",  $user->user_displayname);
+                $this->session->set_userdata("cpnName", $user->cpn_name);
+
                 $adminCodeList = $this->configPermission["adminCodeList"];
                         
                 if(in_array($user->user_type_code, $adminCodeList)){

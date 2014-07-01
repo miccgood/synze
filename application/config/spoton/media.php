@@ -56,7 +56,8 @@ $config["textSize"] = array("12px" => "12" ,
 $config["defaultPlaySpeed"] = "400";
 
 $config["playSpeed"] = array(
-                            "0.5x" => "100"
+                            "0x" => "100"
+                            ,"0.5x" => "100"
                             ,"1x" => "50"
                             ,"2x" => "30"
                             ,"4x" => "20"

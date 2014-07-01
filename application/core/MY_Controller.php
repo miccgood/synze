@@ -198,13 +198,24 @@ class SpotOn extends CI_Controller {
     
     
     
-    protected function getMediaPath($file_name){
+    protected function getMediaPath($file_name, $type = "text"){
         //ดึง Path File จาก config 
-        $path = $this->media['text_path'];
+        $path = "";//$this->media['text_path'];
+        
+        if($type == "text"){
+            $path = $this->media['text_path'];
+        } else {
+            $path = $this->media['media_path'];
+        }
+        
+        
+        //media_path
 
         //path ไฟล์จริงใน server
         return trim($path, "/")."/".$file_name;
     }
+    
+    
     
     protected function subString($string, $charFirst) {
         return substr($string, strpos($string, $charFirst));
@@ -246,6 +257,31 @@ class SpotOn extends CI_Controller {
             //$ret = "L";//Lite Mode
         }
         return $mode;
+    }
+    
+    
+    public function getDisplayName(){
+        
+//        $ret 
+        $displayName = $this->session->userdata("displayName");
+//        $cpnName = $this->session->userdata("cpnName");
+                
+//        if(isset($displayName) && isset($cpnName)){
+           
+//        }
+        return $displayName;
+    }
+    
+    public function getCpnName(){
+        
+//        $ret 
+//        $displayName = $this->session->userdata("displayName");
+        $cpnName = $this->session->userdata("cpnName");
+                
+//        if(isset($displayName) && isset($cpnName)){
+           
+//        }
+        return $cpnName;
     }
     
     protected function getStringFormDuration($sec){

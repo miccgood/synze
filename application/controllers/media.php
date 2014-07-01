@@ -400,8 +400,21 @@ class Media extends SpotOn {
     }
     
     
-    public function _beforeDelete($primary_key) {
-        return $this->m->checkDeleteMedia($primary_key);
+    public function _beforeDelete($primary_key, $row = null, $rows = null) {
+        $canDelete = $this->m->checkDeleteMedia($primary_key);
+        
+        if($canDelete){
+            $media = $this->m->getMediaById($primary_key);
+            
+            $media = $media[0];
+                    
+            $media_path = $this->getMediaPath($media->media_filename, $media->media_type);
+            
+            unlink($media_path);
+        }
+        
+        return $canDelete;
+        
     }
     
 }
