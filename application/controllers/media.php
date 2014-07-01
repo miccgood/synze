@@ -320,10 +320,10 @@ class Media extends SpotOn {
         //เตรียมข้อมูลที่จะเขียนลงไฟล์
 //        $writeDate = $files_to_insert["input_text"];
         
-        $writeDate = $this->getDataFromPost($files_to_insert);
+        $writeData = $this->getDataFromPost($files_to_insert);
         
         
-        file_put_contents($media_path, $writeDate, LOCK_EX);
+        file_put_contents($media_path, $writeData, LOCK_EX);
 
         
         
@@ -383,12 +383,15 @@ class Media extends SpotOn {
 
 
         $files_to_upload[0]->name = $fileObj->name;//str_replace($search, "" , $fileObj->name);
-
+        foreach ($file as $obj) {
+            $files_to_upload[0]->nameShow = $obj["name"];//$fileObj->name;//str_replace($search, "" , $fileObj->name);
+        }
         return $files_to_upload;
     }
 
     function callbackBeforeUpload($files_to_upload, $field_info) {
         foreach ($files_to_upload as $value) {
+//            $value['name'] = iconv("UTF-8", "TIS-620", $value['name']);
             $ext = pathinfo($value['name'], PATHINFO_EXTENSION);
         }
 

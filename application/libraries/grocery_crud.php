@@ -1349,7 +1349,10 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 				header('Access-Control-Allow-Origin: *');
 				header('Access-Control-Allow-Methods: OPTIONS, HEAD, GET, POST, PUT, DELETE');
 				header('Access-Control-Allow-Headers: X-File-Name, X-File-Type, X-File-Size');
-
+                                
+                                // add by momo
+                                header('Content-type: text/html; charset=utf-8');
+                                
 				$allowed_files = $this->config->file_upload_allow_file_types;
 				$reg_exp = '/(\\.|\\/)('.$allowed_files.')$/i';
 
@@ -5437,12 +5440,14 @@ class UploadHandler
 
     private function handle_file_upload($uploaded_file, $name, $size, $type, $error) {
         $file = new stdClass();
-        $file->name = $this->trim_file_name($name, $type);
+        $newFilename = md5($name). "." . pathinfo($name, PATHINFO_EXTENSION);
+        $file->name = $this->trim_file_name($newFilename, $type);
         $file->size = intval($size);
         $file->type = $type;
         $error = $this->has_error($uploaded_file, $file, $error);
         if (!$error && $file->name) {
             $file_path = $this->options['upload_dir'].$file->name;
+//            $file->name = $this->trim_file_name($name, $type);
             $append_file = !$this->options['discard_aborted_uploads'] &&
                 is_file($file_path) && $file->size > filesize($file_path);
             clearstatcache();
@@ -5455,7 +5460,24 @@ class UploadHandler
                         FILE_APPEND
                     );
                 } else {
+//                    mb_internal_encoding("UTF-8");
+//                $encode = mb_detect_encoding($file_path);
+//                    $string_to_export = iconv('UTF-8', 'ISO-8859-1', $file_path);
+//                    $string_to_export = iconv('ISO-8859-1', 'UTF-8', $file_path);
                     move_uploaded_file($uploaded_file, $file_path);
+//                    $content = file_get_contents('assets/uploads/media/568ab-à¸—à¸”à¸ªà¸­à¸š-123.jpg');
+//                    
+//                    $file->name = iconv('ISO-8859-1', 'UTF-8', $file->name);
+//                    $file->name = iconv('ISO-8859-2', 'UTF-8', $file->name);
+//                    $file->name = iconv('ISO-8859-3', 'UTF-8', $file->name);
+//                    $file->name = iconv('ISO-8859-4', 'UTF-8', $file->name);
+//                    $file->name = iconv('ISO-8859-5', 'UTF-8', $file->name);
+                    
+//                    unlink($file_path);
+//                    
+//                    
+//                    file_put_contents($file_path, $content, LOCK_EX);
+                    
                 }
             } else {
                 // Non-multipart uploads (PUT method support)
@@ -5466,6 +5488,35 @@ class UploadHandler
                 );
             }
             $file_size = filesize($file_path);
+            $contents = "";
+            if(file_exists($file_path)){
+//                $filename = "c:\\files\\somepic.gif";
+//                $handle = fopen($file_path, "rb");
+//                $contents = fread($handle, filesize($file_path));
+//                fclose($handle);
+//                $encode = mb_detect_encoding($file_path);
+                
+                
+//                $encodeList = array(
+//                            'UTF-8', 'ASCII', 
+//                            'ISO-8859-1', 'ISO-8859-2', 'ISO-8859-3', 'ISO-8859-4', 'ISO-8859-5', 
+//                            'ISO-8859-6', 'ISO-8859-7', 'ISO-8859-8', 'ISO-8859-9', 'ISO-8859-10', 
+//                            'ISO-8859-13', 'ISO-8859-14', 'ISO-8859-15', 'ISO-8859-16', 
+//                            'Windows-1251', 'Windows-1252', 'Windows-1254', 'TIS-620'
+//                            );
+//                foreach ($encodeList as $key => $value) {
+//                    foreach ($encodeList as $keys => $values) {
+//                        $fn = @iconv($value, $values, $file_path);
+//                        
+//                        if($fn){
+//                            file_put_contents($fn , $contents);
+//                        }
+//                    }
+//                }
+                
+                
+            }
+            
             if ($file_size === $file->size) {
             		if ($this->options['orient_image']) {
             		    $this->orient_image($file_path);
@@ -5488,6 +5539,7 @@ class UploadHandler
         } else {
             $file->error = $error;
         }
+//        $file->name = urlencode($file->name);
         return $file;
     }
 
