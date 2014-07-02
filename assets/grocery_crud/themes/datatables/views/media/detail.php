@@ -27,15 +27,27 @@ $counter = 0;
                 var $type = $(e.target).val()
                 if($type === "scrolling text"){
 //                    $("#text_input_field_box, #media_filename_temp_field_box").show();
+
                     $("#text_input_field_box").show();
                     $("#media_filename_field_box").hide();
-                    $("#field-media_size").prop({readonly : true});
+                    $("#field-media_size").prop({readonly : true}).val("");
+                    $("#field-media_lenght").val("");
+                    $("#media_type_field_box").removeClass("odd").addClass("even");
+                }else if($type === "Web Page" || $type === "RSS feed" || $type === "Streaming"){
+                    
+//                    $("#text_input_field_box, #media_filename_temp_field_box").show();
+                    $("#text_input_field_box").show();
+                    $("#media_filename_field_box").hide();
+                    $("#field-media_size").prop({readonly : true}).val("0");
+                    $("#field-media_lenght").prop({readonly : true}).val("-1");
                     $("#media_type_field_box").removeClass("odd").addClass("even");
                     
-                }else{
+                } else {
                     $("#text_input_field_box, #media_filename_temp_field_box").hide();
                     $("#media_filename_field_box").show();
                     $("#media_type_field_box").removeClass("even").addClass("odd");
+                    $("#field-media_size").val("");
+                    $("#field-media_lenght").val("");
                 }
                 
                 $("#field-media_type_temp").val($type);
@@ -167,6 +179,16 @@ $counter = 0;
 <script type="text/javascript">
 	
         $(function(){
+            $('#transparency').spinner({
+                min: 0, 
+                max: 99,
+                change: function( event, ui ) {
+                          $("#spinner").spinner("stepUp");
+                          $("#spinner").spinner("stepDown");
+                          alert($("#spinner").spinner("value"));
+                      }
+            });
+
             $('#textPicker, #bgPicker').colpick({
                 layout:'hex',
                 submit:0,

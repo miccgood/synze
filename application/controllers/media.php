@@ -159,7 +159,7 @@ class Media extends SpotOn {
         $bgcolor = "";
         $playSpeed = "";
         $directionIn = "";
-        
+        $transparencyIn = "";
         if($state === "edit"){
             $media_path = $this->getMediaPath($row->media_filename);
             if(file_exists($media_path) && $row->media_filename != null && $row->media_filename!= ""){
@@ -178,74 +178,89 @@ class Media extends SpotOn {
                 $playSpeed = $array["speed"];
                 $directionIn = $array["direction"];
                 
+                if($this->nullToZero($textcolor) != "0"){
+                    
+                    $textcolorTemp = substr(str_replace("#", "", $textcolor), 2);
+                    
+                    $transparencyIn = str_replace($textcolor, "", $textcolorTemp);
+                    
+                    $textcolor = "#" . $textcolorTemp;
+                }
             }
         }
         
-        
         $ret = '';
+        
+        $ret .= ' <span id="optionText" > ';
 
-        $ret .= 'Text Color : <input type="text" id="textPicker" name="textcolor" value="'.$textcolor.'"></input> ';
-            
-        $ret .= ' <span style="margin-left:10px;" > ';
-            $ret .= ' Text Size : <select id="textSize" name="textSize" >';
+            $ret .= 'Text Color : <input type="text" id="textPicker" name="textcolor" value="'.$textcolor.'"></input> ';
 
-            $defaultTextSize = $this->media["defaultTextSize"];
-                    
-            foreach ($this->media["textSize"] as $sizeHtml => $size) {
-                if($textSize == $size || ( $defaultTextSize == $size && $state == "add")){
-                    $ret .= '<option value="' . $size . '" selected=selected >' . $sizeHtml . '</option>';
-                } else {
-                    $ret .= '<option value="' . $size . '" >' . $sizeHtml . '</option>';
-                }
-            }
+            $ret .= ' <span style="margin-left:10px;" > ';
+                $ret .= ' Text Size : <select id="textSize" name="textSize" >';
 
-            $ret .= '</select>';
-        
-        $ret .= ' </span> ';
-        
-//        defaultDirection
-         $ret .= ' <span style="margin-left:10px;" > ';
-            $ret .= ' Direction : <select id="direction" name="direction" >';
+                $defaultTextSize = $this->media["defaultTextSize"];
 
-            $defaultDirection = $this->media["defaultDirection"];
-                    
-            foreach ($this->media["direction"] as $keyDirection => $direction) {
-                
-                
-                if($directionIn == $keyDirection || ( $defaultDirection == $keyDirection && $state == "add")){
-                    $ret .= '<option value="' . $keyDirection . '" selected=selected >' . $direction . '</option>';
-                } else {
-                    $ret .= '<option value="' . $keyDirection . '" >' . $direction . '</option>';
-                }
-            }
-
-            $ret .= '</select>';
-        
-        $ret .= ' </span> ';
-        
-        
-        $ret .= ' <div class="clear"></div> <br/>';
-        
-        $ret .= ' <span style="margin-left:10px;" > ';
-        
-            $ret .= 'Bg Color :  <input type="text" id="bgPicker" name="bgcolor" value="'.$bgcolor.'"></input> ';
-
-            $ret .= ' <span style="margin-left:28px;"> ';
-                $ret .= 'Speed : <select id="playSpeed" name="playSpeed" >';
-                
-                    $defaultPlaySpeed = $this->media["defaultPlaySpeed"];
-                    
-                    foreach ($this->media["playSpeed"] as $speed => $speedValue) {
-                        if($playSpeed == $speedValue || ($defaultPlaySpeed == $speedValue && $state == "add") ){
-                            $ret .= '<option value="' . $speedValue . '" selected=selected >' . $speed . '</option>';
-                        } else {
-                            $ret .= '<option value="' . $speedValue . '" >' . $speed . '</option>';
-                        }
-                        
+                foreach ($this->media["textSize"] as $sizeHtml => $size) {
+                    if($textSize == $size || ( $defaultTextSize == $size && $state == "add")){
+                        $ret .= '<option value="' . $size . '" selected=selected >' . $sizeHtml . '</option>';
+                    } else {
+                        $ret .= '<option value="' . $size . '" >' . $sizeHtml . '</option>';
                     }
+                }
 
                 $ret .= '</select>';
+
+            $ret .= ' </span> ';
+
+    //        defaultDirection
+            $ret .= ' <span style="margin-left:10px;" > ';
+                $ret .= ' Direction : <select id="direction" name="direction" >';
+
+                $defaultDirection = $this->media["defaultDirection"];
+
+                foreach ($this->media["direction"] as $keyDirection => $direction) {
+
+
+                    if($directionIn == $keyDirection || ( $defaultDirection == $keyDirection && $state == "add")){
+                        $ret .= '<option value="' . $keyDirection . '" selected=selected >' . $direction . '</option>';
+                    } else {
+                        $ret .= '<option value="' . $keyDirection . '" >' . $direction . '</option>';
+                    }
+                }
+
+                $ret .= '</select>';
+
+            $ret .= ' </span> ';
+
+
+            $ret .= ' <div class="clear"></div> <br/>';
+
+            $ret .= ' <span style="margin-left:10px;" > ';
+
+                $ret .= 'Bg Color :  <input type="text" id="bgPicker" name="bgcolor" value="'.$bgcolor.'"></input> ';
+
+                $ret .= ' <span style="margin-left:28px;"> ';
+                    $ret .= 'Speed : <select id="playSpeed" name="playSpeed" >';
+
+                        $defaultPlaySpeed = $this->media["defaultPlaySpeed"];
+
+                        foreach ($this->media["playSpeed"] as $speed => $speedValue) {
+                            if($playSpeed == $speedValue || ($defaultPlaySpeed == $speedValue && $state == "add") ){
+                                $ret .= '<option value="' . $speedValue . '" selected=selected >' . $speed . '</option>';
+                            } else {
+                                $ret .= '<option value="' . $speedValue . '" >' . $speed . '</option>';
+                            }
+
+                        }
+
+                    $ret .= '</select>';
+                $ret .= '</span>';
             $ret .= '</span>';
+            
+            $ret .= ' <span style="margin-left:10px;" > ';
+                $ret .= ' Transparency : <input id="transparency" name="transparency" value="' . $transparencyIn . '">';
+            $ret .= ' </span> ';
+        
         $ret .= '</span>';
         
         $ret .= ' <div class="clear"></div> <br/>';
@@ -269,10 +284,11 @@ class Media extends SpotOn {
         
         $type = $files_to_insert["media_type"];
         
-        if($type === "scrolling text"){
+        $typeList = array("scrolling text", "Web Page", "RSS feed", "Streaming");
+        if(in_array($type, $typeList)){
             
             $files_to_insert = $this->writeFile($files_to_insert);
-            $files_to_insert["media_type"] = "scrolling text";
+            $files_to_insert["media_type"] = $type;//"scrolling text";
             
             unset($files_to_insert["input_text"]);
             unset($files_to_insert["textcolor"]);
@@ -304,7 +320,7 @@ class Media extends SpotOn {
                  //gen prefix
                 $uniqid = uniqid();
                 //ชื่อไฟล์ที่จะใช้จริง
-                $file_name = $uniqid."-".$file.".xml";
+                $file_name = $uniqid."-".md5($file).".xml";
                 //path ไฟล์จริงใน server
                 $media_path = $this->getMediaPath($file_name);
             } while (file_exists($media_path));
@@ -334,7 +350,10 @@ class Media extends SpotOn {
     
     private function getDataFromPost($files_to_insert){
         $data = $files_to_insert["input_text"];
+        $transparency = $files_to_insert["transparency"];
         $textcolor = $files_to_insert["textcolor"];
+        $textcolor = "#" . $transparency . str_replace("#", "", $textcolor);
+        
         $textSize = $files_to_insert["textSize"];
         $bgcolor = $files_to_insert["bgcolor"];
         $playSpeed = $files_to_insert["playSpeed"];
