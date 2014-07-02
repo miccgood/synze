@@ -444,5 +444,5 @@ class Media extends SpotOn {
 }
 
 
-
+//ALTER TABLE `mst_media` CHANGE `media_type` `media_type` ENUM('video','image','scrolling text', 'Web page', 'RSS feed', 'Streaming') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 

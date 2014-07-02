@@ -8,3 +8,9 @@ ADD COLUMN `pl_expired` DATE NULL AFTER `pl_type`;
 
 ALTER TABLE `synze25561212`.`mst_media` 
 CHANGE COLUMN `media_type` `media_type` ENUM('video','image','scrolling text') NULL DEFAULT 'video' ;
+
+
+
+2/7/2557
+alter mediatype ให้รองรับ หกแบบ
+ALTER TABLE `mst_media` CHANGE `media_type` `media_type` ENUM('video','image','scrolling text', 'Web page', 'RSS feed', 'Streaming') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
