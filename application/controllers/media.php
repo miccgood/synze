@@ -179,10 +179,11 @@ class Media extends SpotOn {
                 $directionIn = $array["direction"];
                 
                 if($this->nullToZero($textcolor) != "0"){
+                    $textcolor = str_replace("#", "", $textcolor);
                     
                     $textcolorTemp = substr(str_replace("#", "", $textcolor), 2);
                     
-                    $transparencyIn = str_replace($textcolor, "", $textcolorTemp);
+                    $transparencyIn = sprintf("%02d", str_replace($textcolorTemp, "", $textcolor));
                     
                     $textcolor = "#" . $textcolorTemp;
                 }
@@ -258,14 +259,14 @@ class Media extends SpotOn {
             $ret .= '</span>';
             
             $ret .= ' <span style="margin-left:10px;" > ';
-                $ret .= ' Transparency : <input id="transparency" name="transparency" value="' . $transparencyIn . '">';
+                $ret .= ' Transparency : <input id="transparency" name="transparency"  style="width:20px;" value="' . $transparencyIn . '">';
             $ret .= ' </span> ';
         
         $ret .= '</span>';
         
         $ret .= ' <div class="clear"></div> <br/>';
         
-        $ret .= ' <textarea name="input_text" id="field-text_input">' . $data . '</textarea> ';
+        $ret .= ' <textarea name="input_text" id="field-text_input"">' . $data . '</textarea> ';
         
         
         
@@ -284,7 +285,7 @@ class Media extends SpotOn {
         
         $type = $files_to_insert["media_type"];
         
-        $typeList = array("scrolling text", "Web Page", "RSS feed", "Streaming");
+        $typeList = array("scrolling text", "Web page", "RSS feed", "Streaming");
         if(in_array($type, $typeList)){
             
             $files_to_insert = $this->writeFile($files_to_insert);
@@ -320,7 +321,7 @@ class Media extends SpotOn {
                  //gen prefix
                 $uniqid = uniqid();
                 //ชื่อไฟล์ที่จะใช้จริง
-                $file_name = $uniqid."-".md5($file).".xml";
+                $file_name = $uniqid."-".$this->getFileName($file).".xml";
                 //path ไฟล์จริงใน server
                 $media_path = $this->getMediaPath($file_name);
             } while (file_exists($media_path));
@@ -350,9 +351,10 @@ class Media extends SpotOn {
     
     private function getDataFromPost($files_to_insert){
         $data = $files_to_insert["input_text"];
-        $transparency = $files_to_insert["transparency"];
-        $textcolor = $files_to_insert["textcolor"];
-        $textcolor = "#" . $transparency . str_replace("#", "", $textcolor);
+        $transparency = sprintf("%02d", $this->nullToZero($files_to_insert["transparency"], "00"));
+        
+        $textcolor = str_replace("#", "", $files_to_insert["textcolor"]);
+        $textcolor = "#" . $transparency . $textcolor;
         
         $textSize = $files_to_insert["textSize"];
         $bgcolor = $files_to_insert["bgcolor"];

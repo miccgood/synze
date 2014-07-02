@@ -351,19 +351,28 @@ class SpotOn extends CI_Controller {
     
     
     public function isThaiString($string){
-        $test = preg_match("^[ก-๙]+$",$string);
-        $test = ereg_replace("^[ก-๙]+$", "", $string);
-        if( !ereg("^[ก-๙]+$", $string ) ){ // หรือจะใช้ if( !ereg("^[\xA1-\xF9]+$",$value ) ){  ก็ได้นะครับ
-            echo false;
+//        $test = preg_match("^[ก-๙]+$",$string);
+//        $test = ereg_replace("^[ก-๙]+$", "", $string);
+//        $test = ereg("^[ก-๙]+$", $string );
+//        $test = preg_replace('/[^ก-๙]/u','',$string);
+//        
+//        $test = preg_replace('/[^ก-๙]/u','',$string);
+        
+        $test = preg_replace('/[^ก-๙]/u','',$string);
+        if( $test == "" ){ // หรือจะใช้ if( !ereg("^[\xA1-\xF9]+$",$value ) ){  ก็ได้นะครับ
+            return false;
         } else {
-            echo true;
+            return true;
         }
     }
     
     public function getFileName($string){
         //ถ้ามีภาษาไทยปนอยู่
-        if($this->isThaiString($string)){
-            $string = str_replace(" ", "", ereg_replace("^[ก-๙]+$", "", $string));
+        $isThaiString = $this->isThaiString($string);
+        if($isThaiString){
+            $stringTest = preg_replace('/[^ก-๙]/u','',$string);
+            $string = str_replace($stringTest, "", $string);
+            $string = str_replace(" ", "", $string);
         }
         
         return $string;

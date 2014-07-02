@@ -5440,7 +5440,9 @@ class UploadHandler
 
     private function handle_file_upload($uploaded_file, $name, $size, $type, $error) {
         $file = new stdClass();
-        $newFilename = md5($name). "." . pathinfo($name, PATHINFO_EXTENSION);
+        
+        $ci = &get_instance();                
+        $newFilename = $ci->getFileName($name). "." . pathinfo($name, PATHINFO_EXTENSION);
         $file->name = $this->trim_file_name($newFilename, $type);
         $file->size = intval($size);
         $file->type = $type;
