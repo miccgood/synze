@@ -348,6 +348,26 @@ class SpotOn extends CI_Controller {
     public function isReadonly(){
         return $this->isReadonly;
     }
+    
+    
+    public function isThaiString($string){
+        $test = preg_match("^[ก-๙]+$",$string);
+        $test = ereg_replace("^[ก-๙]+$", "", $string);
+        if( !ereg("^[ก-๙]+$", $string ) ){ // หรือจะใช้ if( !ereg("^[\xA1-\xF9]+$",$value ) ){  ก็ได้นะครับ
+            echo false;
+        } else {
+            echo true;
+        }
+    }
+    
+    public function getFileName($string){
+        //ถ้ามีภาษาไทยปนอยู่
+        if($this->isThaiString($string)){
+            $string = str_replace(" ", "", ereg_replace("^[ก-๙]+$", "", $string));
+        }
+        
+        return $string;
+    }
 }
 
 
