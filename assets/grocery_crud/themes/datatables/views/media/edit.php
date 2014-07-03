@@ -94,6 +94,7 @@ $this->set_js_lib($this->default_javascript_path.'/jquery_plugins/colpick.js');
     
     $(function(){
         var $mediaLenght = parseInt($("#field-media_lenght").val());
-        $("#field-media_lenght").val($mediaLenght / 1000);
+        
+        $("#field-media_lenght").val(( $mediaLenght >= 0 ? $mediaLenght / 1000 : $mediaLenght));
     });
 </script>

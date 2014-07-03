@@ -103,8 +103,8 @@ class ReportCSV extends SpotOnReport {
             "Player", 
             "Player_Group", 
             "From", "To", 
-            "Total_Media ", 
-            "Total_Duration "));
+            "Total_Media", 
+            "Total_Duration"));
         
         
         array_push($ret, array($valuePrint["companyName"], 

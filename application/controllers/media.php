@@ -299,7 +299,10 @@ class Media extends SpotOn {
             unset($files_to_insert["direction"]);
         
         }
-        $files_to_insert["media_lenght"] = $files_to_insert["media_lenght"] * 1000;
+        
+        $mediaLenght = $this->nullToZero($files_to_insert["media_lenght"], 0);
+        
+        $files_to_insert["media_lenght"] = ($mediaLenght >= 0 ? $mediaLenght * 1000 : $mediaLenght);
         $files_to_insert = parent::clearBeforeInsertAndUpdate($files_to_insert);
         $files_to_insert = parent::setDefaultValue($files_to_insert);
         return $files_to_insert;
