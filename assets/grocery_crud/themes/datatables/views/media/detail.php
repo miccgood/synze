@@ -43,7 +43,12 @@ $counter = 0;
                     $("#field-media_size").prop({readonly : true}).html("0");
                     $("#field-media_lenght").prop({readonly : true}).val("-1");
                     $("#media_type_field_box").removeClass("odd").addClass("even");
-                    $("#direction").prop('disabled', true).css({"background-color": "#dedede"}).trigger('liszt:updated');
+                    
+                    if($type === "Web page" || $type === "Streaming"){
+                        $("#direction").prop('disabled', true).css({"background-color": "#dedede"}).trigger('liszt:updated');
+                    } else {
+                        $("#direction").prop('disabled', false).css({"background-color": ""}).trigger('liszt:updated');
+                    }
                     
                 } else {
                     $("#text_input_field_box, #media_filename_temp_field_box").hide();
