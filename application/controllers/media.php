@@ -149,6 +149,17 @@ class Media extends SpotOn {
         return "<input id='field-media_filename_temp' name='media_filename_temp' type='text' value='$value' $readonly/>";
     }
     
+    private function getTransparencyFromTextColor($textColor){
+        
+//        $textcolor = str_replace("#", "", $textcolor);
+                    
+        $textcolorTemp = substr(str_replace("#", "", $textcolor), 2);
+
+        $transparencyIn = sprintf("%02d", str_replace($textcolorTemp, "", $textcolor));
+
+        $textcolor = "#" . $textcolorTemp;
+        
+    }
     
     function _text_input($value = "", $field_info = "" , $file = null, $row = null){
         $state = $this->crud->getState();
@@ -179,13 +190,25 @@ class Media extends SpotOn {
                 $directionIn = $array["direction"];
                 
                 if($this->nullToZero($textcolor) != "0"){
+                    
                     $textcolor = str_replace("#", "", $textcolor);
                     
                     $textcolorTemp = substr(str_replace("#", "", $textcolor), 2);
-                    
+
                     $transparencyIn = sprintf("%02d", str_replace($textcolorTemp, "", $textcolor));
-                    
+
                     $textcolor = "#" . $textcolorTemp;
+                    
+                    
+                    $bgcolor = str_replace("#", "", $bgcolor);
+                    
+                    $bgcolorTemp = substr(str_replace("#", "", $bgcolor), 2);
+
+                    if($this->nullToZero($transparencyIn) == "0"){
+                         $transparencyIn = sprintf("%02d", str_replace($bgcolorTemp, "", $bgcolor));
+                    }
+
+                    $bgcolor = "#" . $bgcolorTemp;
                 }
             }
         }
@@ -359,8 +382,11 @@ class Media extends SpotOn {
         $textcolor = str_replace("#", "", $files_to_insert["textcolor"]);
         $textcolor = "#" . $transparency . $textcolor;
         
+        $bgcolor = str_replace("#", "", $files_to_insert["bgcolor"]);
+        $bgcolor = "#" . $transparency . $bgcolor;
+        
         $textSize = $files_to_insert["textSize"];
-        $bgcolor = $files_to_insert["bgcolor"];
+        
         $playSpeed = $files_to_insert["playSpeed"];
         $direction = $files_to_insert["direction"];
         
