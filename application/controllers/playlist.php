@@ -139,8 +139,8 @@ class PlayList extends SpotOn {
          $layoutId = $this->m->insertLayout($layout);
          
          $display = $this->createDisplay($playListname, $resolution, $layoutId);
-         $displayId = $this->m->insertDisplay($display);
-         
+         $displayId = $this->m->insertDisplay($display); 
+        
          $story = $this->createStory($playListname, $layoutId);
          $storyId = $this->m->insertStory($story);
          
@@ -302,8 +302,8 @@ class PlayList extends SpotOn {
         ->field_type("pl_ID", "hidden") 
         ->field_type("media_temp", "hidden")    
         ->field_type("event", "hidden") 
-        ->callback_column("pl_lenght", array($this, "_length")) 
-        ->callback_column("pl_usage", array($this, "_usage")) 
+        ->callback_column("pl_lenght", array($this, "_length"))  
+       ->callback_column("pl_usage", array($this, "_usage")) 
         ->callback_field("pl_lenght", array($this, "_pl_lenght"))
         ->callback_field("pl_usage", array($this, "_pl_usage")) 
 //        ->callback_field("autoCreateStory", array($this, "_autoCreateStory")) 
@@ -340,7 +340,7 @@ class PlayList extends SpotOn {
             $mediaXmlList = json_encode($mediaXmlList);
             $this->crud->setCustomScript("var mediaList = $mediaXmlList;\n var groupList = $groupDaoList; ");
             if($state === "add"){
-                $this->crud->field_type("pl_type", "enum", array("video", "image", "scrolling text"), $playlist_type);
+                $this->crud->field_type("pl_type", "enum", array("video", "image", "scrolling text", "Web page", "RSS feed", "Streaming"), $playlist_type);
             }
         }
     }
