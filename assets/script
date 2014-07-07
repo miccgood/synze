@@ -14,3 +14,9 @@ CHANGE COLUMN `media_type` `media_type` ENUM('video','image','scrolling text') N
 2/7/2557
 alter mediatype ให้รองรับ หกแบบ
 ALTER TABLE `mst_media` CHANGE `media_type` `media_type` ENUM('video','image','scrolling text', 'Web page', 'RSS feed', 'Streaming') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+
+ALTER TABLE `mst_pl` CHANGE `pl_type` `pl_type` ENUM('video','image','scrolling text','Web page','RSS feed','Streaming') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'video'
+
+
+
