@@ -32,11 +32,23 @@ $config["extention"]["image"] = array("jpg", "gif", "png");
 
 $config["allowed_formats"] = array_merge($config["extention"]["video"], $config["extention"]["image"]);
 
-//"display" => คือเอาไว้แสดงผลกับหน้าจอ 
-//"value" => ค่าที่เอาไปใช้หรือเก็บลงไฟล์
+
+//case sensitive นะครับ
+$config["media_types"] = array(
+    "video"
+    , "image"
+    , "scrolling text"
+    , "Web page"
+//    , "RSS feed"
+    , "Streaming"
+    );
+
 
                           //"value" 
 $config["defaultTextSize"] = "14";
+
+//"display" => คือเอาไว้แสดงผลกับหน้าจอ 
+//"value" => ค่าที่เอาไปใช้หรือเก็บลงไฟล์
 
                       //"display"=>"value"
 $config["textSize"] = array("12px" => "12" ,

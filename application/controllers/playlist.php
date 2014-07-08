@@ -339,9 +339,10 @@ class PlayList extends SpotOn {
             
             $mediaXmlList = json_encode($mediaXmlList);
             $this->crud->setCustomScript("var mediaList = $mediaXmlList;\n var groupList = $groupDaoList; ");
-            if($state === "add"){
-                $this->crud->field_type("pl_type", "enum", array("video", "image", "scrolling text", "Web page", "RSS feed", "Streaming"), $playlist_type);
-            }
+//            if($state === "add"){
+                $this->crud->field_type("pl_type", "enum", $this->playlist["media_types"], $playlist_type);
+//                $this->crud->field_type("pl_type", "enum", array("video", "image", "scrolling text", "Web page", "RSS feed", "Streaming"), $playlist_type);
+//            }
         }
     }
 }

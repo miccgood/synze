@@ -24,7 +24,16 @@ class Media extends SpotOn {
         return NULL;
     }
             
-    function index() {
+    public function getPlaylistType($mediaId){
+        $this->m->getPlaylistById();
+        $event = $this->input->post("pl_type");
+        if($event === FALSE || $event === ""){
+            $event = "video";
+        }
+        return $event;
+    }
+    
+    function index($sta = null, $id = null) {
         
         $cat_id = $this->getCatId();
         $state = $this->crud->getState();
@@ -109,6 +118,16 @@ class Media extends SpotOn {
 //        ->callback_before_insert(array($this, 'callbackBeforeInsert'))     
 //        ->callback_before_update(array($this, 'callbackBeforeUpdate'))
                 ;
+        
+        $mediaType = "";
+        if($state == "edit"){
+            $media = $this->m->getMediaById($id);
+            if($media){
+                $mediaType = $media[0]->media_type;
+            }
+        }
+        
+        $this->crud->field_type("media_type", "enum", $this->media["media_types"], $mediaType);
         
         $this->crud->setCustomScript(" "
                 . "$(function(){ "
