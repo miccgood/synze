@@ -226,7 +226,10 @@
             if (value)
             {
                 var a = d.map(function() {
-                    return b(this).text().toLowerCase()
+                    var temp = b(this).find(".count-item").html();
+                    
+                    return this.innerText.replace(temp, "").trim().toLowerCase();
+//                    return b(this).text().toLowerCase()
                 });
                 d.hide();
                 a.each(function(a) {
@@ -240,12 +243,24 @@
                     if(src){
                         var mediaId = src.val();
                         var media = mediaList[mediaId];
-                        if(media != null){
-                            if(media.cat_ID === catId){
-                                li.show();
+                        if(media !== null){
+                            //ถ้าเป็น all หรือ media group ตรงกัน ให้แสดง
+                            if(media.type == $("#field-pl_type").val()){
+                            //ถ้าเป็น All ให้โชว์หมด
+                                if(catId == 0){
+                                    li.show();
+                                    return;
+                                }
+                                if(media.cat_ID === catId){
+                                    li.show();
+                                }else{
+                                    li.hide();
+                                }
                             }else{
+                                //ถ้าไม่ตรงกับที่เลือกให้ hide
                                 li.hide();
                             }
+
                         }else{
                             li.hide();
                         }
@@ -270,9 +285,20 @@
                         var mediaId = src.val();
                         var media = mediaList[mediaId];
                         if(media != null){
-                            if(media.cat_ID === catId){
-                                li.show();
+                            //ถ้าเป็น all หรือ media group ตรงกัน ให้แสดง
+                            if(media.type == $("#field-pl_type").val()){
+                            //ถ้าเป็น All ให้โชว์หมด
+                                if(catId == 0){
+                                    li.show();
+                                    return;
+                                }
+                                if(media.cat_ID === catId){
+                                    li.show();
+                                }else{
+                                    li.hide();
+                                }
                             }else{
+                                //ถ้าไม่ตรงกับที่เลือกให้ hide
                                 li.hide();
                             }
                         }
