@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scrollingtext>
+    <text>test</text>
+    <speed>50</speed>
+    <backgroundcolor>#99064e63</backgroundcolor>
+    <textcolor>#99ff00ff</textcolor>
+    <size>20</size>
+    <direction>down</direction>
+</scrollingtext>

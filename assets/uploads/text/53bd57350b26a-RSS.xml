@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scrollingtext>
+    <text>rss tets</text>
+    <speed>30</speed>
+    <backgroundcolor>#00542b54</backgroundcolor>
+    <textcolor>#00ff00ff</textcolor>
+    <size>22</size>
+    <direction>down</direction>
+</scrollingtext>

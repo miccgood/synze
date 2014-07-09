@@ -68,7 +68,7 @@ class Media extends SpotOn {
             ->display_as('cat_id', 'Group')
             ->display_as('media_name', 'Name')
             ->display_as('media_type', 'Type')
-            ->display_as('media_path', 'Path File')
+            ->display_as('media_path', 'URL')
             ->display_as('media_filename', 'File Name')
             ->display_as('media_filename_temp', 'File Name (.txt)')
             ->display_as('media_size', 'Size (byte)')
@@ -84,10 +84,11 @@ class Media extends SpotOn {
                 'media_lenght', 
                 'media_expire', 
                 
-                'media_path', 
+                
                 "page", 
                 'media_checksum', 
                 'text_input', 
+                'media_path', 
                 'media_filename_temp',
                 'cpn_ID',
                 "create_date", "create_by", "update_date", "update_by"
@@ -96,13 +97,13 @@ class Media extends SpotOn {
                
 //        ->field_type("media_filename_temp", "readonly")
 //        ->field_type("cpn_ID", "hidden", $this->cpnId)
-        ->field_type("media_path", "hidden")
+//        ->field_type("media_path", "hidden")
         ->field_type("media_checksum", "hidden")
         ->field_type("media_lenght", "integer")     
 //        ->field_type('cat_ID', 'dropdown', $this->mediaGroup, $this->nullToZero($cat_id))
         ->field_type("cat_id", "dropdown", $catigory, $cat_id)
         ->field_type('text_input', 'text')      
-        ->required_fields('media_name', "media_filename", "media_expire", "media_lenght", 'media_type', 'cat_id')
+        ->required_fields('media_name', "media_filename", "media_expire", "media_lenght", 'media_type', 'cat_id', 'media_path')
 
         ->set_field_upload('media_filename', 'assets/uploads/media')
         ->callback_before_upload(array($this, 'callbackBeforeUpload'))
@@ -150,10 +151,13 @@ class Media extends SpotOn {
     }
 
     function _media_lenght($value = "", $field_info = "" , $file = null, $row = null){
-        return $value / 1000;
+        return ($value >= 0 ? $value / 1000 : $value) ;
     }
     
     function _media_filename($value = "", $field_info = "" , $file = null, $row = null){
+//        if($this->nullToZero($value, "0") == "0"){
+//            $value = $field_info->media_path;
+//        }
         return "<a href='$field_info->media_path'>$value</a>";
     }
     
@@ -234,10 +238,12 @@ class Media extends SpotOn {
         
         $ret = '';
         
-        $ret .= ' <span id="optionText" > ';
+        $ret .= ' <div id="optionText" style="margin-bottom:10px;"> ';
 
-            $ret .= 'Text Color : <input type="text" id="textPicker" name="textcolor" value="'.$textcolor.'"></input> ';
-
+        $ret .= ' <span style="margin-left:10px;" > ';
+            $ret .= ' Text Color : <input type="text" id="textPicker" name="textcolor" value="'.$textcolor.'"></input> ';
+        $ret .= ' </span> ';
+        
             $ret .= ' <span style="margin-left:10px;" > ';
                 $ret .= ' Text Size : <select id="textSize" name="textSize" >';
 
@@ -254,6 +260,7 @@ class Media extends SpotOn {
                 $ret .= '</select>';
 
             $ret .= ' </span> ';
+            
 
     //        defaultDirection
             $ret .= ' <span style="margin-left:10px;" > ';
@@ -304,9 +311,9 @@ class Media extends SpotOn {
                 $ret .= ' Transparency : <input id="transparency" name="transparency"  style="width:20px;" value="' . $transparencyIn . '">';
             $ret .= ' </span> ';
         
-        $ret .= '</span>';
+        $ret .= '</div>';
         
-        $ret .= ' <div class="clear"></div> <br/>';
+        $ret .= ' <div class="clear"></div>';
         
         $ret .= ' <textarea name="input_text" id="field-text_input"">' . $data . '</textarea> ';
         
@@ -327,8 +334,9 @@ class Media extends SpotOn {
         
         $type = $files_to_insert["media_type"];
         
-        $typeList = array("scrolling text", "Web page", "RSS feed", "Streaming");
-        if(in_array($type, $typeList)){
+        $typeWriteFileList = array("scrolling text", "RSS feed");
+        $typeNotWriteFileList = array("Web page", "Streaming");
+        if(in_array($type, $typeWriteFileList)){
             
             $files_to_insert = $this->writeFile($files_to_insert);
             $files_to_insert["media_type"] = $type;//"scrolling text";
@@ -340,6 +348,15 @@ class Media extends SpotOn {
             unset($files_to_insert["playSpeed"]);
             unset($files_to_insert["direction"]);
         
+        } else if(in_array($type, $typeNotWriteFileList)) {
+            $files_to_insert["media_type"] = $type;//"scrolling text";
+            $files_to_insert["media_filename"] = "";
+            unset($files_to_insert["input_text"]);
+            unset($files_to_insert["textcolor"]);
+            unset($files_to_insert["textSize"]);
+            unset($files_to_insert["bgcolor"]);
+            unset($files_to_insert["playSpeed"]);
+            unset($files_to_insert["direction"]);
         }
         
         $mediaLenght = $this->nullToZero($files_to_insert["media_lenght"], 0);

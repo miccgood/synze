@@ -9,6 +9,6 @@ $config["media_types"] = array(
     , "image"
     , "scrolling text"
     , "Web page"
-//    , "RSS feed"
+    , "RSS feed"
     , "Streaming"
     );

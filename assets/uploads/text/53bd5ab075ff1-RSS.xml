@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scrollingtext>
+    <text>rsss</text>
+    <speed>100</speed>
+    <backgroundcolor>#9900ff88</backgroundcolor>
+    <textcolor>#99000000</textcolor>
+    <size>14</size>
+    <direction>right</direction>
+</scrollingtext>

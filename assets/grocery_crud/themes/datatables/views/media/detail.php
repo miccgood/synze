@@ -31,33 +31,48 @@ $counter = 0;
                 
                 if($type === "scrolling text"){
 //                    $("#text_input_field_box, #media_filename_temp_field_box").show();
-
+                    if($typePre !== undefined && $typePre !== $type){
+                        $("#field-media_path").val("gen");
+                    }
                     $("#text_input_field_box").show();
-                    $("#media_filename_field_box").hide();
+                    $("#media_filename_field_box, #media_path_field_box").hide();
                     $("#field-media_lenght").prop({readonly : false});
                     $("#media_type_field_box").removeClass("odd").addClass("even");
 //                    $(":text").prop({disabled:true}).css({"background-color": "#dedede"});
                     $("#direction").prop('disabled', false).css({"background-color": ""}).trigger('liszt:updated');
                     
-                    if($typePre !== $type){
+                    if($typePre !== undefined && $typePre !== $type){
                         $("#field-media_lenght").val("");
                     }
                 }else if($type === "Web page" || $type === "RSS feed" || $type === "Streaming"){
                     
 //                    $("#text_input_field_box, #media_filename_temp_field_box").show();
-                    $("#text_input_field_box").show();
-                    $("#media_filename_field_box").hide();
+                    
+                    $("#media_filename_field_box, #media_path_field_box").hide();
                     $("#field-media_lenght").prop({readonly : true}).val("-1");
                     $("#media_type_field_box").removeClass("odd").addClass("even");
                     
                     if($type === "Web page" || $type === "Streaming"){
-                        $("#direction").prop('disabled', true).css({"background-color": "#dedede"}).trigger('liszt:updated');
+                        if($typePre !== undefined && $typePre !== $type){
+                            $("#field-media_path").val("");
+                        }
+                        
+                        $("#media_path_field_box").removeClass("even").addClass("odd").show();
+                        $("#text_input_field_box").hide();
+//                        $("#direction").prop('disabled', true).css({"background-color": "#dedede"}).trigger('liszt:updated');
                     } else {
-                        $("#direction").prop('disabled', false).css({"background-color": ""}).trigger('liszt:updated');
+                        
+                        if($typePre !== undefined && $typePre !== $type){
+                            $("#field-media_path").val("gen");
+                        }
+                        
+                        $("#text_input_field_box").show();
+//                        $("#direction").prop('disabled', false).css({"background-color": ""}).trigger('liszt:updated');
                     }
                     
                 } else {
-                    $("#text_input_field_box, #media_filename_temp_field_box").hide();
+                    $("#field-media_path").val("");
+                    $("#text_input_field_box, #media_filename_temp_field_box, #media_path_field_box").hide();
                     $("#media_filename_field_box").show();
                     $("#media_type_field_box").removeClass("even").addClass("odd");
                     $("#field-media_size").html("");
