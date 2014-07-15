@@ -368,10 +368,15 @@ class SpotOn extends CI_Controller {
     
     public function getFileName($string){
         //ถ้ามีภาษาไทยปนอยู่
+        $string = str_replace("." . pathinfo($string, PATHINFO_EXTENSION), "", $string);
+                
         $isThaiString = $this->isThaiString($string);
         if($isThaiString){
             $stringTest = preg_replace('/[^ก-๙]/u','',$string);
             $string = str_replace($stringTest, "", $string);
+            if($string == ""){
+                $string = substr(md5($stringTest), 0, 10);
+            }
             $string = str_replace(" ", "", $string);
         }
         

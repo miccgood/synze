@@ -71,12 +71,14 @@ $counter = 0;
                     }
                     
                 } else {
-                    $("#field-media_path").val("");
+                    if($typePre !== undefined && $typePre !== $type){
+//                        $("#field-media_path").val("gen");
+                        $("#media_filename_field_box").show();
+                        $("#media_type_field_box").removeClass("even").addClass("odd");
+                        $("#field-media_size").html("");
+                        $("#field-media_lenght").val("");
+                    }
                     $("#text_input_field_box, #media_filename_temp_field_box, #media_path_field_box").hide();
-                    $("#media_filename_field_box").show();
-                    $("#media_type_field_box").removeClass("even").addClass("odd");
-                    $("#field-media_size").html("");
-                    $("#field-media_lenght").val("");
                 }
                 
                 $("#field-media_type_temp").val($type);
