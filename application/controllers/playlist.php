@@ -10,10 +10,17 @@ class PlayList extends SpotOn {
         $this->playlist = $this->config->item('playlist');
     }
     
-    public function getPlaylistType(){
+    public function getPlaylistType($pk = ""){
         $event = $this->input->post("pl_type");
         if($event === FALSE || $event === ""){
-            $event = "video";
+            if($pk != "") {
+                $pl = $this->m->getPlaylistById($pk);
+                $pl = $pl[0];
+                $event = $pl->pl_type;
+            } else {
+                $event = "video";
+            }
+           
         }
         return $event;
     }
@@ -56,8 +63,8 @@ class PlayList extends SpotOn {
         echo json_encode($ret);
     }
     
-    public function index() {
-        $this->detail();
+    public function index($state = null, $pk = "") {
+        $this->detail($state, $pk);
        
         $this->output();
     }
@@ -271,11 +278,11 @@ class PlayList extends SpotOn {
     }
     
     
-    private function detail($detail = ""){
-        $playlist_type = $this->getPlaylistType();
+    private function detail($state = null, $pk = ""){
+        $playlist_type = $this->getPlaylistType($pk);
         $this->crud->set_table('mst_pl')
         ->set_relation_n_n('Media', 'trn_pl_has_media', 'mst_media', 'pl_ID', 'media_ID', 'media_name', 'seq_no', null, array("`mst_media`.`create_date` DESC"))
-        ->set_subject($detail . ' PlayList')
+        ->set_subject('PlayList')
         ->where("mst_pl.cpn_ID" , $this->cpnId)
         
         ->columns('pl_name','pl_desc', 'pl_lenght', 'pl_usage')
