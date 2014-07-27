@@ -172,17 +172,17 @@ class Media extends SpotOn {
         return "<input id='field-media_filename_temp' name='media_filename_temp' type='text' value='$value' $readonly/>";
     }
     
-    private function getTransparencyFromTextColor($textColor){
-        
-//        $textcolor = str_replace("#", "", $textcolor);
-                    
-        $textcolorTemp = substr(str_replace("#", "", $textcolor), 2);
-
-        $transparencyIn = sprintf("%02d", str_replace($textcolorTemp, "", $textcolor));
-
-        $textcolor = "#" . $textcolorTemp;
-        
-    }
+//    private function getTransparencyFromTextColor($textColor){
+//        
+////        $textcolor = str_replace("#", "", $textcolor);
+//                    
+//        $textcolorTemp = substr(str_replace("#", "", $textcolor), 2);
+//
+//        $transparencyIn = sprintf("%02d", str_replace($textcolorTemp, "", $textcolor));
+//
+//        $textcolor = "#" . $textcolorTemp;
+//        
+//    }
     
     function _text_input($value = "", $field_info = "" , $file = null, $row = null){
         $state = $this->crud->getState();
@@ -215,23 +215,35 @@ class Media extends SpotOn {
                 if($this->nullToZero($textcolor) != "0"){
                     
                     $textcolor = str_replace("#", "", $textcolor);
-                    
-                    $textcolorTemp = substr(str_replace("#", "", $textcolor), 2);
+                   
+                    if(strlen($textcolor) > 6){
+                        $textcolorTemp = substr($textcolor, 2);
 
-                    $transparencyIn = sprintf("%02d", str_replace($textcolorTemp, "", $textcolor));
+//                        $transparencyIn = sprintf("%02d", str_replace($textcolorTemp, "", $textcolor));
 
-                    $textcolor = "#" . $textcolorTemp;
+                        $textcolor = "#" . $textcolorTemp;
+                    } else {
+                        $textcolor = "#" . $textcolor;
+                    }
                     
-                    
+                }
+                
+                if($this->nullToZero($bgcolor) != "0"){
                     $bgcolor = str_replace("#", "", $bgcolor);
                     
-                    $bgcolorTemp = substr(str_replace("#", "", $bgcolor), 2);
+                    if(strlen($bgcolor) > 6){
+                    
+                        $bgcolorTemp = substr($bgcolor, 2);
 
-                    if($this->nullToZero($transparencyIn) == "0"){
-                         $transparencyIn = sprintf("%02d", str_replace($bgcolorTemp, "", $bgcolor));
+    //                    if($this->nullToZero($transparencyIn) == "0"){
+                        $transparencyIn = sprintf("%02d", str_replace($bgcolorTemp, "", $bgcolor));
+    //                    }
+
+                        $bgcolor = "#" . $bgcolorTemp;
+                    } else {
+                        $bgcolor = "#" . $bgcolor;
                     }
-
-                    $bgcolor = "#" . $bgcolorTemp;
+                    
                 }
             }
         }
@@ -413,19 +425,35 @@ class Media extends SpotOn {
     
     private function getDataFromPost($files_to_insert){
         $data = $files_to_insert["input_text"];
-        $transparency = sprintf("%02d", $this->nullToZero($files_to_insert["transparency"], "00"));
+        $transparency = $files_to_insert["transparency"];
+        if(strlen($transparency) > 0){
+            $transparency = sprintf("%02d", $transparency);
+        } 
+        
         
         $textcolor = str_replace("#", "", $files_to_insert["textcolor"]);
-        $textcolor = "#" . $transparency . $textcolor;
+        $textcolor = "#" . str_pad($textcolor, 6, "0", STR_PAD_LEFT);
         
         $bgcolor = str_replace("#", "", $files_to_insert["bgcolor"]);
-        $bgcolor = "#" . $transparency . $bgcolor;
+        
+        $bgcolor = "#" . $transparency . str_pad($bgcolor, 6, "0", STR_PAD_LEFT);
         
         $textSize = $files_to_insert["textSize"];
+        if($this->nullToZero($textSize) == "0"){
+            $textSize = $this->media["defaultTextSize"];
+        }
+        
         
         $playSpeed = $files_to_insert["playSpeed"];
+        if($this->nullToZero($playSpeed)){
+           $playSpeed = $this->media["defaultPlaySpeed"];
+        }
+        
         $direction = $files_to_insert["direction"];
         
+        if($this->nullToZero($direction)){
+           $direction = $this->media["defaultDirection"]; 
+        }
         $this->load->library('xml_writer');
         $this->xml_writer->setRootName('scrollingtext');
         $this->xml_writer->initiate();

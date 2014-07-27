@@ -31,9 +31,9 @@ $counter = 0;
                 
                 if($type === "scrolling text"){
 //                    $("#text_input_field_box, #media_filename_temp_field_box").show();
-                    if($typePre !== undefined && $typePre !== $type){
+//                    if($typePre !== undefined && $typePre !== $type){
                         $("#field-media_path").val("gen");
-                    }
+//                    }
                     $("#text_input_field_box").show();
                     $("#media_filename_field_box, #media_path_field_box").hide();
                     $("#field-media_lenght").prop({readonly : false});
