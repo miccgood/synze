@@ -44,15 +44,6 @@ class Media extends SpotOn {
             }
         }
         
-        
-        
-//        $mediaGroupList = $this->m->selectCat();
-//        $this->mediaGroup = array();
-//        foreach ($mediaGroupList as $mediaGroup) {
-//            $this->mediaGroup[$mediaGroup->cat_ID] = $mediaGroup->cat_name;
-//        }
-        
-        
         $cat = $this->m->selectCat("*");
         $catigory = array();
         foreach ($cat as $key => $value) {
@@ -83,8 +74,6 @@ class Media extends SpotOn {
                 'media_size', 
                 'media_lenght', 
                 'media_expire', 
-                
-                
                 "page", 
                 'media_checksum', 
                 'text_input', 
@@ -95,12 +84,8 @@ class Media extends SpotOn {
                 )
                 
                
-//        ->field_type("media_filename_temp", "readonly")
-//        ->field_type("cpn_ID", "hidden", $this->cpnId)
-//        ->field_type("media_path", "hidden")
         ->field_type("media_checksum", "hidden")
         ->field_type("media_lenght", "integer")     
-//        ->field_type('cat_ID', 'dropdown', $this->mediaGroup, $this->nullToZero($cat_id))
         ->field_type("cat_id", "dropdown", $catigory, $cat_id)
         ->field_type('text_input', 'text')      
         ->required_fields('media_name', "media_filename", "media_expire", "media_lenght", 'media_type', 'cat_id', 'media_path')
@@ -114,10 +99,6 @@ class Media extends SpotOn {
         ->callback_field('media_size',array($this,'_media_size'))
         ->callback_column('media_lenght',array($this,'_media_lenght'))
         ->callback_column('media_filename',array($this,'_media_filename'))        
-                
-        
-//        ->callback_before_insert(array($this, 'callbackBeforeInsert'))     
-//        ->callback_before_update(array($this, 'callbackBeforeUpdate'))
                 ;
         
         $mediaType = "";
@@ -155,9 +136,6 @@ class Media extends SpotOn {
     }
     
     function _media_filename($value = "", $field_info = "" , $file = null, $row = null){
-//        if($this->nullToZero($value, "0") == "0"){
-//            $value = $field_info->media_path;
-//        }
         return "<a href='$field_info->media_path'>$value</a>";
     }
     
@@ -171,18 +149,6 @@ class Media extends SpotOn {
         }
         return "<input id='field-media_filename_temp' name='media_filename_temp' type='text' value='$value' $readonly/>";
     }
-    
-//    private function getTransparencyFromTextColor($textColor){
-//        
-////        $textcolor = str_replace("#", "", $textcolor);
-//                    
-//        $textcolorTemp = substr(str_replace("#", "", $textcolor), 2);
-//
-//        $transparencyIn = sprintf("%02d", str_replace($textcolorTemp, "", $textcolor));
-//
-//        $textcolor = "#" . $textcolorTemp;
-//        
-//    }
     
     function _text_input($value = "", $field_info = "" , $file = null, $row = null){
         $state = $this->crud->getState();
@@ -403,14 +369,11 @@ class Media extends SpotOn {
             $files_to_insert["media_filename"] = $file_name;
             $files_to_insert["media_path"] = trim($this->media['text_url'], "/")."/" .$file_name;
         }else if($state === "update"){
-//            $files_to_insert["media_filename"] = $files_to_insert["media_filename"].".xml";
-            $media_path = $this->getMediaPath($files_to_insert["media_filename"]);
+            $files_to_insert["media_path"] = trim($this->media['text_url'], "/")."/" .$files_to_insert["media_filename"];
             
         }
         
         //เตรียมข้อมูลที่จะเขียนลงไฟล์
-//        $writeDate = $files_to_insert["input_text"];
-        
         $writeData = $this->getDataFromPost($files_to_insert);
         
         
@@ -445,13 +408,13 @@ class Media extends SpotOn {
         
         
         $playSpeed = $files_to_insert["playSpeed"];
-        if($this->nullToZero($playSpeed)){
+        if($this->nullToZero($playSpeed, null) == null){
            $playSpeed = $this->media["defaultPlaySpeed"];
         }
         
         $direction = $files_to_insert["direction"];
         
-        if($this->nullToZero($direction)){
+        if($this->nullToZero($direction, null) == null){
            $direction = $this->media["defaultDirection"]; 
         }
         $this->load->library('xml_writer');
