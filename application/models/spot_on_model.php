@@ -45,7 +45,11 @@ class spot_on_model extends CI_Model  {
         }
         
         public function getCpnById( $cpn_ID ){
-            return $this->db->select("*")->where("cpn_ID", $cpn_ID)->get("mst_cpn")->result();
+            return $this->db->select("*")->where("cpn_ID", $cpn_ID)->get("mst_cpn")->result_array();
+        }
+        
+        public function getCpn(){
+            return $this->db->select("*")->get("mst_cpn")->result();
         }
         
         public function getWhere($where = "", $value = ""){

@@ -1,3 +1,12 @@
+<?php 
+    $ci = &get_instance();                
+    $mode = $ci->getMode();
+    $cpnArray = $ci->getCpnAll();
+
+    //$mode = "A";//Advance Mode
+    //$mode = "L";//Lite Mode
+
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,13 +24,13 @@
             <script src="<?php echo $file; ?>"></script>
         <?php endforeach; ?>
         <script src="<?php echo base_url() ?>theme/js/jquery-ui-1.10.3.custom.js"></script>
-
-
-
-        
-
-
-
+        <?php
+            if($ci->getUserPermissionSuperAdminPage()){
+        ?>
+            <link type="text/css" rel="stylesheet" href="<?php echo base_url() ?>assets/grocery_crud/css/jquery_plugins/chosen/chosen.css">
+            <script src="<?php echo base_url() ?>assets/grocery_crud/js/jquery_plugins/jquery.chosen.min.js"></script>
+            <script src="<?php echo base_url() ?>assets/grocery_crud/js/jquery_plugins/config/jquery.chosen.config.js"></script>
+        <?php } ?>
         <style type='text/css'>
             body
             {
@@ -41,39 +50,64 @@
             .img-logo {width:61px !important;  height:61px !important;};
         </style>
     </head>
-<?php 
-    $ci = &get_instance();                
-    $mode = $ci->getMode();
 
-    //$mode = "A";//Advance Mode
-    //$mode = "L";//Lite Mode
-
-?>
     <body class="">
 
         <div class="synzecontainer">
-            <div class="header"><div class="logo"><a href="#"><img src="<?php echo base_url() ?>theme/images/logo.png" width="169" height="55" style="display:block;" /></a> </div>
+            <div class="header">
+                <div class="logo"><a href="#"><img src="<?php echo base_url() ?>theme/images/logo.png" width="169" height="55" style="display:block;" /></a> </div>
                 <div class="userinfo right">
                     <div class="userimage"><img src="<?php echo base_url() ?>theme/images/vgi_logo.jpg" class="img-logo"></div>
                     <div class="usermanage">
-                        <div class="cpnname"><?php  echo $ci->getCpnName(); ?></div>
-                        <div class="username"><?php  echo $ci->getDisplayName(); ?></div>
+                        <span class="username"><?php  echo $ci->getDisplayName(); ?>@<?php  echo $ci->getCpnName(); ?></span>
+                        <!--<span class="cpnname"></span>-->
+                        
                         <div class="logout">
-                        <?php
-                            if($ci->getUserPermissionSuperAdminPage()){
-                        ?>
-                            <a href="<?php echo site_url("super");?>">Super Admin</a> / 
-                        <?php 
-                            } else if($ci->getUserPermissionAdminPage()){
-                        ?>
-                            <a href="<?php echo site_url("admin");?>">Admin</a> / 
-                        <?php 
-                            }
-                        ?>  
-                        <a href="<?php echo site_url("login/logout");?>">Logout</a></div>
+                            
+                            <?php
+                                if($ci->getUserPermissionSuperAdminPage()){
+                            ?>
+                                
+                                <a href="<?php echo site_url("super");?>">Super Admin</a> / 
+                            <?php 
+                                } else if($ci->getUserPermissionAdminPage()){
+                            ?>
+                                <a href="<?php echo site_url("admin");?>">Admin</a> / 
+                            <?php 
+                                }
+                            ?>  
+                            <a href="<?php echo site_url("login/logout");?>">Logout</a>
+                        </div>
+                        <div style="height: 5px;">
+                        </div>
+                        <div class="">
+                            <?php
+                                if($ci->getUserPermissionSuperAdminPage()){
+                                    
+                            ?>
+                                <select id="selectCpnId" style="width:200px;"class='chosen-select'>
+                                    <?php
+                                        $cpnId = $ci->getCpnId();
+                                        foreach ($cpnArray as $value) {
+                                            
+                                            echo "<option value='" . $value->cpn_ID . "' ". ($cpnId == $value->cpn_ID ? "selected" : "") ."> " . $value->cpn_name . "</option>";
+                                        }
+                                    ?>
+                                </select>
+                                <style>
+                                    .header{
+                                        /*height: 110px;*/
+                                    }
+                                </style>
+                            <?php 
+                                } 
+                            ?>
+                            
+                        </div>
                     </div>
                 </div>
             </div>
+            
             <div class="mainleft">
                 <div class="sidebar1">
                     <br />
@@ -84,20 +118,34 @@
                     
                     <script>
                         $(function() {
-                          $( "#advanceModeButton" )
+                            $( "#advanceModeButton" )
                             .button(<?php echo ($mode == "A" ? "{ disabled: true }" : ""); ?>)
                             .click(function( event ) {
                                 setMode("A");
                                 $(this).button({ disabled: true });
                                 $("#liteModeButton").button({ disabled: false });
                             });
-                          $( "#liteModeButton" )
+                            $( "#liteModeButton" )
                             .button(<?php echo ($mode == "L" ? "{ disabled: true }" : ""); ?>)
                             .click(function( event ) {
                                 setMode("L");
                                 $(this).button({ disabled: true });
                                 $("#advanceModeButton").button({ disabled: false });
                             });
+                            $( "#selectCpnId" )
+                            .change(function( event ) {
+                                var $cpnId = $( "#selectCpnId" ).val();
+                                var url = "<?php echo base_url("index.php/mode/setCpn") ; ?>/" + $cpnId;
+                            
+                                $.post(url, $cpnId , function(data, textStatus) {
+                                    location.reload();
+                                }, "json").fail(function() {
+                                    //ถ้าเชื่อต่อไม่ได้แปลว่า session timeout
+//                                    window.location.replace("<?php echo base_url("index.php/login") ; ?>");
+                                    alert( "Network Connection Error" );
+                                });
+                            });
+                            
                         });
                         
                         function setMode($mode){

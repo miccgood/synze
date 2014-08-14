@@ -283,6 +283,16 @@ class SpotOn extends CI_Controller {
     }
     
     
+    public function getCpnAll(){
+        return $this->m->getCpn();
+    }
+    
+    
+    function getCpnId(){
+        return $this->cpnId;
+    }
+    
+    
     public function getDisplayName(){
         
 //        $ret 
