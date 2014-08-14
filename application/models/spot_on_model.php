@@ -539,6 +539,16 @@ class spot_on_model extends CI_Model  {
             }
         }
         
+        public function checkDeleteCompany($primary_key){
+            //ตรวจสอบที่ media ว่ามีการเรียกใช้รึป่าว
+            $result = $this->db->select("count(`cpn_ID`) AS VALUE")->where("cpn_ID", $primary_key)->get('mst_user')->result();
+	
+            foreach ($result as $value) {
+                return ($value->VALUE == 0);
+            }
+            
+        }
+        
         public function checkDeletePlaylist($primary_key){
             //ตรวจสอบที่ display ว่ามีการเรียกใช้รึป่าว
             $result = $this->db->select("count(`pl_ID`) AS VALUE")->where("pl_ID", $primary_key)->get('trn_dsp_has_pl')->result();

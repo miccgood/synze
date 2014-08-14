@@ -31,8 +31,10 @@ class Login extends CI_Controller {
                 $this->session->set_userdata("cpnName", $user->cpn_name);
 
                 $adminCodeList = $this->configPermission["adminCodeList"];
-                        
-                if(in_array($user->user_type_code, $adminCodeList)){
+                $superAdminCodeList = $this->configPermission["superAdminCodeList"];
+                if(in_array($user->user_type_code, $superAdminCodeList)){
+                    redirect("super");
+                }else if(in_array($user->user_type_code, $adminCodeList)){
                     redirect("admin");
                 } else {
                     redirect("media");

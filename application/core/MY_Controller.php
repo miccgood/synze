@@ -82,6 +82,20 @@ class SpotOn extends CI_Controller {
             if(!in_array($this->userTypeCode, $adminCodeList)){
                 $this->permissionView = FALSE;
             }
+        } else if($page == "super"){
+            
+            $superAdminCodeList = $this->configPermission["superAdminCodeList"];
+            //ถ้าไม่ใช่ super admin ห้ามเข้า
+            if(!in_array($this->userTypeCode, $superAdminCodeList)){
+                $this->permissionView = FALSE;
+            } 
+        } else if($page == "company"){
+            
+            $superAdminCodeList = $this->configPermission["superAdminCodeList"];
+            //ถ้าไม่ใช่ super admin ห้ามเข้า
+            if(in_array($this->userTypeCode, $superAdminCodeList)){
+                $permissionEdit = true;
+            } 
         }
         
         return $permissionEdit;
@@ -120,6 +134,15 @@ class SpotOn extends CI_Controller {
     
     public function getUserTypeCode(){
         return $this->userTypeCode;
+    }
+    
+    public function getUserPermissionSuperAdminPage(){
+        $ret = FALSE;
+        $superAdminCodeList = $this->configPermission["superAdminCodeList"];
+        if(in_array($this->userTypeCode, $superAdminCodeList)){
+            $ret = TRUE;
+        }
+        return $ret;
     }
     
     public function getUserPermissionAdminPage(){

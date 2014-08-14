@@ -60,7 +60,11 @@
                         <div class="username"><?php  echo $ci->getDisplayName(); ?></div>
                         <div class="logout">
                         <?php
-                            if($ci->getUserPermissionAdminPage()){
+                            if($ci->getUserPermissionSuperAdminPage()){
+                        ?>
+                            <a href="<?php echo site_url("super");?>">Super Admin</a> / 
+                        <?php 
+                            } else if($ci->getUserPermissionAdminPage()){
                         ?>
                             <a href="<?php echo site_url("admin");?>">Admin</a> / 
                         <?php 

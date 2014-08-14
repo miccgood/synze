@@ -14,3 +14,5 @@ $config["mapPermission"] = array(
                                 "terminalgroup" => "07"
                                 );
 $config["adminCodeList"] = array("01", "02");
+
+$config["superAdminCodeList"] = array("01");
