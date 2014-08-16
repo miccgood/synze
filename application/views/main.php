@@ -63,7 +63,6 @@
                         <!--<span class="cpnname"></span>-->
                         
                         <div class="logout">
-                            
                             <?php
                                 if($ci->getUserPermissionSuperAdminPage()){
                             ?>
@@ -102,7 +101,6 @@
                             <?php 
                                 } 
                             ?>
-                            
                         </div>
                     </div>
                 </div>
