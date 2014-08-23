@@ -163,4 +163,7 @@ class Super extends SpotOn {
         return $isPermissionUpdate;
     }
     
+    public function _beforeDelete(){
+        return true;
+    }
 }

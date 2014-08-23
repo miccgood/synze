@@ -370,7 +370,7 @@ class Media extends SpotOn {
             $files_to_insert["media_path"] = trim($this->media['text_url'], "/")."/" .$file_name;
         }else if($state === "update"){
             $files_to_insert["media_path"] = trim($this->media['text_url'], "/")."/" .$files_to_insert["media_filename"];
-            
+            $media_path = $this->getMediaPath($files_to_insert["media_filename"]);
         }
         
         //เตรียมข้อมูลที่จะเขียนลงไฟล์

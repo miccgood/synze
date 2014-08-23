@@ -163,4 +163,10 @@ class Admin extends SpotOn {
         return $isPermissionUpdate;
     }
     
+    
+    public function _beforeDelete($primary_key)
+    {
+        return true;
+    }
+    
 }
