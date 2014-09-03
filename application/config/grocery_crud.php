@@ -8,8 +8,8 @@
 	// The default per page when a user firstly see a list page
 	$config['grocery_crud_default_per_page']	= 25;
 
-	$config['grocery_crud_file_upload_allow_file_types'] = 'gif|jpeg|jpg|png|tiff|doc|docx|txt|odt|xls|xlsx|pdf|ppt|pptx|pps|ppsx|mp3|m4a|ogg|wav|mp4|m4v|mov|wmv|flv|avi|mpg|mpeg|ogv|3gp|3g2';
-	$config['grocery_crud_file_upload_max_file_size'] = '200MB'; //ex. '10MB' (Mega Bytes), '1067KB' (Kilo Bytes), '5000B' (Bytes)
+	$config['grocery_crud_file_upload_allow_file_types'] = 'avi|gif|jpeg|jpg|png|tiff|doc|docx|txt|odt|xls|xlsx|pdf|ppt|pptx|pps|ppsx|mp3|m4a|ogg|wav|mp4|m4v|mov|wmv|flv|avi|mpg|mpeg|ogv|3gp|3g2';
+	$config['grocery_crud_file_upload_max_file_size'] = '500MB'; //ex. '10MB' (Mega Bytes), '1067KB' (Kilo Bytes), '5000B' (Bytes)
 
 	//You can choose 'ckeditor','tinymce' or 'markitup'
 	$config['grocery_crud_default_text_editor'] = 'ckeditor';

@@ -337,9 +337,9 @@ class Media extends SpotOn {
             unset($files_to_insert["direction"]);
         }
         
-        $mediaLenght = $this->nullToZero($files_to_insert["media_lenght"], 0);
+        $mediaLenght = str_replace(",", "", $this->nullToZero($files_to_insert["media_lenght"], 0));
         
-        $files_to_insert["media_lenght"] = ($mediaLenght >= 0 ? $mediaLenght * 1000 : $mediaLenght);
+        $files_to_insert["media_lenght"] = ($mediaLenght >= 0 ? $mediaLengh * 1000 : $mediaLenght);
         $files_to_insert = parent::clearBeforeInsertAndUpdate($files_to_insert);
         $files_to_insert = parent::setDefaultValue($files_to_insert);
         return $files_to_insert;
@@ -467,6 +467,7 @@ class Media extends SpotOn {
     }
 
     function callbackBeforeUpload($files_to_upload, $field_info) {
+        $ext = "";
         foreach ($files_to_upload as $value) {
 //            $value['name'] = iconv("UTF-8", "TIS-620", $value['name']);
             $ext = pathinfo($value['name'], PATHINFO_EXTENSION);

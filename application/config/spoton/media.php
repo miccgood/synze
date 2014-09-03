@@ -23,9 +23,9 @@ $config["text_path"] = "assets/uploads/text/";
 $config["not_allowed_file_name"] = array("/", ".", "-");
 
 
-$config["extention"]["map"] = array("mpeg" => "mpg");
+$config["extention"]["map"] = array("mpeg" => "mpg", "riff" => "avi");
 
-$config["extention"]["video"] = array("mp4", "mpg", "mpeg");
+$config["extention"]["video"] = array("mp4", "mpg", "mpeg", "avi");
 $config["extention"]["image"] = array("jpg", "gif", "png");
 //$config["extention"]["text"] = array("txt");
 
