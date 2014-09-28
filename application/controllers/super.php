@@ -25,6 +25,10 @@ class Super extends SpotOn {
         ->display_as("user_username" , "Username")
         ->display_as("user_password" , "Password")
         ->display_as("permission_ID" , "Page")
+        ->display_as("user_receive_sms", "Receive SMS")
+        ->display_as("user_receive_email", "Receive Email")
+        ->display_as("user_email", "Email")
+        ->display_as("user_tel", "Tel")
         ->display_as("cpn_ID" , "Company")
         ->display_as("user_type_ID" , "User Type")
         ->set_relation('user_type_ID', 'mst_user_type', 'user_type_name', $whereUser, "user_type_code")
@@ -32,13 +36,25 @@ class Super extends SpotOn {
         ->set_relation_n_n('permission_ID', 'trn_permission', 'mst_permission', 'user_ID', 'permission_ID', 'page_name','seq')
         ->where($where)
         ->columns('cpn_ID', 'user_displayname', 'user_type_ID', 'permission_ID')
-        ->fields('cpn_ID', 'user_displayname', 'user_username', 'user_password', 'user_type_ID', 'permission_ID')
+        ->fields('cpn_ID', 'user_displayname', 'user_username', 'user_password', 'user_type_ID', 'permission_ID', 'user_receive_email', 'user_email', 'user_receive_sms', 'user_tel')
         ->field_type('user_password', 'password')
-        ;
+        ->callback_add_field('user_email',array($this,'addOrEditField'))
+        ->callback_edit_field('user_email',array($this,'addOrEditField'))
+        ->callback_add_field('user_tel',array($this,'addOrEditField'))
+        ->callback_edit_field('user_tel',array($this,'addOrEditField'));
+        
         $this->output();
         
     }
     
+    
+    function addOrEditField($data, $pk, $rows){
+        return '<textarea name="' . $rows->name .'" rows="15">' . $data. '</textarea>';
+    }
+//    function add_field_callback_1(){
+//        return '<textarea name="user_email" rows="15"></textarea>';
+//    }
+
     private function getMainWhere(){
         $userTypeCode = $this->getUserTypeCode();
         

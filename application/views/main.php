@@ -191,7 +191,8 @@
                     <ul class="nav">
                         <li><h4>Device Management</h4></li>
                         <div class="divider"></div>
-                        <li><a href="<?php echo site_url(); ?>/terminal"><img src="<?php echo base_url() ?>theme/images/terminal-group.png" width="38" height="30">Player</a></li> 
+                        <li><a href="<?php echo site_url(); ?>/terminal"><img src="<?php echo base_url() ?>theme/images/terminal.png" width="38" height="30">Player</a></li> 
+                        <li><a href="<?php echo site_url(); ?>/groupplayer"><img src="<?php echo base_url() ?>theme/images/terminal-group.png" width="38" height="30">Group Player</a></li> 
                         <li><a href="<?php echo site_url(); ?>/monitor"><img src="<?php echo base_url() ?>theme/images/monitor_icon.png" width="38" height="30">Monitor</a></li>
                         <li><a href="<?php echo site_url(); ?>/report"><img src="<?php echo base_url() ?>theme/images/report_icon.png" width="38" height="30">Report</a></li>
                     </ul>

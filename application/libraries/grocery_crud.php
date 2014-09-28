@@ -2559,7 +2559,9 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 		$this->_inline_js("var ajax_relation_url = '".$this->getAjaxRelationUrl()."';\n");
 
 		$field_info 		= $this->relation_n_n[$field_info_type->name]; //As we use this function the relation_n_n exists, so don't need to check
-		$unselected_values 	= $this->get_relation_n_n_unselected_array($field_info, $selected_values);
+		$selected_values = (is_null($field_info->selected_values) || empty($field_info->selected_values) 
+                                            ? $selected_values : $field_info->selected_values);
+                $unselected_values 	= $this->get_relation_n_n_unselected_array($field_info, $selected_values);
 
 		if(empty($unselected_values) && empty($selected_values))
 		{
@@ -5096,7 +5098,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 	 * @param string $priority_field_relation_table
 	 * @param mixed $where_clause
 	 */
-	public function set_relation_n_n($field_name, $relation_table, $selection_table, $primary_key_alias_to_this_table, $primary_key_alias_to_selection_table , $title_field_selection_table , $priority_field_relation_table = null, $where_clause = null, $custom_order_by = array())
+	public function set_relation_n_n($field_name, $relation_table, $selection_table, $primary_key_alias_to_this_table, $primary_key_alias_to_selection_table , $title_field_selection_table , $priority_field_relation_table = null, $where_clause = null, $custom_order_by = array(), $selected_values = array())
 	{
 		$this->relation_n_n[$field_name] =
 			(object)array(
@@ -5108,7 +5110,8 @@ class Grocery_CRUD extends grocery_CRUD_States
 				'title_field_selection_table' => $title_field_selection_table ,
 				'priority_field_relation_table' => $priority_field_relation_table,
 				'where_clause' => $where_clause,
-                                'custom_order_by' => $custom_order_by
+                                'custom_order_by' => $custom_order_by,
+                                'selected_values' => $selected_values // add By momo
 			);
 
 		return $this;

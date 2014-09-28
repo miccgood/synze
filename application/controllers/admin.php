@@ -32,11 +32,20 @@ class Admin extends SpotOn {
         ->set_relation_n_n('permission_ID', 'trn_permission', 'mst_permission', 'user_ID', 'permission_ID', 'page_name','seq')
         ->where($where)
         ->columns('cpn_ID', 'user_displayname', 'user_type_ID', 'permission_ID')
-        ->fields('cpn_ID', 'user_displayname', 'user_username', 'user_password', 'user_type_ID', 'permission_ID')
+        ->fields('cpn_ID', 'user_displayname', 'user_username', 'user_password', 'user_type_ID', 'permission_ID', 'user_receive_email', 'user_email', 'user_receive_sms', 'user_tel')
         ->field_type('user_password', 'password')
-        ;
+        ->callback_add_field('user_email',array($this,'addOrEditField'))
+        ->callback_edit_field('user_email',array($this,'addOrEditField'))
+        ->callback_add_field('user_tel',array($this,'addOrEditField'))
+        ->callback_edit_field('user_tel',array($this,'addOrEditField'));
+        
         $this->output();
         
+    }
+    
+    
+    function addOrEditField($data, $pk, $rows){
+        return '<textarea name="' . $rows->name .'" rows="15">' . $data. '</textarea>';
     }
     
     private function getMainWhere(){

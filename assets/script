@@ -19,4 +19,32 @@ ALTER TABLE `mst_media` CHANGE `media_type` `media_type` ENUM('video','image','s
 ALTER TABLE `mst_pl` CHANGE `pl_type` `pl_type` ENUM('video','image','scrolling text','Web page','RSS feed','Streaming') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'video'
 
 
+10/9/2557
 
+
+ALTER TABLE `mst_story` ADD `effect` ENUM('normal', 'synchronized', 'mosaic') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'normal' AFTER `lyt_ID`
+
+ALTER TABLE `mst_tmn_grp` ADD `tmn_grp_width` INT(11) NULL AFTER `tmn_grp_name`, ADD `tmn_grp_height` INT(11) NULL AFTER `tmn_grp_width`;
+ALTER TABLE `mst_tmn_grp` ADD `tmn_grp_desc` VARCHAR(1000) NOT NULL AFTER `tmn_grp_name`;
+
+ALTER TABLE `mst_tmn` ADD `tmn_left` INT(11) NULL AFTER `tmn_grp_ID`, ADD `tmn_top` INT(11) NULL AFTER `tmn_left`, ADD `tmn_width` INT(11) NULL AFTER `tmn_top`, ADD `tmn_height` INT(11) NULL AFTER `tmn_width`;
+ALTER TABLE `mst_tmn` CHANGE `tmn_left` `tmn_left` INT(11) NULL DEFAULT '0', CHANGE `tmn_top` `tmn_top` INT(11) NULL DEFAULT '0', CHANGE `tmn_width` `tmn_width` INT(11) NULL DEFAULT '0', CHANGE `tmn_height` `tmn_height` INT(11) NULL DEFAULT '0';
+
+INSERT INTO `821508_synze_test`.`mst_permission` (`permission_ID`, `page_code`, `page_name`) VALUES (NULL, '08', 'Group Player');
+
+UPDATE `mst_tmn` SET `tmn_left`= 0 WHERE 1
+UPDATE `mst_tmn` SET `tmn_top`= 0 WHERE 1
+UPDATE `mst_tmn` SET `tmn_width`= 0 WHERE 1
+UPDATE `mst_tmn` SET `tmn_height`= 0 WHERE 1
+
+ALTER TABLE `mst_user` ADD `user_email` VARCHAR(500) NULL , ADD `user_tel` VARCHAR(500) NULL ;
+ALTER TABLE `mst_user` ADD `user_receive_sms` BOOLEAN NOT NULL DEFAULT FALSE AFTER `user_tel`, ADD `user_receive_email` BOOLEAN NOT NULL DEFAULT FALSE AFTER `user_receive_sms`;
+
+CREATE TABLE IF NOT EXISTS `mst_user_manager` (
+  `user_manager_ID` int(11) NOT NULL,
+  `tmn_grp_ID` int(11) NOT NULL,
+  `tmn_ID` int(11) NOT NULL
+  PRIMARY KEY (`user_manager_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `mst_tmn_grp` ADD `tmn_grp_master` INT NOT NULL AFTER `tmn_grp_height`;

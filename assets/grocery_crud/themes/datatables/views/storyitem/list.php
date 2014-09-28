@@ -1,15 +1,15 @@
 
  <?php 
  
-    function getValueInObj($obj, $index){
+    function getValueInObj($obj, $index, $ret = ""){
         if(is_object($obj)){
             if(property_exists($obj, $index)){
                 return $obj->$index;
             }
         }
-        
-        return "";
+        return $ret;
     }
+    
 //    getValueInObj(getValueInArr(),)
     function getValueInArr($arr, $index){
         if(is_array($arr)){
@@ -550,7 +550,17 @@ var initContainer = function($containerId){
                 <tr>
                     <td>Duration </td> <td> <input type="text" id="inputDuration" value="" readonly="readonly" class="grayInput" /></td>
                 </tr>
-                
+                <tr>
+                    <td>Effect </td> 
+                    <td> 
+<!--                        <input type="radio" name="sex" value="male">Male<br>
+                        <input type="radio" name="sex" value="female">Female-->
+
+                        <input type="radio" name="inputEffect" value="normal" /> Normal &nbsp;&nbsp;
+                        <input type="radio" name="inputEffect" value="synchronized" /> Synchronized &nbsp;&nbsp;
+                        <input type="radio" name="inputEffect" value="mosaic" /> Mosaic  &nbsp;&nbsp;
+                    </td>
+                </tr>
                 <?php 
                     $ci = &get_instance();
                     $mode = ( $ci->getStoryId() == "0" ? "add" : "edit" ) ;
@@ -695,8 +705,10 @@ var initContainer = function($containerId){
     
     var $_displayAll = <?php  echo json_encode($displayAll); ?>;
     var $_layoutAll = <?php  echo json_encode($layoutAll); ?>;
+    var $_initEffect = '<?php echo getValueInObj($story, "effect", "normal");?>';
     $(function(){
         init();
+        initEffect();
         initPlaylist();
         initVolumn();
         getMaxDuration();
@@ -750,6 +762,17 @@ var initContainer = function($containerId){
         return $('<div name="volumnInput" class="volumnInput"></div>');
     }
     
+    function initEffect(){
+        
+        var $radios = $('input:radio[name=inputEffect]');
+        if($radios.is(':checked') === false) {
+            $radios.filter('[value='+ $_initEffect +']').prop('checked', true);
+        } 
+//        else {
+//            $radios.filter('[value=normal]').prop('checked', true);
+//        }
+//        $(":input[name=inputEffect]").val("<?php echo getValueInObj($story, "effect");?>")
+    }
     function initPlaylist(){
         
         var $selectTemplate = getPlaylistTemplate();
@@ -819,11 +842,8 @@ var initContainer = function($containerId){
                 slide: sliderTooltip
             });
           
-//            $(this).find( "div[name=volumnInput]" ).slider( "value" , "10");
         });
         
-        
-//          $( "div[name=volumnInput]" ).slider( "value" );
     }    
     
 //    

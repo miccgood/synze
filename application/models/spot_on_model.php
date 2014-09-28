@@ -193,8 +193,21 @@ class spot_on_model extends CI_Model  {
             
             return $this->db->where("dsp_ID", $data["dsp_ID"])->update("mst_dsp", $data);
         }
+        
+        public function updateScreen($data){
+            if(is_object($data)){
+                $data = get_object_vars($data);
+            }
+            
+            return $this->db->where("tmn_ID", $data["tmn_ID"])->update("mst_tmn", $data);
+        }
+        
         public function getResolutionByLayoutId($layoutId){
             return $this->db->select("lyt_width, lyt_height")->where("lyt_ID", $layoutId)->get('mst_lyt')->result();
+        }
+        
+        public function getResolutionByGroupPlayerId($groupPlayerId){
+            return $this->db->select("tmn_grp_width, tmn_grp_height")->where("tmn_grp_ID", $groupPlayerId)->get('mst_tmn_grp')->result();
         }
                 
 //        public function selectMedia($where = array(), $select = "cat_ID, media_ID, media_lenght, media_type") {
@@ -762,6 +775,23 @@ class spot_on_model extends CI_Model  {
             return implode('-', $date);
         }
         
+        
+        public function getSelectUserReceiveAlert(){
+            $result = $this->db->select("*")
+                ->where($this->getWhere())
+                ->where('user_receive_sms = true OR user_receive_email = true ')
+//                ->or_where(array('user_receive_sms' => true, 'user_receive_email' => true))
+                ->order_by('user_username')
+                ->get('mst_user')->result_array();
+            
+            $ret = array();
+            foreach ($result as $array) {
+                $ret[$array['user_ID']] = $array['user_username'];
+            }
+            
+            return $ret;
+//            SELECT *, user_username as s254b66a7 FROM (`mst_user`) WHERE `mst_user`.`cpn_ID` = '1' ORDER BY `mst_user`.`user_username`
+        }
 }
 
 

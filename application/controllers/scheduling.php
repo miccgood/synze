@@ -91,24 +91,24 @@ class Scheduling extends SpotOn {
         return date("Y/m/d", strtotime($value));
     }
     
-    function _story_ID($value = '', $shd_ID = null, $row = "", $roe= ""){
-//        $result = $this->m->getTerminalGroup();
-//        $resultSelected = $this->m->getTerminalGroupByShdId($shd_ID);
-//        $selectedArray = array();
-//        foreach ($resultSelected as $value) {
-//            $selectedArray[$value->tmn_grp_ID] = $value->tmn_grp_ID;
-//        }
-//        $ret = "<select id='playerGroup' name='player_group[]' multiple='multiple' style='width:500px; display:none;'> " ;
-//            foreach($result as $value) {
-//                $selected = (in_array($value->tmn_grp_ID, $selectedArray) ? "selected='selected'" : "");            
-//                $ret .= "<option value='$value->tmn_grp_ID' $selected> $value->tmn_grp_name </option> ";
-//            }
-//        $ret .= "</select>";
-//        return $ret;
-        
-        return "<select id='field-story_ID'  name='story_ID' class='chosen-select' data-placeholder='Select Story Name' style='width:300px'><option value=''></option><option value='6'  >asf</option><option value='5'  >story</option><option value='1'  >Story 1</option><option value='2'  >Story 2</option><option value='3'  >str</option><option value='4' selected='selected' >str</option></select>";		
-    }
-    
+//    function _story_ID($value = '', $shd_ID = null, $row = "", $roe= ""){
+////        $result = $this->m->getTerminalGroup();
+////        $resultSelected = $this->m->getTerminalGroupByShdId($shd_ID);
+////        $selectedArray = array();
+////        foreach ($resultSelected as $value) {
+////            $selectedArray[$value->tmn_grp_ID] = $value->tmn_grp_ID;
+////        }
+////        $ret = "<select id='playerGroup' name='player_group[]' multiple='multiple' style='width:500px; display:none;'> " ;
+////            foreach($result as $value) {
+////                $selected = (in_array($value->tmn_grp_ID, $selectedArray) ? "selected='selected'" : "");            
+////                $ret .= "<option value='$value->tmn_grp_ID' $selected> $value->tmn_grp_name </option> ";
+////            }
+////        $ret .= "</select>";
+////        return $ret;
+//        
+//        return "<select id='field-story_ID'  name='story_ID' class='chosen-select' data-placeholder='Select Story Name' style='width:300px'><option value=''></option><option value='6'  >asf</option><option value='5'  >story</option><option value='1'  >Story 1</option><option value='2'  >Story 2</option><option value='3'  >str</option><option value='4' selected='selected' >str</option></select>";		
+//    }
+//    
     function _player_group($value = '', $shd_ID = null, $row = "", $roe= ""){
         $result = $this->m->getTerminalGroup();
         $resultSelected = $this->m->getTerminalGroupByShdId($shd_ID);

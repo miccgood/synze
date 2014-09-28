@@ -26,11 +26,6 @@
 	$this->set_css($this->default_css_path.'/jquery_plugins/fancybox/jquery.fancybox.css');
 	$this->set_js($this->default_javascript_path.'/jquery_plugins/jquery.fancybox-1.3.4.js');
 	$this->set_js($this->default_javascript_path.'/jquery_plugins/jquery.easing-1.3.pack.js');
-
-	$this->set_js_lib($this->default_javascript_path.'/jquery_plugins/jquery.chosen.min.js');
-        $this->set_css($this->default_css_path.'/jquery_plugins/chosen/chosen.css');
-                
-                
 ?>
 <script type='text/javascript'>
 	var base_url = '<?php echo base_url();?>';
@@ -124,141 +119,16 @@
 <?php }?>
 <?php if(!is_null($back_url) && $back_url != ""){?>
 
-<!--<span class="datatables-add-button">
+<span class="datatables-add-button">
 <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" href="<?php echo $back_url?>">
 	<span class="ui-button-icon-primary ui-icon ui-icon-circle-arrow-w"></span>
 	<span class="ui-button-text">Back</span>
 </a>
-</span>-->
+</span>
 <?php }?>
-<!--<div style='text-align: center;'><h3 style="color: #222;">  Table <?php echo $subject?> </h3></div>-->
+<div style='text-align: center;'><h3 style="color: #222;">  Table <?php echo $subject?> </h3></div>
 <div class="dataTablesContainer">
 	<?php echo $list_view?>
 </div>
 
 <?php // echo var_dump($this); ?>
-
-
-
-
-<script type="text/javascript">
-    $(function(){
-    
-    
-    var save_and_go_back_to_list = false;
-    $("#save_and_go_back_to_list").unbind().bind("click", function(){
-        save_and_go_back_to_list = true;
-        $("#save").click();
-    });
-        $("#save").unbind().bind("click", function(){
-            if(!validate()){
-//                alert("validate Error");
-                return false;;
-            }
-            var url = "storyitem/ajax";
-            var dataToBeSent = new Array();
-             
-            dataToBeSent["story"] = getStoryFromPage();
-            
-            dataToBeSent["storyItem"] = getDataFromTable();
-//            var data = { name: "John", location: "Boston" };
-
-            dataToBeSent = arrayToObject(dataToBeSent);
-            
-            $("#FormLoading").show();
-            $.post(url, dataToBeSent, function(data, textStatus) {
-               console.log( "success" );
-              }, "json")
-            .done(function(data) {
-                if(save_and_go_back_to_list){
-                    window.location = "<?php echo $back_url?>";
-                } else {
-                    if(data){
-                        var storyId = data.story_id;
-                        $("#storyId").val(storyId);
-                    }
-                    form_success_message("<p>Your data has been successfully updated. <a href='<?php echo base_url("index.php/story");?>'>Go back to list</a></p>") ;
-                }
-            })
-            .fail(function(data) {
-                form_error_message(data);
-//                $("#report-error").fadeIn(1000).delay(3000).fadeOut(1000);
-            })
-            .always(function() {
-                $("#FormLoading").hide();
-                console.log( "complete" );
-            });
-        });
-    });
-    
-    function validate(){
-        
-        var storyNameId = "#storyName";
-        var selectLayoutId = "#selectLayout";
-        var message = "";
-        var ret = true;
-        $(storyNameId + ', ' + selectLayoutId).removeClass('field_error');
-        
-        var $storyName = $(storyNameId).val();
-        
-        if($storyName === null || $storyName === ""){
-//            $("#storyName").focus().css({'border-color': "red"});
-            
-            $(storyNameId).addClass('field_error');
-            message += "<p>The Story Name field is required.</p>";
-            ret = false;
-        }
-        var $selectLayout = $(selectLayoutId).val();
-        
-        if($selectLayout === null || $selectLayout === "" || $selectLayout === "0"){
-            $(selectLayoutId).addClass('field_error');//$("#selectLayout").focus().css('border-color', "red");
-            message += "<p>The Layout field is required.</p>";
-            ret = false;
-        }
-        
-        if(!ret){
-            form_error_message(message);
-        }
-        
-        return ret;
-    }
-    
-    function getDataFromTable(){
-        var $ret = new Array();
-//        ค้นหา tr 
-        $("#" + $_tableId + " tbody").find("tr").each(function(e2){
-            var $id = $(this).attr("id");
-            if($id){
-                var storyItem = new Object();
-                storyItem.dsp_ID = $id.replace("row-", "");
-                storyItem.pl_ID = $(this).find("select[name=playlist]").val();
-                storyItem.volumn = $(this).find("div[name=volumnInput]").slider( "value" );
-                $ret[$ret.length] = storyItem;
-            }
-        });
-        return arrayToObject($ret);
-    }
-    
-    function getStoryFromPage(){
-        var $story = new Array();
-        $story["story_id"] = $("#storyId").val();
-        $story["story_name"] = $("#storyName").val();
-        $story["story_desc"] = $("#storyDesc").val();
-        $story["lyt_ID"] = $("#selectLayout").val();
-        $story["effect"] = $(":input[name=inputEffect]:checked").val();
-        return arrayToObject($story);
-    }
-    
-    function arrayToObject($ret){
-        var jObject={};
-        for(i in $ret)
-        {
-            jObject[i] = $ret[i];
-        }
-        return  jObject;
-    }
-</script>
-
-<!--<div class='line-1px'></div>-->
-<div id='report-error' class='report-div error'><p>Your data has been Error updated. </p></div>
-<div id='report-success' class='report-div success'><p>Your data has been successfully updated. <a href="<?php echo base_url("index.php/story");?>">Go back to list</a></p></div>
