@@ -76,7 +76,7 @@ class GroupPlayer extends SpotOn {
      
     function callbackLytName($value = '', $primary_key = null)
     {
-        return '<a href="'.site_url('display?tmn_grp_id='.$primary_key->tmn_grp_ID).'">'.$value.'</a>';
+        return '<a href="'.site_url('groupplayerscreen?tmn_grp_id='.$primary_key->tmn_grp_ID).'">'.$value.'</a>';
     }
 
 
