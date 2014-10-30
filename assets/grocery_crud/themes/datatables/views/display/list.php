@@ -80,15 +80,50 @@
             var widthInit = 200; //$_layoutWidth
             var heightInit = 200; //$_layoutHeight
             
-            createLayout(newLayoutId, "Zone", 0, 0, widthInit, heightInit, null);
+            var name = getZoneName();
+            createLayout(newLayoutId, name, 0, 0, widthInit, heightInit, null);
             
             var $trId = "row-" + newLayoutId;
-            createRow($trId, "Zone", 0, 0, widthInit, heightInit, null);
+            createRow($trId, name, 0, 0, widthInit, heightInit, null);
         });
 
         setCenter($("#layout1"));
+        
+//        createMasterZone();
     });
 
+    var getZoneName = function(){
+        var zoneName = "Zone";
+        var size = $_tableTemplate.find("tr").not($_tableTemplate.find('.dataTables_empty').parent("tr")).size() + 1;
+        for (var i = 1; i <= size; i++) { 
+            var name = "Zone"
+            if(i < 10){
+                name += "0" + i;
+            } else {
+                name += i;
+            }
+            
+            if(!checkDuplicateZoneName(name)){
+                zoneName = name;
+                break;
+            }
+            
+        }
+        return zoneName;
+    };
+    
+    var checkDuplicateZoneName = function(zoneName){
+        var isDuplicate = false;
+        $_tableTemplate.find("tr").not($_tableTemplate.find('.dataTables_empty').parent("tr")).each(function(){
+            var dsp_name = $(this).find("td[name=dsp_name]").html().trim().toLowerCase();
+            if(dsp_name === zoneName.toLowerCase()){
+                isDuplicate = true;
+                return false;
+            }
+        });
+        return isDuplicate;
+    };
+    
     var initContainer = function($containerId){
         
         var width = parseInt($($containerId).width());//640px;  360px;
@@ -184,6 +219,7 @@
         var $tdWidth = $_tdTemplate.clone(true);
         var $tdHeight = $_tdTemplate.clone(true);
         var $tdZindex = $_tdTemplate.clone(true);
+        var $tdMasterZone = $_tdTemplate.clone(true);
         var $tdAction = $_tdTemplate.clone(true);
         
         if(zindex == null || typeof zindex == "undefined"){
@@ -196,6 +232,7 @@
         .append($tdWidth.attr("name", "dsp_width").html(width))
         .append($tdHeight.attr("name", "dsp_height").html(height))
         .append($tdZindex.attr("name", "dsp_zindex").html(zindex))
+        .append($tdMasterZone)
         .append($tdAction.attr("class", "actions ")
                     .html( '<a value="' + id + '" href="javascript:void(0)" class="delete-tr-gen ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button">'+
                         '<span class="ui-button-icon-primary ui-icon ui-icon-circle-minus"></span>'+
@@ -206,12 +243,104 @@
         
         $_tableTemplate.append($tr);
         
+        var masterZoneTemplate = getMasterZoneTemplate(id);
+        $tdMasterZone.attr("name", "dsp_master_id").html(masterZoneTemplate);
+        masterZoneTemplate.chosen();
+        
+        refreshMasterZoneTemplate(id, name);
         bindEventRow();
         bindEventDelete();
     };
     
+    function createMasterZone(){
+        if($_tableTemplate.find('.dataTables_empty').length > 0)
+            return;
+
+        var $selectTemplate = $("<select name='master_zone' class='chosen-select' style='width:100%; max-width: 250px;'> <option value='0'></option> </select>");
+        
+        $_tableTemplate.find("tr").each(function(e2){
+            var $id = $(this).attr("id");
+            if($id){
+                 $selectTemplate.append($("<option ></option>").attr("value", $id.replace("row-", "")).html($(this).find("td[name=dsp_name]").html()));
+            }
+        });
+        
+        $_tableTemplate.find("tr").each(function(e2){
+            var $tdDspMasterId = $(this).find("td[name=dsp_master_id]");
+            var dspMasterId = $tdDspMasterId.html();
+            var $select = $selectTemplate.clone(true);
+//            $select.val(dspMasterId).trigger("chosen:updated")
+            $tdDspMasterId.html($select);
+            
+            $select.chosen().val(dspMasterId.trim()).trigger("liszt:updated");
+        });
+        
+        return $selectTemplate;
+    }
+    
+    function getMasterZoneTemplate(id){
+        var $selectTemplate = $("<select name='master_zone' class='chosen-select' style='width:100%; max-width: 250px;'> <option value='0'></option> </select>");
+        
+        $_tableTemplate.find("tr").each(function(e2){
+            var $id = $(this).attr("id");
+            if($id){
+                 $selectTemplate.append($("<option " + (id === $id ? "selected='selected'" : "" ) + "></option>").attr("value", $id).html($(this).find("td[name=dsp_name]").html()));
+            }
+        });
+        
+        return $selectTemplate;
+    }
+    
+    function refreshMasterZoneTemplate(id, name){
+        if($_tableTemplate.find('.dataTables_empty').length > 0)
+            return;
+        
+        $_tableTemplate.find("tr").each(function(){
+            var $id = $(this).attr("id");
+            var isNew = true;
+            var $select = $(this).find("td[name=dsp_master_id]").find("select");
+            if($select.length > 0){
+                var $option = $select.find("option[value="+id+"]");
+                if($option.length > 0){
+                    $option.html(name).trigger("liszt:updated");
+                    isNew = false;
+                }
+            }
+            if(isNew){
+                $select.append($("<option " + (id === $id ? "selected='selected'" : "" ) + "></option>").attr("value", id).html(name)).trigger("liszt:updated");;
+            }
+        });
+    }
+    
+    function bindEventPlaylist(){
+        $(".chosen-select").chosen().not("#selectLayout").bind("change", function(e){
+            var $value = $_playlist[$(this).val()];
+            var $duration = $value["duration"];
+            var $desc = $value["desc"];
+//            $(this).parent("tr").find("td[name=duration]").html($duration);
+            var $tr = $(this).parents().filter("tr");
+            $tr.find("td[name=duration]").html(getFormatTime($duration));
+            $tr.find("td[name=pl_desc]").html($desc);
+            
+            var $table = $(this).parents().filter("table");
+            var highest = -Infinity;
+            $table.find("tr").each(function($index, $value){
+                var $value = $_playlist[$(this).find("select[name=playlist]").val()];
+                
+                if($value){
+                    var $duration = $value["duration"];
+                    highest = Math.max(highest, parseFloat(nullToZero($duration)));
+                }
+            });
+            $("#inputDuration").val(getFormatTime(highest));
+//            alert(getFormatTime(highest));
+        });
+        $('.chzn-container, .chzn-drop').css({"width": "100%"});
+        
+    };
+    
     var bindEventRow = function(){
-        $(".trigger-td-input").unbind().bind("click", function(e){ 
+        $(".trigger-td-input").not("td[name=dsp_master_id]").unbind().bind("click", function(e){ 
             $_isSelect = true;
             if($(e.target).find('input').size() > 0 ){
                 e.preventDefault();
@@ -237,6 +366,8 @@
 
         });  
         
+//        $("table")
+        
         bindEventDocument();
     };
     
@@ -256,12 +387,13 @@
 
             $("table tbody").find("tr").each(function(e2){
                 var $isRefresh = false;
-
+                var id = $(this).attr("id").replace("row-", "");
                 $(this).find('td').each(function(e3){
                     if ($(this).is(":hover")) {
                         return;
                     }
-                    if($(this).find('input').size() > 0 ){
+                    if($(this).find('select').size() > 0 ){
+                    } else if($(this).find('input').size() > 0 ){
                         var inputValue = $(this).find('input').val();
                         if(inputValue != ""){
                             $(this).html(inputValue);
@@ -269,7 +401,8 @@
                             //จะเป็นว่างได้ในกรณี ชื่อเท่านั้น
                             $(this).html("Zone");
                         }
-
+                        
+                        
                         $isRefresh = true;
                         $_isSelect = false;
                     }
@@ -287,6 +420,7 @@
                     var $height = $(this).find("td[name=dsp_height]").html();
                     var $zIndex = $(this).find("td[name=dsp_zindex]").html();
                     refreshLayout($id, $name, $top, $left, $width, $height, $zIndex);
+                    refreshMasterZoneTemplate($id, $name);
                 } 
             });
         });
@@ -455,7 +589,6 @@
 
     };
 
-
 // $( "#layout1" ).css({top: "auto", left: "auto"});
 </script>
 <div class='clear' style="width: 100%; height: 20px;"></div>
@@ -474,15 +607,6 @@
 <div class='clear' style="width: 100%; height: 20px;"></div>
 
 
-<!-- <br/>
-    X : <span id="printX">0</span>
-    Y : <span id="printY">0</span> 
-
-    Width : <span id="printWidth">0</span>
-    Height : <span id="printHeight">0</span> 
-    <br/>-->
-    
-
     <?php if($this->default_value["permissionEdit"]){ ?>
        
         <div>
@@ -492,7 +616,6 @@
                 <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
                         <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
                         <span class="ui-button-text" id="saveLayout"> Update Change </span>
-                        <!--<button id="addLayout"> Add Layout </button>-->
                 </a>
             </span>
 
@@ -500,7 +623,6 @@
                 <a role="button" class="add_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" >
                         <span class="ui-button-icon-primary ui-icon ui-icon-circle-check"></span>
                         <span class="ui-button-text" id="save_and_go_back_to_list"> Update and go back to list </span>
-                        <!--<button id="addLayout"> Add Layout </button>-->
                 </a>
             </span>
 
@@ -670,6 +792,7 @@
         $('th').eq(-2).click();
         $('th').unbind('click');
         $('th>div .DataTables_sort_icon').remove();
+        createMasterZone();
     });
     
     function callbackAfterDelete(id){

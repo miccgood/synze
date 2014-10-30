@@ -24,18 +24,35 @@ class Display extends SpotOn {
     function ajax(){
         //array
         $post = $this->input->post();
-        
+//        $mapDspMasterId = array();
+        $mapDspId = array();
+        $temp = array();
         foreach ($post as $value) {
             $value["lyt_ID"] = $this->getLytId();
-            
             $value = $this->setDefaultValue($value);
-            if(strpos($value["dsp_ID"], "gen-") !== false){
+            $dspId = $value["dsp_ID"];
+            $temp[$dspId] = $value;
+//            $dspMasterId = $value["dsp_master_id"];
+            $value["dsp_master_id"] = null;
+            if(strpos($dspId, "gen-") !== FALSE){
                 $value["dsp_ID"] = null;
-                $this->m->insertDisplay($value);
+                //เก็บค่า Id ไว้ใน map
+                $mapDspId[$dspId] = $this->m->insertDisplay($value);
+//                $mapDspMasterId[$dspId] = $dspMasterId;
             }else{
                 $this->m->updateDisplay($value);
+                $mapDspId[$dspId] = $value["dsp_ID"];
+//                $mapDspMasterId[$dspId] = $dspMasterId;
             }
         }
+        
+        foreach ($temp as $dspId => $value){
+            $value["dsp_ID"] = $mapDspId[$dspId];
+            $value["dsp_master_id"] = $mapDspId[$value["dsp_master_id"]];
+                    
+            $this->m->updateDisplay($value);
+        }
+        
         $ret = array("success" => true);
         return json_encode($ret);
     }
@@ -56,7 +73,7 @@ class Display extends SpotOn {
 //            ->set_relation('PlayList', 'trn_dsp_has_pl', 'dsp_ID', 'pl_ID', 'pl_name')
 //            ->set_relation_n_n('PlayList', 'trn_dsp_has_pl', 'mst_pl', 'dsp_ID', 'pl_ID', 'pl_name')
             ->set_subject('Display')
-            ->columns('dsp_name', 'dsp_left', 'dsp_top', 'dsp_width', 'dsp_height', 'dsp_zindex')
+            ->columns('dsp_name', 'dsp_left', 'dsp_top', 'dsp_width', 'dsp_height', 'dsp_zindex', 'dsp_master_id')
             
             ->display_as('dsp_name', 'Name')
 //            ->display_as('dsp_desc', 'Description')
@@ -65,6 +82,7 @@ class Display extends SpotOn {
             ->display_as('dsp_width', 'Width')
             ->display_as('dsp_height', 'Height')
             ->display_as('dsp_zindex', 'ZIndex')
+            ->display_as('dsp_master_id', 'Zone Master')
         ->fields('dsp_ID', 'dsp_name', 'dsp_left', 'dsp_top', 'dsp_width', 'dsp_height', 'dsp_zindex', 'lyt_ID', 'cpn_ID',
                 "create_date", "create_by", "update_date", "update_by")//, "PlayList"
         ->field_type("dsp_left", "integer")

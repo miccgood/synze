@@ -48,3 +48,8 @@ CREATE TABLE IF NOT EXISTS `mst_user_manager` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `mst_tmn_grp` ADD `tmn_grp_master` INT NOT NULL AFTER `tmn_grp_height`;
+
+
+
+26/10/2557
+ALTER TABLE `mst_dsp` ADD `dsp_master_id` INT NULL DEFAULT NULL AFTER `lyt_ID`;

@@ -227,14 +227,20 @@
             var $id = $(this).attr("id");
             if($id){
                 var zone = new Object();
-                zone.dsp_ID = $(this).attr("id").replace("row-", "")
+                zone.dsp_ID = $(this).attr("id").replace("row-", "");
 
     //            หา td
                 $(this).find('td').each(function(e3){
                     var name = $(this).attr("name");
-                    if(typeof name == "undefined" || name == "undefined"){
+                    if(typeof name === "undefined" || name === "undefined"){
                         return ;
                     }
+                    
+    //                ตรวจสอบว่า เป็น select หรือไม่ จะได้ดึงข้อมูลมาถูก
+                    if($(this).find('select').size() > 0 ){
+                        var inputValue = $(this).find("select").val();
+                        zone[name] = inputValue.replace("row-", "").trim();
+                    } else 
     //                ตรวจสอบว่า เป็น input หรือไม่ จะได้ดึงข้อมูลมาถูก
                     if($(this).find('input').size() > 0 ){
                         var inputValue = $(this).find('input').val();
