@@ -18,6 +18,7 @@ class TerminalGroup extends SpotOnLov {
         $this->crud->set_table('mst_tmn_grp')
         ->set_subject('Terminal Group')
         ->where("mst_tmn_grp.cpn_ID" , $this->cpnId)
+        ->fields('tmn_grp_name')
         ->columns('tmn_grp_name','count_terminal')
 //            ->order_by("cat_name", "DESC")
             ->callback_column('tmn_grp_name',array($this,'callbackTmnGrpName'))

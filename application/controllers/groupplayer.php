@@ -10,7 +10,7 @@ class GroupPlayer extends SpotOn {
         $this->indexArray = array("Resolution", "next");
     }
     
-    public function index() {
+    public function index($state = null, $mstTmnGrpId = -1) {
         
         
        $state = $this->crud->getState();
@@ -19,21 +19,21 @@ class GroupPlayer extends SpotOn {
        
         $this->crud->set_table('mst_tmn_grp')
 //        ->set_relation_n_n('user_manager_ID', 'trn_permission', 'mst_permission', 'user_ID', 'permission_ID', 'page_name','seq')
-        ->set_relation_n_n('user_manager_ID', 'mst_user_manager', 'mst_user', 'tmn_grp_ID', 'user_ID', 'user_username', 'user_manager_ID', 
+        ->set_relation_n_n('user_manager_ID', 'mst_user_manager', 'mst_user', 'tmn_grp_ID', 'user_ID', 'user_username', 'user_manager_seq', 
                 array('mst_user.cpn_ID' => $this->cpnId), 
                 array('user_username'), $selected_value)
-        ->set_relation('tmn_grp_master_ID', 'mst_tmn', 'tmn_name', array('mst_tmn.cpn_ID' => $this->cpnId))
+        ->set_relation('tmn_grp_master_ID', 'mst_tmn', 'tmn_name', array('mst_tmn.cpn_ID' => $this->cpnId, "mst_tmn.tmn_grp_ID" => $mstTmnGrpId))
         ->where("mst_tmn_grp.cpn_ID" , $this->cpnId)
         ->columns('tmn_grp_name','tmn_grp_desc', 'tmn_grp_width', 'tmn_grp_height')
         ->set_subject('Group Player')
         
         ->display_as('tmn_grp_name', 'Name')
         ->display_as('tmn_grp_desc', 'Description')
-        ->display_as('tmn_grp_master_ID', 'Master Group')
-        ->display_as('user_manager_ID', 'User Manager')
+        ->display_as('tmn_grp_master_ID', 'Master of Group')
+        ->display_as('user_manager_ID', 'Receive Notification')
         ->display_as('tmn_grp_width', 'Width')
         ->display_as('tmn_grp_height', 'Height')
-        ->display_as('Resolution', 'Screen Size')
+        ->display_as('Resolution', 'Virtual Screen Size')
          ->field_type('tmn_grp_ID','hidden')       
 //        ->field_type('next','invisible')
         
@@ -122,14 +122,12 @@ class GroupPlayer extends SpotOn {
     }
     
     public function _beforeDelete($primary_key) {
-        if($this->m->checkDeleteLayout($primary_key)){
-            $this->m->deleteDisplayByLayoutId($primary_key);
+//        if($this->m->checkDeleteLayout($primary_key)){
+//            $this->m->deleteDisplayByLayoutId($primary_key);
             return true;
-        } else {
-            return false;
-        }
-        
-        
+//        } else {
+//            return false;
+//        }
     }
     
 }

@@ -5098,7 +5098,9 @@ class Grocery_CRUD extends grocery_CRUD_States
 	 * @param string $priority_field_relation_table
 	 * @param mixed $where_clause
 	 */
-	public function set_relation_n_n($field_name, $relation_table, $selection_table, $primary_key_alias_to_this_table, $primary_key_alias_to_selection_table , $title_field_selection_table , $priority_field_relation_table = null, $where_clause = null, $custom_order_by = array(), $selected_values = array())
+	public function set_relation_n_n($field_name, $relation_table, $selection_table, $primary_key_alias_to_this_table, 
+                $primary_key_alias_to_selection_table , $title_field_selection_table , $priority_field_relation_table = null, 
+                $where_clause = null, $custom_order_by = array(), $selected_values = array())
 	{
 		$this->relation_n_n[$field_name] =
 			(object)array(

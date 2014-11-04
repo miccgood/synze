@@ -82,7 +82,7 @@ class Display extends SpotOn {
             ->display_as('dsp_width', 'Width')
             ->display_as('dsp_height', 'Height')
             ->display_as('dsp_zindex', 'ZIndex')
-            ->display_as('dsp_master_id', 'Zone Master')
+            ->display_as('dsp_master_id', 'Master of Zone')
         ->fields('dsp_ID', 'dsp_name', 'dsp_left', 'dsp_top', 'dsp_width', 'dsp_height', 'dsp_zindex', 'lyt_ID', 'cpn_ID',
                 "create_date", "create_by", "update_date", "update_by")//, "PlayList"
         ->field_type("dsp_left", "integer")

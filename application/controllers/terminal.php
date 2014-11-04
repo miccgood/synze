@@ -69,7 +69,9 @@ class Terminal extends SpotOn {
     }
     
     public function _beforeDelete($primary_key) {
+        
         return $this->m->checkDeleteTerminal($primary_key);
+//        return $this->m->checkDeleteTerminal($primary_key);
     }
     
     

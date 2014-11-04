@@ -653,10 +653,19 @@ class spot_on_model extends CI_Model  {
         public function checkDeleteTerminal($primary_key){
             //ตรวจสอบที่ ว่ามีการเรียกใช้รึป่าว
             $result = $this->db->select("count(`tmn_ID`) AS VALUE")->where("tmn_ID", $primary_key)->get('trn_dpm')->result();
-	
+            $result2 = $this->db->select("count(`tmn_grp_master_ID`) AS VALUE")->where("tmn_grp_master_ID", $primary_key)->get('mst_tmn_grp')->result();
+            
+            $ret = false;
+            $ret2 = false;
             foreach ($result as $value) {
-                return ($value->VALUE == 0);
+                $ret = ($value->VALUE == 0);
             }
+            
+            foreach ($result2 as $value) {
+                $ret2 = ($value->VALUE == 0);
+            }
+            
+            return $ret && $ret2;
         }
         
         public function getMediaTemp(){

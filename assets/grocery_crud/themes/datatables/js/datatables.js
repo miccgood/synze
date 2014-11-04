@@ -218,7 +218,9 @@ function delete_row(delete_url , row_id)
 {
 	if(confirm(message_alert_delete))
 	{
-		$.ajax({
+            var $delete_error_message = 'Can’t be delete, the entity is being used.';
+            if(beforeDelete(row_id)){
+                $.ajax({
 			url: delete_url,
 			dataType: 'json',
                         cache: false,
@@ -241,6 +243,9 @@ function delete_row(delete_url , row_id)
 				}
 			}
 		});
+            } else {
+                error_message($delete_error_message);
+            }
 	}
 
 	return false;
@@ -267,4 +272,8 @@ function fnGetSelected( oTableLocal )
 
 function callbackAfterDelete(id){
     return id;
+}
+
+function beforeDelete(id){
+    return true;
 }

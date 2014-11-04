@@ -27,6 +27,8 @@ class Admin extends SpotOn {
         ->display_as("permission_ID" , "Page")
         ->display_as("cpn_ID" , "Company")
         ->display_as("user_type_ID" , "User Type")
+        ->display_as("user_email", "Email Address")
+        ->display_as("user_tel", "Telephone Number")
         ->set_relation('user_type_ID', 'mst_user_type', 'user_type_name', $whereUser, "user_type_code")
         ->set_relation('cpn_ID', 'mst_cpn', 'cpn_name', $whereCpn, "cpn_name")
         ->set_relation_n_n('permission_ID', 'trn_permission', 'mst_permission', 'user_ID', 'permission_ID', 'page_name','seq')

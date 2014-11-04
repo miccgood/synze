@@ -67,6 +67,7 @@
 //        $("button").button();
 
         $("#addLayout").click(function() {
+            refreshDataRowToHtml();
             var $layoutCount = ++$_layoutCount;
             //รูปแบบ id
 //            1 แบบโหลดมาจาก DB จะให้ ID จาก DB เลย
@@ -253,12 +254,14 @@
     };
     
     function createMasterZone(){
-        if($_tableTemplate.find('.dataTables_empty').length > 0)
-            return;
+//        if($_tableTemplate.find('.dataTables_empty').length > 0)
+//            return;
 
         var $selectTemplate = $("<select name='master_zone' class='chosen-select' style='width:100%; max-width: 250px;'> <option value='0'></option> </select>");
         
         $_tableTemplate.find("tr").each(function(e2){
+            if($(this).find('.dataTables_empty').length > 0)
+                return;
             var $id = $(this).attr("id");
             if($id){
                  $selectTemplate.append($("<option ></option>").attr("value", $id.replace("row-", "")).html($(this).find("td[name=dsp_name]").html()));
@@ -266,6 +269,8 @@
         });
         
         $_tableTemplate.find("tr").each(function(e2){
+            if($(this).find('.dataTables_empty').length > 0)
+                return;
             var $tdDspMasterId = $(this).find("td[name=dsp_master_id]");
             var dspMasterId = $tdDspMasterId.html();
             var $select = $selectTemplate.clone(true);
@@ -282,6 +287,8 @@
         var $selectTemplate = $("<select name='master_zone' class='chosen-select' style='width:100%; max-width: 250px;'> <option value='0'></option> </select>");
         
         $_tableTemplate.find("tr").each(function(e2){
+            if($(this).find('.dataTables_empty').length > 0)
+                return;
             var $id = $(this).attr("id");
             if($id){
                  $selectTemplate.append($("<option " + (id === $id ? "selected='selected'" : "" ) + "></option>").attr("value", $id).html($(this).find("td[name=dsp_name]").html()));
@@ -292,10 +299,13 @@
     }
     
     function refreshMasterZoneTemplate(id, name){
-        if($_tableTemplate.find('.dataTables_empty').length > 0)
-            return;
+//        if($_tableTemplate.find('.dataTables_empty').length > 0)
+//            return;
         
         $_tableTemplate.find("tr").each(function(){
+            if($(this).find('.dataTables_empty').length > 0)
+                return;
+        
             var $id = $(this).attr("id");
             var isNew = true;
             var $select = $(this).find("td[name=dsp_master_id]").find("select");
@@ -374,8 +384,15 @@
     var bindEventDelete = function (){
         $(".delete-tr-gen").bind("click", function(){
             var $id = $(this).attr("value");
-            removeLayout($id.replace("row-", ""));
-            removeRow($id);
+            var $delete_error_message = 'Can’t be delete, the entity is being used.';
+            var $delete_success_message = 'Your data has been successfully deleted from the database.';
+            if(beforeDelete($id.replace("row-", ""))){
+                removeLayout($id.replace("row-", ""));
+                removeRow($id);
+                success_message($delete_success_message);
+            } else {
+                error_message($delete_error_message);
+            }
         });
     };
 
@@ -384,9 +401,17 @@
             if($_isSelect == false){
                 return;
             }
+            refreshDataRowToHtml();
+            
+        });
+    };
 
-            $("table tbody").find("tr").each(function(e2){
-                var $isRefresh = false;
+    var refreshDataRowToHtml = function(){
+        
+        $_tableTemplate.find("tr").each(function(e2){
+            var $isRefresh = false;
+
+            if($(this).find('.dataTables_empty').size() === 0){
                 var id = $(this).attr("id").replace("row-", "");
                 $(this).find('td').each(function(e3){
                     if ($(this).is(":hover")) {
@@ -401,31 +426,31 @@
                             //จะเป็นว่างได้ในกรณี ชื่อเท่านั้น
                             $(this).html("Zone");
                         }
-                        
-                        
+
+
                         $isRefresh = true;
                         $_isSelect = false;
                     }
                 });
+            }
 
 
-                if($isRefresh == true){
-                    var $id = $(this).attr("id").replace("row-", "");
-                    //เป็น html() แน่นอนเพราะมีการแปลกลับแล้ว
 
-                    var $name = $(this).find("td[name=dsp_name]").html();
-                    var $left = $(this).find("td[name=dsp_left]").html();
-                    var $top = $(this).find("td[name=dsp_top]").html();
-                    var $width = $(this).find("td[name=dsp_width]").html();
-                    var $height = $(this).find("td[name=dsp_height]").html();
-                    var $zIndex = $(this).find("td[name=dsp_zindex]").html();
-                    refreshLayout($id, $name, $top, $left, $width, $height, $zIndex);
-                    refreshMasterZoneTemplate($id, $name);
-                } 
-            });
+            if($isRefresh == true){
+                var $id = $(this).attr("id").replace("row-", "");
+                //เป็น html() แน่นอนเพราะมีการแปลกลับแล้ว
+
+                var $name = $(this).find("td[name=dsp_name]").html();
+                var $left = $(this).find("td[name=dsp_left]").html();
+                var $top = $(this).find("td[name=dsp_top]").html();
+                var $width = $(this).find("td[name=dsp_width]").html();
+                var $height = $(this).find("td[name=dsp_height]").html();
+                var $zIndex = $(this).find("td[name=dsp_zindex]").html();
+                refreshLayout($id, $name, $top, $left, $width, $height, $zIndex);
+                refreshMasterZoneTemplate($(this).attr("id"), $name);
+            } 
         });
-    };
-
+    }
     var setSpinner = function ($this, min, max){
         var $spinner = $this.find('input').spinner({
             min: min,
@@ -799,6 +824,39 @@
         $('#'+id).remove();
     }
     
+    function beforeDelete(id){
+//        if(id === null){
+//            return false;
+//        }
+//        id = replaceRowStr(id);
+        var $ret = true;
+        $_tableTemplate.find("tr").each(function(e2){
+            if($(this).find('.dataTables_empty').length > 0)
+                return;
+            var rowId = replaceRowStr($(this).attr("id"));
+          
+            if(rowId === id){
+                return;
+            }
+            
+            var $select = $(this).find("td[name=dsp_master_id]").find("select");
+            var $id = replaceRowStr($select.val());
+            
+            if($id === id){
+               $ret = false;
+               return false;
+            }
+//            $select.chosen().val(dspMasterId.trim()).trigger("liszt:updated");
+        });
+        return $ret;
+    }
+    
+    function replaceRowStr($str){
+        if($str === null){
+            return "";
+        }    
+        return  $str.replace("row-", "");
+    }
 </script>
 
 
