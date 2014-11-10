@@ -244,11 +244,11 @@
         
         $_tableTemplate.append($tr);
         
-        var masterZoneTemplate = getMasterZoneTemplate(id);
+        var masterZoneTemplate = getMasterZoneTemplate(replaceRowStr(id));
         $tdMasterZone.attr("name", "dsp_master_id").html(masterZoneTemplate);
         masterZoneTemplate.chosen();
         
-        refreshMasterZoneTemplate(id, name);
+        refreshMasterZoneTemplate(replaceRowStr(id), name);
         bindEventRow();
         bindEventDelete();
     };
@@ -289,7 +289,7 @@
         $_tableTemplate.find("tr").each(function(e2){
             if($(this).find('.dataTables_empty').length > 0)
                 return;
-            var $id = $(this).attr("id");
+            var $id = replaceRowStr($(this).attr("id"));
             if($id){
                  $selectTemplate.append($("<option " + (id === $id ? "selected='selected'" : "" ) + "></option>").attr("value", $id).html($(this).find("td[name=dsp_name]").html()));
             }
@@ -306,7 +306,7 @@
             if($(this).find('.dataTables_empty').length > 0)
                 return;
         
-            var $id = $(this).attr("id");
+            var $id = replaceRowStr($(this).attr("id"));
             var isNew = true;
             var $select = $(this).find("td[name=dsp_master_id]").find("select");
             if($select.length > 0){
@@ -447,7 +447,7 @@
                 var $height = $(this).find("td[name=dsp_height]").html();
                 var $zIndex = $(this).find("td[name=dsp_zindex]").html();
                 refreshLayout($id, $name, $top, $left, $width, $height, $zIndex);
-                refreshMasterZoneTemplate($(this).attr("id"), $name);
+                refreshMasterZoneTemplate(replaceRowStr($(this).attr("id")), $name);
             } 
         });
     }
